@@ -54,13 +54,6 @@ export class CreateUserDto {
   @IsNumber()
   phone: number;
 
-  @ApiProperty({
-    description: 'Last name of the user',
-    example: 'Doe',
-  })
-  @IsString()
-  lastName: string;
-
   @ApiHideProperty()
   @IsEmpty()
   isActive?: boolean;
