@@ -116,9 +116,6 @@ export class UpdateUserDto {
     description: 'Last name of the user',
     example: 'Doe',
   })
-  @IsOptional()
-  @IsString()
-  lastName?: string;
 
   @ApiHideProperty()
   @IsEmpty()

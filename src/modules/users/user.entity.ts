@@ -26,9 +26,6 @@ export class UserEntity {
   @Column()
   phone: number;
 
-  @Column()
-  lastName: string;
-
   @Column({
     default: true,
   })
