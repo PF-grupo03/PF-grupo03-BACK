@@ -73,7 +73,6 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @UseGuards(AuthGuard)
   getUserByEmail(@Param('email') email: string) {
     return this.userService.getUserByEmail(email);
   }

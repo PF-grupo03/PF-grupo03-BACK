@@ -87,7 +87,7 @@ export class UsersRepository {
       return userByEmail;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw error; // Propaga el error NotFoundException
+        throw error;
       }
       throw new InternalServerErrorException(
         'Error al obtener el usuario por email: ' + error.message,

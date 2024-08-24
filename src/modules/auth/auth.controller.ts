@@ -74,13 +74,13 @@ export class AuthController {
     }
 
     @Post('signin')
-    @ApiOperation({ summary: 'signin', description: 'signin' })
-    @ApiResponse({ status: 200, description: 'signin retrieved successfully' })
-    @ApiResponse({ status: 404, description: 'signin not found' })
+    @ApiOperation({ summary: 'signin', description: 'Signin user' })
+    @ApiResponse({ status: 200, description: 'User signed in successfully' })
+    @ApiResponse({ status: 400, description: 'Invalid credentials' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
-    signIn(@Body() credential: LoginUserDto) {
-        const { email, password } = credential;
-        return this.authService.signIn(email, password);
-    }
+    async signIn(@Body() credential: LoginUserDto) {
+    const { email, password } = credential;
+    return await this.authService.signIn(email, password);
+}
 
 }
