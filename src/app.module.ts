@@ -10,6 +10,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -33,5 +35,7 @@ import { OrdersModule } from './modules/orders/orders.module';
     FileUploadModule,
     OrdersModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
