@@ -22,7 +22,8 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  await app.listen(3000);
-  console.log('connection to the server succesful');
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`Server running on port ${port}`);
 }
 bootstrap();
