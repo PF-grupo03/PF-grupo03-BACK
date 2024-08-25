@@ -21,7 +21,7 @@ const config = {
   migrations: ['dist/migrations/*{.ts,.js}'],
   logging: false,
   dropSchema: false,
-  synchronize: false,
+  synchronize: true,
   ssl:{
     rejectUnauthorized: false,
   },

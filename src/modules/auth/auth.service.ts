@@ -3,14 +3,13 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/user.dto';
 import { UsersRepository } from '../users/user.repository';
-import { AuthRepository } from './auth.repository';
+
 
 @Injectable()
 export class AuthService {
     constructor (
         private readonly usersRepository: UsersRepository,
         private readonly jwtService: JwtService,
-        private readonly authRepository: AuthRepository
 
     ) {}
 
@@ -28,11 +27,45 @@ export class AuthService {
     }
 
     async signIn(email: string, password: string) {
-    return this.authRepository.signIn(email, password);
+        
+        
+        const user = await this.usersRepository.getUserByEmail(email);
+        
+        
+        if(!user) throw new BadRequestException('Credenciales incorrectas');
+
+        
+        const validPassword = await bcrypt.compare(password, user.password);
+        if(!validPassword) throw new BadRequestException('Credenciales Invalidas');
+        
+        
+        const payload = { id: user.id, email: user.email, isAdmin: user.IsAdmin };
+        const token = this.jwtService.sign(payload);
+        
+        
+        return {
+            message: ' Usuario Logueado...',
+            token,
+        };
+
     }
 
     async signUp(user: CreateUserDto) {
-        return this.authRepository.signUp(user);
+        const { email, password } = user;
+        
+        //* Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        //* Crear usuario en BBDD:
+        const newUser = await this.usersRepository.addUser({
+            ...user,
+            password: hashedPassword
+        })
+
+        return {
+            message: 'Usuario registrado exitosamente',
+            user: newUser,
+        };
     }
 
 }

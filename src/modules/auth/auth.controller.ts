@@ -19,6 +19,25 @@ export class AuthController {
         return this.authService.getAuth();
     }
 
+    @Post('signup')
+    @ApiOperation({ summary: 'signup', description: 'signup' })
+    @ApiResponse({ status: 200, description: 'signup retrieved successfully' })
+    @ApiResponse({ status: 404, description: 'signup not found' })
+    @ApiResponse({ status: 500, description: 'Internal server error' })
+    signIn(@Body() user: CreateUserDto) {
+        return this.authService.signUp(user);
+    }
+
+    @Post('signin')
+    @ApiOperation({ summary: 'signin', description: 'Signin user' })
+    @ApiResponse({ status: 200, description: 'User signed in successfully' })
+    @ApiResponse({ status: 400, description: 'Invalid credentials' })
+    @ApiResponse({ status: 500, description: 'Internal server error' })
+    async signUp(@Body() credential: LoginUserDto) {
+    const { email, password } = credential;
+    return await this.authService.signIn(email, password);
+}
+
     @Get('google')
     @ApiOperation({ summary: 'Get google auth', description: 'Get google auth' })
     @ApiResponse({ status: 200, description: 'Google auth retrieved successfully' })
@@ -61,26 +80,5 @@ export class AuthController {
     async test(@Res() res) {
         res.json('success');
     }
-
-
-
-    @Post('signup')
-    @ApiOperation({ summary: 'signup', description: 'signup' })
-    @ApiResponse({ status: 200, description: 'signup retrieved successfully' })
-    @ApiResponse({ status: 404, description: 'signup not found' })
-    @ApiResponse({ status: 500, description: 'Internal server error' })
-    signUp(@Body() user: CreateUserDto) {
-        return this.authService.signUp(user);
-    }
-
-    @Post('signin')
-    @ApiOperation({ summary: 'signin', description: 'Signin user' })
-    @ApiResponse({ status: 200, description: 'User signed in successfully' })
-    @ApiResponse({ status: 400, description: 'Invalid credentials' })
-    @ApiResponse({ status: 500, description: 'Internal server error' })
-    async signIn(@Body() credential: LoginUserDto) {
-    const { email, password } = credential;
-    return await this.authService.signIn(email, password);
-}
 
 }

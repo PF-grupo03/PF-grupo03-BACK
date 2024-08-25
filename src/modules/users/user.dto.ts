@@ -165,16 +165,4 @@ export class FiltersUsersDto {
 export class LoginUserDto extends PickType(CreateUserDto, [
   'email',
   'password',
-]) {
-  @ApiProperty({
-    description: 'Email of the user',
-    example: 'johndoe@example.com',
-  })
-  email: string;
-
-  @ApiProperty({
-    description: 'Password of the user',
-    example: 'password123',
-  })
-  password: string;
-}
+]) {}
