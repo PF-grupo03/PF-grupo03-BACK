@@ -20,7 +20,7 @@ export class ProductsService {
 
   updateProduct(id: string, product: UpdateProductDto) {
     return this.productsRepository.updateProduct(id, product);
-  } 
+  }
 
   deleteProduct(id: string) {
     return this.productsRepository.deleteProduct(id);
