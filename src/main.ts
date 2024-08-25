@@ -15,11 +15,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  app.enableCors({origin: 'http://localhost:3000/', // Permitir solicitudes desde este origen
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Permitir envío de cookies y cabeceras de autorización
-  });
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
