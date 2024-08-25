@@ -37,7 +37,7 @@ export class CategoriesRepository {
             .createQueryBuilder()
             .insert()
             .into(CategoryEntity)
-            .values({ name: element.category })
+            .values({ name: element.name })
             .orIgnore()
             .execute();
         }),
@@ -53,7 +53,7 @@ export class CategoriesRepository {
       await this.categoriesRepository
         .createQueryBuilder()
         .update(CategoryEntity)
-        .set({ name: data.category })
+        .set({ name: data.name })
         .where({ id })
         .execute();
       return 'Categoría actualizada correctamente';
