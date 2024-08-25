@@ -48,8 +48,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: UpdateUserDto })
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @UseGuards(AuthGuard)
   updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() userBody: UpdateUserDto,
@@ -75,5 +74,16 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   getUserByEmail(@Param('email') email: string) {
     return this.userService.getUserByEmail(email);
+  }
+
+  @Put('make-admin/:id')
+  @ApiOperation({ summary: 'Make user admin', description: 'Make user admin' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
+  async makeAdmin(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.makeAdmin(id);
   }
 }

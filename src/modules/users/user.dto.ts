@@ -112,11 +112,11 @@ export class UpdateUserDto {
   @IsNumber()
   phone?: number;
 
-  @ApiPropertyOptional({
+/*   @ApiPropertyOptional({
     description: 'Last name of the user',
-    example: 'Doe',
+    example: t,
   })
-
+ */
   @ApiHideProperty()
   @IsEmpty()
   isActive?: boolean;
