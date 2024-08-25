@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { JwtModule } from '@nestjs/jwt';
-import { JWT_SECRET } from './config/env.config';
+import { JWT_SECRET, RESTART_SCHEMA } from './config/env.config';
 import { ProductsModule } from './modules/products/products.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -12,6 +12,9 @@ import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SeederService } from './seeders/seeder.service';
+import { ProductEntity } from './modules/products/product.entity';
+import { CategoryEntity } from './modules/categories/category.entity';
 
 @Module({
   imports: [
@@ -34,8 +37,17 @@ import { AppService } from './app.service';
     CategoriesModule,
     FileUploadModule,
     OrdersModule,
+    TypeOrmModule.forFeature([CategoryEntity, ProductEntity]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SeederService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly seederService: SeederService) {}
+  async onModuleInit() {
+    if (RESTART_SCHEMA) {
+      await this.seederService.seedProducts();
+      console.log('Database seeding completed');
+    }
+  }
+}

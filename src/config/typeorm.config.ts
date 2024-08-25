@@ -6,6 +6,7 @@ import {
   DB_PASSWORD,
   DB_PORT,
   DB_USERNAME,
+  RESTART_SCHEMA,
 } from './env.config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
@@ -20,7 +21,7 @@ const config = {
   autoLoadEntities: true,
   migrations: ['dist/migrations/*{.ts,.js}'],
   logging: false,
-  dropSchema: false,
+  dropSchema: RESTART_SCHEMA,
   synchronize: true,
   ssl:{
     rejectUnauthorized: false,

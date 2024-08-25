@@ -1,293 +1,134 @@
 {
-    "products": [
-      {
-        "id": "1a2b3c4d-5678-90ab-cdef-1234567890ab",
-        "name": "Medical Tourism Package",
-        "description": "Comprehensive medical tourism package including consultations and treatments.",
-        "price": 2000,
-        "stock": 5,
-        "imgUrl": "http://example.com/medical-tourism.jpg",
-        "isActive": true,
-        "categories": [
-          "medical"
-        ]
-      },
-      {
-        "id": "1a2b3c4d-5678-90ab-cdef-1234567890bc",
-        "name": "Mountain Hiking Adventure",
-        "description": "A thrilling hiking adventure in the mountains with professional guides.",
-        "price": 350,
-        "stock": 12,
-        "imgUrl": "http://example.com/mountain-hiking.jpg",
-        "isActive": true,
-        "categories": [
-          "adventure"
-        ]
-      },
-      {
-        "id": "1a2b3c4d-5678-90ab-cdef-1234567890cd",
-        "name": "Eco-Friendly Safari",
-        "description": "An eco-friendly safari experience in the wildlife reserve.",
-        "price": 450,
-        "stock": 8,
-        "imgUrl": "http://example.com/eco-safari.jpg",
-        "isActive": true,
-        "categories": [
-          "ecological"
-        ]
-      },
-      {
-        "id": "1a2b3c4d-5678-90ab-cdef-1234567890de",
-        "name": "Corporate Retreat",
-        "description": "A relaxing corporate retreat with team-building activities.",
-        "price": 800,
-        "stock": 6,
-        "imgUrl": "http://example.com/corporate-retreat.jpg",
-        "isActive": true,
-        "categories": [
-          "corporate"
-        ]
-      },
-      {
-        "id": "1a2b3c4d-5678-90ab-cdef-1234567890ef",
-        "name": "Cultural City Tour",
-        "description": "A guided tour through the city's historical and cultural landmarks.",
-        "price": 250,
-        "stock": 20,
-        "imgUrl": "http://example.com/cultural-tour.jpg",
-        "isActive": true,
-        "categories": [
-          "tours"
-        ]
-      },
-      {
-        "id": "2b3c4d5e-6789-01ab-cdef-2345678901ab",
-        "name": "Luxury Hotel Stay",
-        "description": "Experience luxury with a stay at a 5-star hotel.",
-        "price": 600,
-        "stock": 10,
-        "imgUrl": "http://example.com/luxury-hotel.jpg",
-        "isActive": true,
-        "categories": [
-          "accommodations"
-        ]
-      },
-      {
-        "id": "2b3c4d5e-6789-01ab-cdef-2345678901bc",
-        "name": "Round-Trip Air Ticket",
-        "description": "Book a round-trip air ticket to any destination.",
-        "price": 1500,
-        "stock": 25,
-        "imgUrl": "http://example.com/air-ticket.jpg",
-        "isActive": true,
-        "categories": [
-          "air-tickets"
-        ]
-      },
-      {
-        "id": "2b3c4d5e-6789-01ab-cdef-2345678901cd",
-        "name": "Custom Travel Itinerary",
-        "description": "Create a personalized travel itinerary tailored to your needs.",
-        "price": 300,
-        "stock": 7,
-        "imgUrl": "http://example.com/custom-itinerary.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "2b3c4d5e-6789-01ab-cdef-2345678901de",
-        "name": "Beachfront Resort Package",
-        "description": "Enjoy a relaxing stay at a beachfront resort.",
-        "price": 750,
-        "stock": 9,
-        "imgUrl": "http://example.com/beachfront-resort.jpg",
-        "isActive": true,
-        "categories": [
-          "accommodations"
-        ]
-      },
-      {
-        "id": "2b3c4d5e-6789-01ab-cdef-2345678901ef",
-        "name": "Adventure Sports Package",
-        "description": "Includes activities like skydiving, bungee jumping, and more.",
-        "price": 400,
-        "stock": 15,
-        "imgUrl": "http://example.com/adventure-sports.jpg",
-        "isActive": true,
-        "categories": [
-          "adventure"
-        ]
-      },
-      {
-        "id": "3c4d5e6f-7890-12ab-cdef-3456789012ab",
-        "name": "Guided Eco Tour",
-        "description": "Experience nature with a guided eco-tour in a protected area.",
-        "price": 220,
-        "stock": 13,
-        "imgUrl": "http://example.com/eco-tour.jpg",
-        "isActive": true,
-        "categories": [
-          "ecological"
-        ]
-      },
-      {
-        "id": "3c4d5e6f-7890-12ab-cdef-3456789012bc",
-        "name": "Luxury Cruise Vacation",
-        "description": "A luxurious cruise experience with multiple destinations.",
-        "price": 1200,
-        "stock": 4,
-        "imgUrl": "http://example.com/luxury-cruise.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "3c4d5e6f-7890-12ab-cdef-3456789012cd",
-        "name": "City Adventure Tour",
-        "description": "Explore the city with adventurous activities and sightseeing.",
-        "price": 350,
-        "stock": 14,
-        "imgUrl": "http://example.com/city-adventure.jpg",
-        "isActive": true,
-        "categories": [
-          "tours"
-        ]
-      },
-      {
-        "id": "3c4d5e6f-7890-12ab-cdef-3456789012de",
-        "name": "Historical Landmark Stay",
-        "description": "Stay at a hotel located near historical landmarks.",
-        "price": 400,
-        "stock": 11,
-        "imgUrl": "http://example.com/historical-landmark.jpg",
-        "isActive": true,
-        "categories": [
-          "accommodations"
-        ]
-      },
-      {
-        "id": "3c4d5e6f-7890-12ab-cdef-3456789012ef",
-        "name": "Corporate Conference Package",
-        "description": "Package includes conference room booking, meals, and activities.",
-        "price": 1000,
-        "stock": 8,
-        "imgUrl": "http://example.com/corporate-conference.jpg",
-        "isActive": true,
-        "categories": [
-          "corporate"
-        ]
-      },
-      {
-        "id": "4d5e6f7g-8901-23ab-cdef-4567890123ab",
-        "name": "Remote Work Retreat",
-        "description": "A retreat designed for remote workers seeking inspiration and productivity.",
-        "price": 500,
-        "stock": 9,
-        "imgUrl": "http://example.com/remote-work.jpg",
-        "isActive": true,
-        "categories": [
-          "corporate"
-        ]
-      },
-      {
-        "id": "4d5e6f7g-8901-23ab-cdef-4567890123bc",
-        "name": "Luxury Spa and Wellness",
-        "description": "Indulge in a luxury spa and wellness package.",
-        "price": 600,
-        "stock": 5,
-        "imgUrl": "http://example.com/spa-wellness.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "4d5e6f7g-8901-23ab-cdef-4567890123cd",
-        "name": "Family Fun Package",
-        "description": "A fun-filled package for the whole family including various activities.",
-        "price": 700,
-        "stock": 7,
-        "imgUrl": "http://example.com/family-fun.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "4d5e6f7g-8901-23ab-cdef-4567890123de",
-        "name": "Personalized Travel Planning",
-        "description": "Customized travel planning to suit individual preferences.",
-        "price": 350,
-        "stock": 6,
-        "imgUrl": "http://example.com/personalized-planning.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "4d5e6f7g-8901-23ab-cdef-4567890123ef",
-        "name": "Weekend Getaway Package",
-        "description": "Enjoy a relaxing weekend getaway at a beautiful destination.",
-        "price": 400,
-        "stock": 10,
-        "imgUrl": "http://example.com/weekend-getaway.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "5e6f7g8h-9012-34ab-cdef-5678901234ab",
-        "name": "Romantic Escape",
-        "description": "A romantic getaway package for couples.",
-        "price": 650,
-        "stock": 5,
-        "imgUrl": "http://example.com/romantic-escape.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "5e6f7g8h-9012-34ab-cdef-5678901234bc",
-        "name": "Luxury Cruise and Stay",
-        "description": "Combine a luxury cruise with a stay at a top resort.",
-        "price": 1500,
-        "stock": 4,
-        "imgUrl": "http://example.com/cruise-and-stay.jpg",
-        "isActive": true,
-        "categories": [
-          "custom"
-        ]
-      },
-      {
-        "id": "5e6f7g8h-9012-34ab-cdef-5678901234cd",
-        "name": "Adventure Sports Extravaganza",
-        "description": "Ultimate adventure sports experience including multiple activities.",
-        "price": 600,
-        "stock": 8,
-        "imgUrl": "http://example.com/adventure-sports-extravaganza.jpg",
-        "isActive": true,
-        "categories": [
-          "adventure"
-        ]
-      },
-      {
-        "id": "5e6f7g8h-9012-34ab-cdef-5678901234de",
-        "name": "Luxury Island Resort",
-        "description": "Stay at a luxury island resort with all-inclusive amenities.",
-        "price": 900,
-        "stock": 6,
-        "imgUrl": "http://example.com/luxury-island-resort.jpg",
-        "isActive": true,
-        "categories": [
-          "accommodations"
-        ]
-      }
-    ]
-  }
-  
+  "products": [
+    {
+      "id": "1a2b3c4d-5678-90ab-cdef-1234567890ab",
+      "image": "http://example.com/medical-tourism.jpg",
+      "image2": "http://example.com/medical-tourism2.jpg",
+      "image3": "http://example.com/medical-tourism3.jpg",
+      "location": "Hospital Central, City X",
+      "title": "Medical Tourism Package",
+      "description": "Comprehensive medical tourism package including consultations and treatments.",
+      "description2": "Includes a full medical check-up and specialized treatments.",
+      "price": 2000,
+      "stock": 5,
+      "duration": "7 days"
+    },
+    {
+      "id": "1a2b3c4d-5678-90ab-cdef-1234567890bc",
+      "image": "http://example.com/mountain-hiking.jpg",
+      "image2": "http://example.com/mountain-hiking2.jpg",
+      "image3": "http://example.com/mountain-hiking3.jpg",
+      "location": "Mountain Range Y",
+      "title": "Mountain Hiking Adventure",
+      "description": "A thrilling hiking adventure in the mountains with professional guides.",
+      "description2": "Suitable for all fitness levels, with routes of varying difficulty.",
+      "price": 350,
+      "stock": 12,
+      "duration": "3 days"
+    },
+    {
+      "id": "1a2b3c4d-5678-90ab-cdef-1234567890cd",
+      "image": "http://example.com/eco-safari.jpg",
+      "image2": "http://example.com/eco-safari2.jpg",
+      "image3": "http://example.com/eco-safari3.jpg",
+      "location": "Wildlife Reserve Z",
+      "title": "Eco-Friendly Safari",
+      "description": "An eco-friendly safari experience in the wildlife reserve.",
+      "description2": "Guided tours focusing on wildlife conservation and sustainable practices.",
+      "price": 450,
+      "stock": 8,
+      "duration": "4 days"
+    },
+    {
+      "id": "1a2b3c4d-5678-90ab-cdef-1234567890de",
+      "image": "http://example.com/corporate-retreat.jpg",
+      "image2": "http://example.com/corporate-retreat2.jpg",
+      "image3": "http://example.com/corporate-retreat3.jpg",
+      "location": "Resort X, Coastal Area",
+      "title": "Corporate Retreat",
+      "description": "A relaxing corporate retreat with team-building activities.",
+      "description2": "Includes accommodation, meals, and a variety of team-building exercises.",
+      "price": 800,
+      "stock": 6,
+      "duration": "5 days"
+    },
+    {
+      "id": "1a2b3c4d-5678-90ab-cdef-1234567890ef",
+      "image": "http://example.com/cultural-tour.jpg",
+      "image2": "http://example.com/cultural-tour2.jpg",
+      "image3": "http://example.com/cultural-tour3.jpg",
+      "location": "City A, Historic District",
+      "title": "Cultural City Tour",
+      "description": "A guided tour through the city's historical and cultural landmarks.",
+      "description2": "Experience the rich history and culture of the city with an expert guide.",
+      "price": 250,
+      "stock": 20,
+      "duration": "1 day"
+    },
+    {
+      "id": "2b3c4d5e-6789-01ab-cdef-2345678901ab",
+      "image": "http://example.com/luxury-hotel.jpg",
+      "image2": "http://example.com/luxury-hotel2.jpg",
+      "image3": "http://example.com/luxury-hotel3.jpg",
+      "location": "City B, Downtown",
+      "title": "Luxury Hotel Stay",
+      "description": "Experience luxury with a stay at a 5-star hotel.",
+      "description2": "Includes access to spa, gourmet dining, and other premium amenities.",
+      "price": 600,
+      "stock": 10,
+      "duration": "3 nights"
+    },
+    {
+      "id": "2b3c4d5e-6789-01ab-cdef-2345678901bc",
+      "image": "http://example.com/air-ticket.jpg",
+      "image2": "http://example.com/air-ticket2.jpg",
+      "image3": "http://example.com/air-ticket3.jpg",
+      "location": "International Airports",
+      "title": "Round-Trip Air Ticket",
+      "description": "Book a round-trip air ticket to any destination.",
+      "description2": "Flexible travel dates and destinations available.",
+      "price": 1500,
+      "stock": 25,
+      "duration": "Varies"
+    },
+    {
+      "id": "2b3c4d5e-6789-01ab-cdef-2345678901cd",
+      "image": "http://example.com/custom-itinerary.jpg",
+      "image2": "http://example.com/custom-itinerary2.jpg",
+      "image3": "http://example.com/custom-itinerary3.jpg",
+      "location": "Worldwide Destinations",
+      "title": "Custom Travel Itinerary",
+      "description": "Create a personalized travel itinerary tailored to your needs.",
+      "description2": "Plan your dream vacation with the help of our travel experts.",
+      "price": 300,
+      "stock": 7,
+      "duration": "Varies"
+    },
+    {
+      "id": "2b3c4d5e-6789-01ab-cdef-2345678901de",
+      "image": "http://example.com/beachfront-resort.jpg",
+      "image2": "http://example.com/beachfront-resort2.jpg",
+      "image3": "http://example.com/beachfront-resort3.jpg",
+      "location": "Beachfront, Tropical Island",
+      "title": "Beachfront Resort Package",
+      "description": "Enjoy a relaxing stay at a beachfront resort.",
+      "description2": "Includes all-inclusive meals, drinks, and activities.",
+      "price": 750,
+      "stock": 9,
+      "duration": "4 nights"
+    },
+    {
+      "id": "2b3c4d5e-6789-01ab-cdef-2345678901ef",
+      "image": "http://example.com/adventure-sports.jpg",
+      "image2": "http://example.com/adventure-sports2.jpg",
+      "image3": "http://example.com/adventure-sports3.jpg",
+      "location": "Adventure Park Z",
+      "title": "Adventure Sports Package",
+      "description": "Includes activities like skydiving, bungee jumping, and more.",
+      "description2": "Perfect for thrill-seekers looking for an adrenaline rush.",
+      "price": 400,
+      "stock": 15,
+      "duration": "2 days"
+    }
+  ]
+}
