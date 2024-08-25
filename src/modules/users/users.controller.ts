@@ -34,37 +34,37 @@ export class UsersController {
   }
 
 
-    @ApiOperation({ summary: 'Get user by ID', description: 'Get user by ID' })
-    @ApiResponse({ status: 200, description: 'User retrieved successfully' })
-    @ApiResponse({ status: 404, description: 'User not found' })
-    @ApiResponse({ status: 500, description: 'Internal server error' })
-    @ApiBearerAuth()
-    @Get(':id')
-    @UseGuards(AuthGuard)
-    getUser(@Param('id', ParseUUIDPipe) id: string) {
-      return this.userService.getUserById(id);
-    }
+  @ApiOperation({ summary: 'Get user by ID', description: 'Get user by ID' })
+  @ApiResponse({ status: 200, description: 'User retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @ApiBearerAuth()
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  getUser(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.getUserById(id);
+  }
 
-    @ApiOperation({ summary: 'Get user by email', description: 'Get user by email' })
-    @ApiResponse({ status: 200, description: 'User retrieved successfully' })
-    @ApiResponse({ status: 404, description: 'User not found' })
-    @ApiResponse({ status: 500, description: 'Internal server error' })
-    @Get(':email')
-    getUserByEmail(@Param('email') email: string) {
-      return this.userService.getUserByEmail(email);
-    }
+  @ApiOperation({ summary: 'Get user by email', description: 'Get user by email' })
+  @ApiResponse({ status: 200, description: 'User retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @Get(':email')
+  getUserByEmail(@Param('email') email: string) {
+    return this.userService.getUserByEmail(email);
+  }
 
-    @ApiOperation({ summary: 'Update user by ID', description: 'Update user by ID' })
-    @ApiResponse({ status: 200, description: 'User updated successfully' })
-    @ApiResponse({ status: 404, description: 'User not found' })
-    @ApiResponse({ status: 500, description: 'Internal server error' })
-    @ApiBearerAuth()
-    @Put(':id')
-    @ApiBody({ type: UpdateUserDto })
-    @UseGuards(AuthGuard)
-    updateUser(@Param('id', ParseUUIDPipe) id: string,@Body() userBody: UpdateUserDto,) {
+  @ApiOperation({ summary: 'Update user by ID', description: 'Update user by ID' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @ApiBearerAuth()
+  @Put(':id')
+  @ApiBody({ type: UpdateUserDto })
+  @UseGuards(AuthGuard)
+  updateUser(@Param('id', ParseUUIDPipe) id: string,@Body() userBody: UpdateUserDto,) {
     
-      return this.userService.updateUser(id, userBody);
+  return this.userService.updateUser(id, userBody);
   }
 
   @ApiOperation({ summary: 'Make user admin', description: 'Make user admin' })
