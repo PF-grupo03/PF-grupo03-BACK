@@ -18,7 +18,9 @@ export class AuthService {
     }
 
     async findUserByEmail(email: string) {
-        return this.usersRepository.getUserByEmail(email);
+        const userDb= this.usersRepository.getUserByEmail(email);  
+        
+        return userDb;
     }
 
     async generateJwt(user: any) {

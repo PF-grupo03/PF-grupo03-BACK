@@ -56,7 +56,10 @@ export class AuthController {
     @UseGuards(AuthGuard('google'))
     
     async callback(@Req() req, @Res() res) {
+        console.log(req);
         const { user } = req;
+        console.log(user);
+        
     
         if (!user) {
             return res.status(400).send('No se pudo autenticar el usuario');
