@@ -14,10 +14,25 @@ export class ProductEntity {
   id: string;
 
   @Column()
-  name: string;
+  image: string;
+
+  @Column()
+  image2: string;
+
+  @Column()
+  image3: string;
+
+  @Column()
+  location: string;
+
+  @Column()
+  title: string;
 
   @Column()
   description: string;
+
+  @Column()
+  description2: string;
 
   @Column()
   price: number;
@@ -26,7 +41,7 @@ export class ProductEntity {
   stock: number;
 
   @Column()
-  imgUrl: string;
+  duration: string;
 
   @Column({
     default: true,

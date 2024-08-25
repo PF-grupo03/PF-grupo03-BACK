@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './product.entity';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import {
   CreateProductDto,
   FiltersProductsDto,
@@ -23,16 +23,19 @@ export class ProductsRepository {
   ) {}
 
   async getProducts(params?: FiltersProductsDto) {
-    const { limit, page, name, price } = params;
+    const { limit, page, title, price } = params;
     try {
       return await this.productsRepository.find({
         where: {
-          name: name || undefined,
+          title: title || undefined,
           price: price || undefined,
           isActive: true,
         },
         take: limit || undefined,
-        skip: page || undefined,
+        skip: page ? (page - 1) * limit : undefined,
+        relations: {
+          categories: true,
+        },
       });
     } catch (error) {
       throw new InternalServerErrorException('Error obteniendo productos');
@@ -60,37 +63,56 @@ export class ProductsRepository {
     try {
       const categories = await this.categoriesRepository.find({
         where: {
+          name: In(product.categories),
           isActive: true,
         },
       });
-      const categoryMatch = categories.filter((category) => {
-        product.categories.includes(category.name)
-      })
-      if (categoryMatch.length !== product.categories.length) {
-        throw new BadRequestException('Categorías no fueron encontradas');
+
+      if (categories.length !== product.categories.length) {
+        throw new BadRequestException('Una o más categorías no fueron encontradas');
       }
+
       const newProduct = this.productsRepository.create({
         ...product,
-        categories: categoryMatch,
+        categories,
       });
+
       return await this.productsRepository.save(newProduct);
     } catch (error) {
-      throw new InternalServerErrorException('Error obteniendo el producto');
+      throw new InternalServerErrorException('Error creando el producto');
     }
   }
 
   async updateProduct(id: string, product: UpdateProductDto) {
     try {
-      const productById = await this.productsRepository.findOne({
+      const existingProduct = await this.productsRepository.findOne({
         where: { id, isActive: true },
         relations: {
           categories: true,
         },
       });
-      if (!productById) {
-        throw new Error('Id de producto inexistente');
+
+      if (!existingProduct) {
+        throw new BadRequestException('ID de producto inexistente');
       }
+
+      if (product.categories) {
+        const categories = await this.categoriesRepository.find({
+          where: {
+            name: In(product.categories),
+            isActive: true,
+          },
+        });
+
+        if (categories.length !== product.categories.length) {
+          throw new BadRequestException('Una o más categorías no fueron encontradas');
+        }
+
+        product.categories = categories;
+      }
+
       await this.productsRepository.update(id, product);
+
       return await this.productsRepository.findOne({
         where: { id, isActive: true },
         relations: {
@@ -107,12 +129,13 @@ export class ProductsRepository {
       const productById = await this.productsRepository.findOne({
         where: { id, isActive: true },
         relations: {
-          categories: true,
-        },
+          categories: true },
       });
+
       if (!productById) {
-        throw new Error('Id de producto inexistente');
+        throw new BadRequestException('ID de producto inexistente');
       }
+
       productById.isActive = false;
       await this.productsRepository.save(productById);
       return 'Producto eliminado correctamente';
