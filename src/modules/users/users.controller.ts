@@ -62,11 +62,9 @@ export class UsersController {
     @Put(':id')
     @ApiBody({ type: UpdateUserDto })
     @UseGuards(AuthGuard)
-  updateUser(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() userBody: UpdateUserDto,
-  ) {
-    return this.userService.updateUser(id, userBody);
+    updateUser(@Param('id', ParseUUIDPipe) id: string,@Body() userBody: UpdateUserDto,) {
+    
+      return this.userService.updateUser(id, userBody);
   }
 
   @ApiOperation({ summary: 'Make user admin', description: 'Make user admin' })
@@ -80,6 +78,7 @@ export class UsersController {
   async makeAdmin(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.makeAdmin(id);
   }
+  
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user by ID', description: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
