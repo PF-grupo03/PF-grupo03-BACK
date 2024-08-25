@@ -13,4 +13,4 @@ export const JWT_SECRET = process.env.JWT_SECRET;
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
 
-export const RESTART_SCHEMA = false;
+export const RESTART_SCHEMA = true;

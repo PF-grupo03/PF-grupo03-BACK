@@ -49,6 +49,7 @@ export class SeederService {
           image2: product.image2,
           image3: product.image3,
           duration: product.duration,
+          location: product.location,
           categories: categoryEntities.filter((category) =>
             product.categories.includes(category.name),
           ),

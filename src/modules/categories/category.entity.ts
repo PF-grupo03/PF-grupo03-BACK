@@ -15,10 +15,8 @@ export class CategoryEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    default: true,
+  })
   isActive: boolean;
-
-  @ManyToMany(() => ProductEntity, (product) => product.categories)
-  products: ProductEntity[];
-
 }
