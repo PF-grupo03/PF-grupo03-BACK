@@ -38,6 +38,7 @@ export class ProductsRepository {
         },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Error obteniendo productos');
     }
   }
