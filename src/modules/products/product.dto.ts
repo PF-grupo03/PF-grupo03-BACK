@@ -97,7 +97,7 @@ export class CreateProductDto {
 
   @ApiHideProperty()
   @IsEmpty()
-  isActive?: boolean = true;
+  isActive?: boolean;
 
   @ApiProperty({
     description: 'Categorías asociadas al paquete de viaje',

@@ -66,7 +66,7 @@ export class AuthService {
 
         return {
             message: 'Usuario registrado exitosamente',
-            user: newUser,
+            user: newUser
         };
     }
 
