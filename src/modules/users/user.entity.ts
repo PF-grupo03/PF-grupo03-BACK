@@ -22,10 +22,16 @@ export class UserEntity {
   })
   password: string;
 
-  @Column()
+  @Column({
+    type: 'bigint',
+    nullable: false
+  })
   dni: number;
 
-  @Column()
+  @Column({
+    type: 'bigint',
+    nullable: false
+  })
   phone: number;
 
   @Column({
