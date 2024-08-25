@@ -59,7 +59,7 @@ export class UsersRepository {
       };
     } catch (error) {
       throw new InternalServerErrorException('Error obteniendo usuarios');
-    } 
+    }
   }
 
   async deleteUser(id: string) {
@@ -73,7 +73,7 @@ export class UsersRepository {
       userById.isActive = false;
       await this.usersRepository.save(userById);
       return {
-        message: 'Usuario eliminado correctamente', 
+        message: 'Usuario eliminado correctamente',
       };
     } catch (error) {
       throw new InternalServerErrorException('Error obteniendo usuarios');
@@ -82,7 +82,7 @@ export class UsersRepository {
 
   async getUserByEmail(email: string): Promise<UserEntity> {
     try {
-      
+
       const userByEmail = await this.usersRepository.findOneBy({ email });
 
       if (!userByEmail) throw new NotFoundException('Usuario no encontrado');
@@ -122,6 +122,23 @@ export class UsersRepository {
       throw new BadRequestException(
         'Error al agregar el usuario: ' + error.message,
       );
+    }
+  }
+
+  async makeAdmin(id: string) {
+    try {
+      const user = await this.usersRepository.findOneBy({ id });
+      if (!user) {
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+      }
+      user.isAdmin = true;
+      await this.usersRepository.save(user);
+      return {
+        message: 'Usuario actualizado correctamente',
+        user,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Error actualizando el usuario');
     }
   }
 }

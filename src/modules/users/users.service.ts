@@ -13,11 +13,11 @@ export class UsersService {
   getUserById(id: string) {
     return this.usersRepository.getUserById(id);
   }
-  
+
   addUser(user: CreateUserDto) {
     return this.usersRepository.addUser(user);
   }
-  
+
   updateUser(id: string, userBody: UpdateUserDto) {
     return this.usersRepository.updateUser(id, userBody);
   }
@@ -30,4 +30,7 @@ export class UsersService {
     return this.usersRepository.getUserByEmail(email);
   }
 
+  async makeAdmin(id: string) {
+    return this.usersRepository.makeAdmin(id);
+  }
 }
