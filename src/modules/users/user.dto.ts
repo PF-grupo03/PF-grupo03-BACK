@@ -123,7 +123,7 @@ export class UpdateUserDto {
 
   @ApiHideProperty()
   @IsEmpty()
-  IsAdmin?: boolean;
+  isAdmin?: boolean;
 }
 
 export class FiltersUsersDto {

@@ -36,7 +36,7 @@ export class UserEntity {
   @Column({
     default: false,
   })
-  IsAdmin: boolean;
+  isAdmin: boolean;
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   order?: OrderEntity[];

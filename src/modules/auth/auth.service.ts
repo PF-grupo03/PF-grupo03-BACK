@@ -41,7 +41,7 @@ export class AuthService {
         if(!validPassword) throw new BadRequestException('Credenciales Invalidas');
         
         
-        const payload = { id: user.id, email: user.email, isAdmin: user.IsAdmin };
+        const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
         const token = this.jwtService.sign(payload);
         
         

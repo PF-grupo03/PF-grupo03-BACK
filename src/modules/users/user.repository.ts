@@ -116,7 +116,7 @@ export class UsersRepository {
           `Error al recuperar el usuario recién creado con id ${newUser.id}`,
         );
 
-      const { password, IsAdmin, ...userNoPassword } = dbUser;
+      const { password, isAdmin, ...userNoPassword } = dbUser;
       return userNoPassword;
     } catch (error) {
       throw new BadRequestException(
