@@ -43,6 +43,7 @@ export class ProductsRepository {
     }
   }
 
+
   async getProductById(id: string) {
     try {
       const product = await this.productsRepository.findOne({
@@ -145,3 +146,4 @@ export class ProductsRepository {
     }
   }
 }
+

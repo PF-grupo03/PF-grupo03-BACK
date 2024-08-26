@@ -190,7 +190,7 @@ export class UpdateProductDto {
   duration?: string;
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsBoolean()
   isActive?: boolean;
 
   @ApiHideProperty()
@@ -249,6 +249,16 @@ export class FiltersProductsDto {
   @IsOptional()
   @IsString()
   duration?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por categorías',
+    example: ['adventure', 'history'],
+  })
+  
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  categories?: string[];
 
   @ApiPropertyOptional({
     description: 'Filtrar por estado activo',
