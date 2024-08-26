@@ -6,6 +6,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from '../users/roles.enum';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -36,7 +37,7 @@ export class CategoriesController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: [CreateCategoryDto] })
-  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
   async addCategories(@Body(new ValidationPipe({ whitelist: true })) data: CreateCategoryDto[]) {
     if (!data.length) {

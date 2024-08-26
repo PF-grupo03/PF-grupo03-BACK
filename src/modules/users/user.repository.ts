@@ -41,7 +41,10 @@ export class UsersRepository {
       if (!userById) {
         throw new NotFoundException(`Usuario con id ${id} no encontrado`);
       }
-      return userById;
+
+      const { password, isAdmin, ...userNoPassword } = userById;
+            return userNoPassword;
+      
     } catch (error) {
       throw new InternalServerErrorException('Error obteniendo usuarios');
     }
@@ -49,15 +52,22 @@ export class UsersRepository {
 
   async updateUser(id: string, userBody: UpdateUserDto) {
     try {
-      await this.usersRepository.update(id, userBody);
+      const result = await this.usersRepository.update(id, userBody);
+      if (result.affected === 0) throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+
       const userById = await this.usersRepository.findOne({
         where: { id, isActive: true },
       });
+
+      const { password, isAdmin, ...userNoPassword} = userById
       return {
         message: 'Usuario actualizado correctamente',
-        userById,
+        userNoPassword,
       };
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error; // Propaga el error NotFoundException
+    }
       throw new InternalServerErrorException('Error obteniendo usuarios');
     }
   }
@@ -76,7 +86,10 @@ export class UsersRepository {
         message: 'Usuario eliminado correctamente',
       };
     } catch (error) {
-      throw new InternalServerErrorException('Error obteniendo usuarios');
+        if (error instanceof NotFoundException || error instanceof BadRequestException) {
+          throw error; // Propaga el error NotFoundException
+        }
+        throw new InternalServerErrorException('Error al eliminar el usuario: ' + error.message);
     }
   }
 
@@ -93,9 +106,7 @@ export class UsersRepository {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException(
-        'Error al obtener el usuario por email: ' + error.message,
-      );
+      throw new InternalServerErrorException('Error al obtener el usuario por email: ' + error.message);
     }
   }
 
@@ -133,9 +144,12 @@ export class UsersRepository {
       }
       user.isAdmin = true;
       await this.usersRepository.save(user);
+      
+      const { password, isAdmin, ...userNoPassword} = user;
+
       return {
         message: 'Usuario actualizado correctamente',
-        user,
+        userNoPassword,
       };
     } catch (error) {
       throw new InternalServerErrorException('Error actualizando el usuario');

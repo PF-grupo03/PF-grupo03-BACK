@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateProductDto, UpdateProductDto } from './product.dto';
+import { CreateProductDto, FiltersProductsDto, UpdateProductDto } from './product.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from '../users/roles.enum';
@@ -17,8 +17,8 @@ export class ProductsController {
   @ApiResponse({ status: 200, description: 'Products retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Products not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  getProducts() {
-    return this.productsService.getProducts();
+  getProducts(@Query() params?: FiltersProductsDto) {
+    return this.productsService.getProducts(params);
   }
 
   @Get(':id')

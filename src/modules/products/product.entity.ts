@@ -1,7 +1,7 @@
 import {
   Column,
   Entity,
-  JoinColumn,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -48,9 +48,9 @@ export class ProductEntity {
   })
   isActive: boolean;
 
-  @ManyToMany(() => CategoryEntity, (category) => category.products)
-  @JoinColumn({ name: 'category__id' })
-  categories: CategoryEntity[];
+  @ManyToMany(() => CategoryEntity)
+  @JoinTable()
+  categories: CategoryEntity[]
 
   @ManyToMany(() => OrderDetailsEntity, (orderDetails) => orderDetails.product)
   orderDetails: OrderDetailsEntity[];

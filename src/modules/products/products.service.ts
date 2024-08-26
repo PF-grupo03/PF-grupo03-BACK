@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsRepository } from './product.repository';
-import { CreateProductDto, UpdateProductDto } from './product.dto';
+import { CreateProductDto, FiltersProductsDto, UpdateProductDto } from './product.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
-  getProducts() {
-    return this.productsRepository.getProducts();
+  getProducts(params?: FiltersProductsDto) {
+    return this.productsRepository.getProducts(params);
   }
 
   getProductById(id: string) {
