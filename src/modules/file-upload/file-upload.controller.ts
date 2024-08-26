@@ -57,7 +57,7 @@ import {
         validators: [
             new MaxFileSizeValidator({
               maxSize: 200000, // 200kb
-                message: 'Supera el máximo permitido: 200kb',
+                message: 'Supera el máximo permitido: 2000kb',
             }),
             new FileTypeValidator({
             fileType: /(.jpg|.jpeg|.png|.webp)/,
