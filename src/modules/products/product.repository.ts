@@ -24,7 +24,7 @@ export class ProductsRepository {
   ) {}
 
   async getProducts(params?: FiltersProductsDto) {
-    const { limit, page, title, location, price, duration, isActive, categories } = params;
+    const { limit, page, title, location, price, duration, categories } = params;
     // console.log(isActive)
     try {
       const whereClause: TWhereClause = {}

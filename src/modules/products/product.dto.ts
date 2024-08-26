@@ -13,7 +13,6 @@ import {
   Min,
   IsArray,
   IsBoolean,
-  ValidateNested,
   IsNotEmpty,
 } from 'class-validator';
 import { CategoryEntity } from '../categories/category.entity';
@@ -243,7 +242,7 @@ export class FiltersProductsDto {
 
   @ApiPropertyOptional({
     description: 'Filtrar por precio',
-    example: 127,
+    example: 100,
   })
   @IsOptional()
   @Type(() => Number)
@@ -259,11 +258,6 @@ export class FiltersProductsDto {
   duration?: string;
 
   @ApiPropertyOptional({
-    description: 'Filtrar por categorías',
-    example: ['adventure', 'history'],
-  })
-  
-  @ApiPropertyOptional({
     description: 'Filtrar por estado activo',
     example: true,
   })
@@ -272,6 +266,10 @@ export class FiltersProductsDto {
   @Type(() => Boolean)
   isActive?: boolean;
 
+  @ApiPropertyOptional({
+    description: 'Filtrar por categorías',
+    example: '["diseño de sonrisa"]',
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
