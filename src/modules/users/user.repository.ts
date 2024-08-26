@@ -42,7 +42,7 @@ export class UsersRepository {
         throw new NotFoundException(`Usuario con id ${id} no encontrado`);
       }
 
-      const { password, ...userNoPassword } = userById;
+      const { password, isAdmin, ...userNoPassword } = userById;
             return userNoPassword;
       
     } catch (error) {
@@ -145,7 +145,7 @@ export class UsersRepository {
       user.isAdmin = true;
       await this.usersRepository.save(user);
       
-      const { password, ...userNoPassword} = user;
+      const { password, isAdmin, ...userNoPassword} = user;
 
       return {
         message: 'Usuario actualizado correctamente',
