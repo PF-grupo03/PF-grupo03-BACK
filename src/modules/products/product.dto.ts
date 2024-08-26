@@ -1,5 +1,9 @@
-import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional, ApiHideProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiHideProperty,
+} from '@nestjs/swagger';
 import {
   IsString,
   IsNumber,
@@ -57,7 +61,8 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'Descripción detallada del paquete de viaje',
-    example: 'Explore the iconic Colosseum with a professional guide and skip the long lines',
+    example:
+      'Explore the iconic Colosseum with a professional guide and skip the long lines',
   })
   @IsNotEmpty()
   @IsString()
@@ -65,7 +70,8 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'Descripción adicional del paquete de viaje',
-    example: 'Explore the iconic Colosseum with a professional guide and skip the long lines',
+    example:
+      'Explore the iconic Colosseum with a professional guide and skip the long lines',
   })
   @IsNotEmpty()
   @IsString()
@@ -151,7 +157,8 @@ export class UpdateProductDto {
 
   @ApiPropertyOptional({
     description: 'Descripción detallada del paquete de viaje',
-    example: 'Explore the iconic Colosseum with a professional guide and skip the long lines',
+    example:
+      'Explore the iconic Colosseum with a professional guide and skip the long lines',
   })
   @IsOptional()
   @IsString()
@@ -159,7 +166,8 @@ export class UpdateProductDto {
 
   @ApiPropertyOptional({
     description: 'Descripción adicional del paquete de viaje',
-    example: 'Explore the iconic Colosseum with a professional guide and skip the long lines',
+    example:
+      'Explore the iconic Colosseum with a professional guide and skip the long lines',
   })
   @IsOptional()
   @IsString()
@@ -256,5 +264,31 @@ export class FiltersProductsDto {
   })
   @IsOptional()
   @IsBoolean()
+  @Type(() => Boolean)
   isActive?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @Transform(({ value }) => {
+    // Intenta convertir el string a un array
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        // Si no se puede convertir, retorna un array vacío o lanza un error
+        return [];
+      }
+    }
+    return value; // Si ya es un array, lo devuelve tal cual
+  })
+  categories?: string[];
 }
+
+export type TWhereClause = {
+  title?: string;
+  location?: string;
+  price?: number;
+  duration?: string;
+  isActive?: boolean;
+};

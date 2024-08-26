@@ -9,6 +9,7 @@ import { Repository, In } from 'typeorm';
 import {
   CreateProductDto,
   FiltersProductsDto,
+  TWhereClause,
   UpdateProductDto,
 } from './product.dto';
 import { CategoryEntity } from '../categories/category.entity';
@@ -23,20 +24,33 @@ export class ProductsRepository {
   ) {}
 
   async getProducts(params?: FiltersProductsDto) {
-    const { limit, page, title, price } = params;
+    const { limit, page, title, location, price, duration, isActive, categories } = params;
+    // console.log(isActive)
     try {
-      return await this.productsRepository.find({
-        where: {
-          title: title || undefined,
-          price: price || undefined,
-          isActive: true,
-        },
-        take: limit || undefined,
-        skip: page ? (page - 1) * limit : undefined,
-        relations: {
-          categories: true,
-        },
+      const whereClause: TWhereClause = {}
+        if (title) whereClause.title = title;
+        if (location) whereClause.location = location;
+        if (price) whereClause.price = price;
+        if (duration) whereClause.duration = duration;
+        // if (typeof isActive === 'undefined') whereClause.isActive = isActive
+        // console.log('whereClause:', whereClause);
+
+        const products = await this.productsRepository.find({
+          where: whereClause,
+          take: limit || undefined,
+          skip: page ? (page - 1) * limit : undefined,
+          relations: {
+              categories: true,
+          },
       });
+
+      if (categories && categories.length > 0) {
+          return products.filter(product => 
+              product.categories.some(category => categories.includes(category.name))
+          );
+      }
+
+      return products;
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Error obteniendo productos');
