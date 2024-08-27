@@ -43,7 +43,7 @@ export class ProductsRepository {
               categories: true,
           },
       });
-
+ 
       if (categories && categories.length > 0) {
           return products.filter(product => 
               product.categories.some(category => categories.includes(category.name))
@@ -75,7 +75,7 @@ export class ProductsRepository {
     }
   }
 
-  async createProduct(product: CreateProductDto) {
+  async createProduct(product: CreateProductDto, files: { imageUrl: string; image2Url: string; image3Url: string }) {
     try {
       const categories = await this.categoriesRepository.find({
         where: {
@@ -91,10 +91,14 @@ export class ProductsRepository {
       const newProduct = this.productsRepository.create({
         ...product,
         categories,
+        image: files.imageUrl,
+        image2: files.image2Url,
+        image3: files.image3Url
       });
 
       return await this.productsRepository.save(newProduct);
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException('Error creando el producto');
     }
   }
