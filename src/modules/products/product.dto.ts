@@ -18,29 +18,29 @@ import {
 import { CategoryEntity } from '../categories/category.entity';
 
 export class CreateProductDto {
-  @ApiProperty({
-    description: 'URL de la imagen principal del paquete de viaje',
-    example: 'https://example.com/colosseum-tour.jpg',
-  })
-  @IsNotEmpty()
-  @IsString()
-  image: string;
+  // @ApiProperty({
+  //   description: 'URL de la imagen principal del paquete de viaje',
+  //   example: 'https://example.com/colosseum-tour.jpg',
+  // })
+  // @IsNotEmpty()
+  // @IsString()
+  // image: string;
 
-  @ApiProperty({
-    description: 'URL de la segunda imagen del paquete de viaje',
-    example: 'https://example.com/colosseum-tour2.jpg',
-  })
-  @IsNotEmpty()
-  @IsString()
-  image2: string;
+  // @ApiProperty({
+  //   description: 'URL de la segunda imagen del paquete de viaje',
+  //   example: 'https://example.com/colosseum-tour2.jpg',
+  // })
+  // @IsNotEmpty()
+  // @IsString()
+  // image2: string;
 
-  @ApiProperty({
-    description: 'URL de la tercera imagen del paquete de viaje',
-    example: 'https://example.com/colosseum-tour3.jpg',
-  })
-  @IsNotEmpty()
-  @IsString()
-  image3: string;
+  // @ApiProperty({
+  //   description: 'URL de la tercera imagen del paquete de viaje',
+  //   example: 'https://example.com/colosseum-tour3.jpg',
+  // })
+  // @IsNotEmpty()
+  // @IsString()
+  // image3: string;
 
   @ApiProperty({
     description: 'Ubicación del paquete de viaje',
@@ -81,6 +81,7 @@ export class CreateProductDto {
     example: 127,
   })
   @IsNotEmpty()
+  @Type(() => Number)
   @IsNumber()
   price: number;
 
@@ -89,6 +90,7 @@ export class CreateProductDto {
     example: 30,
   })
   @IsNotEmpty()
+  @Type(() => Number)
   @IsNumber()
   stock: number;
 
@@ -110,33 +112,45 @@ export class CreateProductDto {
   })
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => {
+    // Intenta convertir el string a un array
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        // Si no se puede convertir, retorna un array vacío o lanza un error
+        return [];
+      }
+    }
+    return value; // Si ya es un array, lo devuelve tal cual
+  })
   categories: string[];
 }
 
 export class UpdateProductDto {
-  @ApiPropertyOptional({
-    description: 'URL de la imagen principal del paquete de viaje',
-    example: 'https://example.com/colosseum-tour.jpg',
-  })
-  @IsOptional()
-  @IsString()
-  image?: string;
+  // @ApiPropertyOptional({
+  //   description: 'URL de la imagen principal del paquete de viaje',
+  //   example: 'https://example.com/colosseum-tour.jpg',
+  // })
+  // @IsOptional()
+  // @IsString()
+  // image?: string;
 
-  @ApiPropertyOptional({
-    description: 'URL de la segunda imagen del paquete de viaje',
-    example: 'https://example.com/colosseum-tour2.jpg',
-  })
-  @IsOptional()
-  @IsString()
-  image2?: string;
+  // @ApiPropertyOptional({
+  //   description: 'URL de la segunda imagen del paquete de viaje',
+  //   example: 'https://example.com/colosseum-tour2.jpg',
+  // })
+  // @IsOptional()
+  // @IsString()
+  // image2?: string;
 
-  @ApiPropertyOptional({
-    description: 'URL de la tercera imagen del paquete de viaje',
-    example: 'https://example.com/colosseum-tour3.jpg',
-  })
-  @IsOptional()
-  @IsString()
-  image3?: string;
+  // @ApiPropertyOptional({
+  //   description: 'URL de la tercera imagen del paquete de viaje',
+  //   example: 'https://example.com/colosseum-tour3.jpg',
+  // })
+  // @IsOptional()
+  // @IsString()
+  // image3?: string;
 
   @ApiPropertyOptional({
     description: 'Ubicación del paquete de viaje',

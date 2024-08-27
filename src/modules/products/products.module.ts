@@ -6,6 +6,7 @@ import { ProductEntity } from './product.entity';
 import { ProductsRepository } from './product.repository';
 import { CategoryEntity } from '../categories/category.entity';
 import { CategoriesModule } from '../categories/categories.module';
+import { FileUploadRepository } from '../file-upload/file-upload.repository';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { CategoriesModule } from '../categories/categories.module';
     CategoriesModule
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsRepository],
+  providers: [ProductsService, ProductsRepository, FileUploadRepository],
 })
 export class ProductsModule {}

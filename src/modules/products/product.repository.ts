@@ -13,6 +13,7 @@ import {
   UpdateProductDto,
 } from './product.dto';
 import { CategoryEntity } from '../categories/category.entity';
+import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class ProductsRepository {
@@ -31,6 +32,7 @@ export class ProductsRepository {
       if (location) whereClause.location = location;
       if (price) whereClause.price = price;
       if (duration) whereClause.duration = duration;
+      whereClause.isActive = true;
   
       const query = this.productsRepository.createQueryBuilder('product')
         .leftJoinAndSelect('product.categories', 'category');
@@ -102,6 +104,7 @@ export class ProductsRepository {
 
       return await this.productsRepository.save(newProduct);
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException('Error creando el producto');
     }
   }
@@ -158,7 +161,22 @@ export class ProductsRepository {
       if (!productById) {
         throw new BadRequestException('ID de producto inexistente');
       }
+      const imageFields = ['image', 'image2', 'image3'];
 
+      // Eliminar imágenes de Cloudinary si existen
+      for (const field of imageFields) {
+        if (productById[field] && productById[field].includes("res.cloudinary.com")) {
+          const publicId = productById[field].split("/").pop()?.split(".")[0];
+          if (publicId) {
+            try {
+              await cloudinary.uploader.destroy(`travel_zone_cloudinary/${publicId}`);
+            } catch (destroyError) {
+              console.error(`Error al eliminar la imagen ${field} de Cloudinary:`, destroyError);
+              throw new InternalServerErrorException(`Error al eliminar la imagen ${field} de Cloudinary`);
+            }
+          }
+        }
+      }
       productById.isActive = false;
       await this.productsRepository.save(productById);
       return 'Producto eliminado correctamente';
