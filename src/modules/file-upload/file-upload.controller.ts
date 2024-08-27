@@ -1,26 +1,28 @@
 import {
     Controller,
-    FileTypeValidator,
-    MaxFileSizeValidator,
-    Param,
-    ParseFilePipe,
     Post,
-    UploadedFile,
-    UseGuards,
+    UploadedFiles,
     UseInterceptors,
-} from '@nestjs/common';
-    import { FileUploadService } from './file-upload.service';
-    import { FileInterceptor } from '@nestjs/platform-express';
-    import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-    import { AuthGuard } from '../auth/guards/auth.guard';
-
-    @ApiTags('file-upload')
-    @Controller('file-upload')
-    export class FileUploadController {
+    UseGuards,
+    BadRequestException,
+    InternalServerErrorException,
+    Param,
+    HttpException,
+  } from '@nestjs/common';
+  import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+  import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+  import { AuthGuard } from '../auth/guards/auth.guard';
+  import { FileUploadService } from './file-upload.service';
+  import { diskStorage } from 'multer';
+  import { extname } from 'path';
+  
+  @ApiTags('file-upload')
+  @Controller('file-upload')
+  export class FileUploadController {
     constructor(private readonly fileUploadService: FileUploadService) {}
-
-    @Post('uploadImage/:id')
-    @ApiOperation({ summary: 'Upload images for a product', description: 'Upload images for a specific product identified by its ID' })
+  
+    @Post('uploadImages/:id')
+    @ApiOperation({ summary: 'Upload images for a product', description: 'Upload up to 3 images for a product' })
     @ApiResponse({ status: 200, description: 'Images uploaded successfully' })
     @ApiResponse({ status: 400, description: 'Bad request' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
@@ -28,73 +30,40 @@ import {
     @UseGuards(AuthGuard)
     @ApiConsumes('multipart/form-data')
     @ApiBody({
-        schema: {
+      schema: {
         type: 'object',
         properties: {
-        image: {
+          image: {
             type: 'string',
             format: 'binary',
-            description: 'Primary image to be uploaded',
-        },
-        image2: {
+          },
+          image2: {
             type: 'string',
             format: 'binary',
-            description: 'Secondary image to be uploaded',
-        },
-        image3: {
+          },
+          image3: {
             type: 'string',
             format: 'binary',
-            description: 'Tertiary image to be uploaded',
+          },
         },
-        },
-    },
+      },
     })
-    @UseInterceptors(FileInterceptor('image'))
+    @UseInterceptors(
+      FileFieldsInterceptor([
+        { name: 'image', maxCount: 1 },
+        { name: 'image2', maxCount: 1 },
+        { name: 'image3', maxCount: 1 },
+      ]),
+    )
     async uploadImages(
-    @Param('id') productId: string,
-    @UploadedFile(
-        new ParseFilePipe({
-        validators: [
-            new MaxFileSizeValidator({
-              maxSize: 200000, // 200kb
-                message: 'Supera el máximo permitido: 200kb',
-            }),
-            new FileTypeValidator({
-            fileType: /(.jpg|.jpeg|.png|.webp)/,
-            }),
-        ],
-        }),
-    ) image: Express.Multer.File,
-        @UploadedFile(
-        new ParseFilePipe({
-        validators: [
-            new MaxFileSizeValidator({
-              maxSize: 200000, // 200kb
-            message: 'Supera el máximo permitido: 200kb',
-            }),
-            new FileTypeValidator({
-            fileType: /(.jpg|.jpeg|.png|.webp)/,
-            }),
-        ],
-        }),
-    ) image2: Express.Multer.File,
-        @UploadedFile(
-        new ParseFilePipe({
-        validators: [
-            new MaxFileSizeValidator({
-              maxSize: 200000, // 200kb
-                message: 'Supera el máximo permitido: 200kb',
-            }),
-            new FileTypeValidator({
-                fileType: /(.jpg|.jpeg|.png|.webp)/,
-            }),
-            ],
-        }),
-    ) image3: Express.Multer.File,
+      @Param('id') productId: string,
+      @UploadedFiles() files: { image?: Express.Multer.File[], image2?: Express.Multer.File[], image3?: Express.Multer.File[] },
     ) {
-    return this.fileUploadService.uploadImages(
-        { image, image2, image3 },
-        productId,
-        );
+      try {
+        return await this.fileUploadService.uploadImages(files, productId);
+      } catch (error) {
+        throw new InternalServerErrorException('Error uploading images');
+      }
     }
-}
+  }
+  

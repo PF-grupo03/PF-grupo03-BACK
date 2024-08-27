@@ -25,37 +25,44 @@ export class ProductsRepository {
 
   async getProducts(params?: FiltersProductsDto) {
     const { limit, page, title, location, price, duration, categories } = params;
-    // console.log(isActive)
     try {
-      const whereClause: TWhereClause = {}
-        if (title) whereClause.title = title;
-        if (location) whereClause.location = location;
-        if (price) whereClause.price = price;
-        if (duration) whereClause.duration = duration;
-        // if (typeof isActive === 'undefined') whereClause.isActive = isActive
-        // console.log('whereClause:', whereClause);
-
-        const products = await this.productsRepository.find({
-          where: whereClause,
-          take: limit || undefined,
-          skip: page ? (page - 1) * limit : undefined,
-          relations: {
-              categories: true,
-          },
-      });
- 
-      if (categories && categories.length > 0) {
-          return products.filter(product => 
-              product.categories.some(category => categories.includes(category.name))
-          );
+      const whereClause: TWhereClause = {};
+      if (title) whereClause.title = title;
+      if (location) whereClause.location = location;
+      if (price) whereClause.price = price;
+      if (duration) whereClause.duration = duration;
+  
+      const query = this.productsRepository.createQueryBuilder('product')
+        .leftJoinAndSelect('product.categories', 'category');
+  
+      if (title) query.andWhere('product.title = :title', { title });
+      if (location) query.andWhere('product.location = :location', { location });
+      if (price) query.andWhere('product.price = :price', { price });
+      if (duration) query.andWhere('product.duration = :duration', { duration });
+  
+      // Si 'categories' es un string, convertirlo en un array con un solo elemento
+      const categoriesArray = categories
+        ? (Array.isArray(categories) ? categories : [categories])
+        : [];
+  
+      // Aplicar filtro de categorías solo si `categoriesArray` tiene elementos
+      if (categoriesArray.length > 0) {
+        query.andWhere('category.name IN (:...categories)', { categories: categoriesArray });
       }
-
+  
+      const products = await query
+        .take(limit || undefined)
+        .skip(page ? (page - 1) * limit : undefined)
+        .getMany();
+  
       return products;
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Error obteniendo productos');
     }
   }
+  
+
 
 
   async getProductById(id: string) {

@@ -282,24 +282,31 @@ export class FiltersProductsDto {
 
   @ApiPropertyOptional({
     description: 'Filtrar por categorías',
-    example: '["diseño de sonrisa"]',
+    example: 'diseño de sonrisa o ["diseño de sonrisa", "implantes dentales"]',
   })
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
   @Transform(({ value }) => {
-    // Intenta convertir el string a un array
+    // Si el valor es un string que no parece un array, lo convertimos a array
+    if (typeof value === 'string' && !value.startsWith('[')) {
+      return [value];
+    }
+  
+    // Si ya es un array de strings o un string en formato JSON, lo procesamos
     if (typeof value === 'string') {
       try {
         return JSON.parse(value);
       } catch (e) {
-        // Si no se puede convertir, retorna un array vacío o lanza un error
-        return [];
+        // Si falla el parseo, lo dejamos como un array con el string original
+        return [value];
       }
     }
+  
     return value; // Si ya es un array, lo devuelve tal cual
   })
+  @IsArray()
+  @IsString({ each: true })
   categories?: string[];
+  
 }
 
 export type TWhereClause = {

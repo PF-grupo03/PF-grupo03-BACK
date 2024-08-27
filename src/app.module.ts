@@ -15,6 +15,7 @@ import { AppService } from './app.service';
 import { SeederService } from './seeders/seeder.service';
 import { ProductEntity } from './modules/products/product.entity';
 import { CategoryEntity } from './modules/categories/category.entity';
+import { CloudinaryConfig } from './config/cloudinary.config';
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { CategoryEntity } from './modules/categories/category.entity';
     TypeOrmModule.forFeature([CategoryEntity, ProductEntity]),
   ],
   controllers: [AppController],
-  providers: [AppService, SeederService],
+  providers: [AppService, SeederService, CloudinaryConfig],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
@@ -51,3 +52,4 @@ export class AppModule implements OnModuleInit {
     }
   }
 }
+
