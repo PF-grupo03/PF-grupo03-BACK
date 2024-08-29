@@ -3,7 +3,8 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/user.dto';
 import { UsersRepository } from '../users/user.repository';
-import { MailService } from 'src/mail/mail.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { MailService } from '../../mail/mail.service';
 
 
 @Injectable()
@@ -11,7 +12,7 @@ export class AuthService {
     constructor (
         private readonly usersRepository: UsersRepository,
         private readonly jwtService: JwtService,
-        private mailService: MailService,
+        private readonly mailService: MailService
 
     ) {}
 
@@ -56,7 +57,7 @@ export class AuthService {
 
     async signUp(user: CreateUserDto) {
         const { email, password } = user;
-        
+
         //* Hashear la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -65,9 +66,10 @@ export class AuthService {
             ...user,
             password: hashedPassword
         })
-        await this.mailService.sendUserConfirmation(user);
 
-        return {
+        await this.mailService.sendWelcomeEmail(user);
+
+                return {
             message: 'Usuario registrado exitosamente',
             user: newUser
         };
