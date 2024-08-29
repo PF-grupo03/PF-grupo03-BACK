@@ -69,7 +69,7 @@ export class AuthController {
             return res.redirect('/auth/signup');
         }
     
-        const redirectUrl = 'https://http://localhost:3000/';
+        const redirectUrl = 'https://localhost:3000/';
         return res.redirect(redirectUrl);
         // res.setHeader('Authorization', `Bearer ${user.token}`);
         // res.json(user);
