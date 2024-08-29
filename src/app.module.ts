@@ -16,6 +16,7 @@ import { SeederService } from './seeders/seeder.service';
 import { ProductEntity } from './modules/products/product.entity';
 import { CategoryEntity } from './modules/categories/category.entity';
 import { CloudinaryConfig } from './config/cloudinary.config';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CloudinaryConfig } from './config/cloudinary.config';
     FileUploadModule,
     OrdersModule,
     TypeOrmModule.forFeature([CategoryEntity, ProductEntity]),
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeederService, CloudinaryConfig],
