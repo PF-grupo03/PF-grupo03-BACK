@@ -5,11 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../users/user.entity';
 import { UsersRepository } from '../users/user.repository';
 import { GoogleStrategy } from './google.strategy';
-import { MailService } from '../mailer/mail.service';
+import { MailModule } from '../../mail/mail.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), MailService],
+  imports: [TypeOrmModule.forFeature([UserEntity]), MailModule],
   controllers: [AuthController],
   providers: [AuthService, UsersRepository, GoogleStrategy, GoogleStrategy]
 })

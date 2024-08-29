@@ -4,9 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailRepository } from './mail.repository';
+import { MailService } from './mail.service';
 
 @Module({
-    exports: [MailerService],
+    exports: [MailService],
     imports: [
     MailerModule.forRootAsync({
         useFactory: async (config: ConfigService) => ({
@@ -32,6 +33,6 @@ import { MailRepository } from './mail.repository';
         inject: [ConfigService],
         })
     ],
-    providers: [MailerService, MailRepository],
+    providers: [MailRepository, MailService],
 })
 export class MailModule {}

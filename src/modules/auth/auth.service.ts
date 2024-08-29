@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/user.dto';
 import { UsersRepository } from '../users/user.repository';
 import { MailerService } from '@nestjs-modules/mailer';
-import { MailService } from '../mailer/mail.service';
+import { MailService } from '../../mail/mail.service';
 
 
 @Injectable()
@@ -67,7 +67,7 @@ export class AuthService {
             password: hashedPassword
         })
 
-        this.mailService.sendWelcomeEmail(user.name, user.email);
+        await this.mailService.sendWelcomeEmail(user);
 
                 return {
             message: 'Usuario registrado exitosamente',
