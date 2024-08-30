@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
+  import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
 import { CreateOrderDto } from "./orders.dto";
@@ -6,6 +6,7 @@ import { ProductEntity } from "../products/product.entity";
 import { UserEntity } from "../users/user.entity";
 import { OrderEntity } from "./order.entity";
 import { OrderDetailsEntity } from "./orderDetails.entity";
+// import { stripe } from "src/config/stripe.config";
 
 @Injectable()
 export class OrdersRepository {
@@ -14,12 +15,6 @@ export class OrdersRepository {
         private entityManager: EntityManager,
         @InjectRepository(OrderEntity)
         private ordersRepository: Repository<OrderEntity>,
-        @InjectRepository(OrderDetailsEntity)
-        private orderDetailsRepository: Repository<OrderDetailsEntity>,
-        @InjectRepository(UserEntity)
-        private usersRepository: Repository<UserEntity>,
-        @InjectRepository(ProductEntity)
-        private productsRepository: Repository<ProductEntity>,
     ) {}
 
     async addOrder(userId: string, products: CreateOrderDto['products']) {
@@ -68,6 +63,23 @@ export class OrdersRepository {
                 if (total > 200) {
                     finalTotal = (total - 200) * 1.13 + 200;
                 }
+
+                // const session = await stripe.checkout.sessions.create({
+                //     payment_method_types: ['card'],
+                //     line_items: productsArray.map(product => ({
+                //         price_data: {
+                //             currency: 'usd',
+                //             product_data: {
+                //                 name: product.title,
+                //             },
+                //             unit_amount: Math.round(product.price * 100),
+                //         },
+                //         quantity: 1,
+                //     })),
+                //     mode: "payment",
+                //     success_url: '',
+                //     cancel_url: '',
+                // }) inicio pasarela de pagos
 
                 const orderDetail = new OrderDetailsEntity();
                 orderDetail.price = Number(finalTotal.toFixed(2));
