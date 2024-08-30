@@ -1,8 +1,11 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { CreateOrderDto } from './orders.dto';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../users/roles.enum';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @ApiTags('orders')
 @Controller('orders')
@@ -16,7 +19,8 @@ export class OrdersController {
     @ApiResponse({ status: 500, description: 'Internal server error' })
     @ApiBody({ type: [CreateOrderDto] })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(Role.User)
     addOrder(@Body() order: CreateOrderDto) {
         const { userId, products} = order;
         return this.orderService.addOrder(userId, products);
@@ -29,7 +33,8 @@ export class OrdersController {
     @ApiResponse({ status: 404, description: 'Order not found' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(Role.User)
     getOrder(@Param('id', ParseUUIDPipe) id: string) {
         return this.orderService.getOrder(id);
     }

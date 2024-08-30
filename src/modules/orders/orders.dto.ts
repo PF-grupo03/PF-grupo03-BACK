@@ -1,5 +1,5 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsUUID } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { ArrayMinSize, IsArray, IsEmpty, IsNotEmpty, IsUUID } from "class-validator";
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { ProductEntity } from "../products/product.entity";
 
 export class CreateOrderDto {
@@ -19,4 +19,12 @@ export class CreateOrderDto {
     @IsArray()
     @ArrayMinSize(1)
     products: Partial<ProductEntity>[];
+
+    @ApiHideProperty()
+    @IsEmpty()
+    stripeSessionId: string;
+
+    @ApiHideProperty()
+    @IsEmpty()
+    status: string;
 }
