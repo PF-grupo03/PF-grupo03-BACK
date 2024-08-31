@@ -9,8 +9,8 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
-import { OrdersModule } from './modules/orders/orders.module';
-import { AppController } from './app.controller';
+/* import { OrdersModule } from './modules/orders/orders.module';
+ */import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SeederService } from './seeders/seeder.service';
 import { ProductEntity } from './modules/products/product.entity';
@@ -38,7 +38,7 @@ import { MailModule } from './mail/mail.module';
     AuthModule,
     CategoriesModule,
     FileUploadModule,
-    OrdersModule,
+    /* OrdersModule, */
     TypeOrmModule.forFeature([CategoryEntity, ProductEntity]),
     MailModule,
   ],

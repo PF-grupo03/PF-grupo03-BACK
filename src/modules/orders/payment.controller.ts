@@ -1,4 +1,4 @@
-import {
+/* import {
   BadRequestException,
   Controller,
   Post,
@@ -37,7 +37,7 @@ export class PaymentsController {
     order.status = OrderStatus.COMPLETED;
     await this.ordersRepository.save(order);
 
-     const orderConStock = await this.ordersRepository.findOne({
+    const orderConStock = await this.ordersRepository.findOne({
             where: { id: order.id },
             relations: {
                 orderDetails: {
@@ -100,3 +100,4 @@ export class PaymentsController {
     });
   }
 }
+ */

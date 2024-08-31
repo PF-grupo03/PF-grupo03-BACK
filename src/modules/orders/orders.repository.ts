@@ -1,4 +1,4 @@
-  import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
+/* import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
 import { CreateOrderDto } from "./orders.dto";
@@ -13,7 +13,7 @@ export class OrdersRepository {
     constructor(
         @InjectEntityManager()
         private entityManager: EntityManager,
-        @InjectRepository(OrderEntity) 
+        @InjectRepository(OrderEntity)
         private ordersRepository: Repository<OrderEntity>,
     ) {}
 
@@ -133,3 +133,4 @@ export class OrdersRepository {
     }
 }
 
+ */

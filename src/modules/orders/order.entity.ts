@@ -29,9 +29,9 @@ export class OrderEntity {
   })
   status: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.order)
+/*   @ManyToOne(() => UserEntity, (user) => user.order)
   user: UserEntity;
 
   @OneToOne(() => OrderDetailsEntity, (orderDetails) => orderDetails.order)
-  orderDetails: OrderDetailsEntity;
+  orderDetails: OrderDetailsEntity; */
 }

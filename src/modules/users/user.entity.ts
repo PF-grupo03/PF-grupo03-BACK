@@ -44,6 +44,6 @@ export class UserEntity {
   })
   isAdmin: boolean;
 
-  @OneToMany(() => OrderEntity, (order) => order.user)
-  order?: OrderEntity[];
+  /* @OneToMany(() => OrderEntity, (order) => order.user)
+  order?: OrderEntity[]; */
 }

@@ -19,8 +19,8 @@ export class OrderDetailsEntity {
   @Column()
   orderId: string;
 
-  @OneToOne(() => OrderEntity, (order) => order.orderDetails)
-  order: OrderEntity;
+/*   @OneToOne(() => OrderEntity, (order) => order.orderDetails)
+  order: OrderEntity; */
 
   @ManyToMany(() => ProductEntity, (product) => product.orderDetails)
   product: ProductEntity[];

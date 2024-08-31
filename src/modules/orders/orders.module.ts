@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+/* import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
 import { OrdersRepository } from './orders.repository';
@@ -14,3 +14,4 @@ import { PaymentsController } from './payment.controller';
   providers: [OrdersService, OrdersRepository],
 })
 export class OrdersModule {}
+ */
