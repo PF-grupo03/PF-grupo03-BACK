@@ -15,8 +15,9 @@ export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
 
 export const RESTART_SCHEMA = false;
 
+export const MAIL_HOST = process.env.MAIL_HOST;
+export const MAIL_USER = process.env.MAIL_USER;
+export const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
+export const MAIL_FROM = process.env.MAIL_FROM;
 
-export const MAIL_HOST= process.env.MAIL_HOST;
-export const MAIL_USER= process.env.MAIL_USER;
-export const MAIL_PASSWORD= process.env.MAIL_PASSWORD;
-export const MAIL_FROM= process.env.MAIL_FROM;
+export const STRIPE_PRIVATE_KEY = process.env.STRIPE_PRIVATE_KEY;
