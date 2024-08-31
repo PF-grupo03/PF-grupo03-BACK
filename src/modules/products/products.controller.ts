@@ -25,7 +25,6 @@ import { Role } from '../users/roles.enum';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import {
   FileFieldsInterceptor,
-  FilesInterceptor,
 } from '@nestjs/platform-express';
 
 @ApiTags('products')

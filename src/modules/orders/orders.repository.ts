@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
+  import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
 import { CreateOrderDto } from "./orders.dto";
@@ -6,20 +6,15 @@ import { ProductEntity } from "../products/product.entity";
 import { UserEntity } from "../users/user.entity";
 import { OrderEntity } from "./order.entity";
 import { OrderDetailsEntity } from "./orderDetails.entity";
+import { stripe } from "src/config/stripe.config";
 
 @Injectable()
 export class OrdersRepository {
     constructor(
         @InjectEntityManager()
         private entityManager: EntityManager,
-        @InjectRepository(OrderEntity)
+        @InjectRepository(OrderEntity) 
         private ordersRepository: Repository<OrderEntity>,
-        @InjectRepository(OrderDetailsEntity)
-        private orderDetailsRepository: Repository<OrderDetailsEntity>,
-        @InjectRepository(UserEntity)
-        private usersRepository: Repository<UserEntity>,
-        @InjectRepository(ProductEntity)
-        private productsRepository: Repository<ProductEntity>,
     ) {}
 
     async addOrder(userId: string, products: CreateOrderDto['products']) {
@@ -78,6 +73,31 @@ export class OrdersRepository {
                 newOrder.orderDetails = orderDetail;
                 await transactionalEntityManager.getRepository(OrderEntity).save(newOrder);
 
+                const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
+                const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
+
+                const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ['card'],
+                    line_items: productsArray.map(product => ({
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: product.title,
+                            },
+                            unit_amount: Math.round(product.price * 100),
+                        },
+                        quantity: 1,
+                    })),
+                    mode: "payment",
+                    success_url: successUrl,
+                    cancel_url: cancelUrl,
+                })
+
+                newOrder.stripeSessionId = session.id;
+                await transactionalEntityManager.getRepository(OrderEntity).save(newOrder)
+
+                return { sessionId: session.id };
+
             } catch (error) {
                 if (error instanceof BadRequestException) {
                     throw error;
@@ -86,24 +106,6 @@ export class OrdersRepository {
             }
 
         });
-
-        const orderConStock = await this.ordersRepository.findOne({
-            where: { id: order.id },
-            relations: {
-                orderDetails: {
-                    product: true,
-                },
-            },
-        });
-
-        const sanitizedOrder = {
-            ...orderConStock,
-            orderDetails: {
-                ...orderConStock.orderDetails,
-                products: orderConStock.orderDetails.product.map(({ stock, ...productWithoutStock }) => productWithoutStock)
-            }
-        };
-        return sanitizedOrder;
     }
 
     async getOrder(id: string) {
@@ -130,3 +132,4 @@ export class OrdersRepository {
         return sanitizedOrder;
     }
 }
+

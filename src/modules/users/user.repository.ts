@@ -129,6 +129,7 @@ export class UsersRepository {
 
       const { password, isAdmin, ...userNoPassword } = dbUser;
       return userNoPassword;
+
     } catch (error) {
       throw new BadRequestException(
         'Error al agregar el usuario: ' + error.message,
