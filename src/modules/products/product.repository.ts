@@ -41,7 +41,7 @@ export class ProductsRepository {
       if (location) query.andWhere('product.location = :location', { location });
       if (price) query.andWhere('product.price = :price', { price });
       if (duration) query.andWhere('product.duration = :duration', { duration });
-  
+      
       // Si 'categories' es un string, convertirlo en un array con un solo elemento
       const categoriesArray = categories
         ? (Array.isArray(categories) ? categories : [categories])
@@ -80,7 +80,7 @@ export class ProductsRepository {
       }
       return product;
     } catch (error) {
-      throw new InternalServerErrorException('Error obteniendo el producto');
+      throw new InternalServerErrorException('Error obteniendo el producto');  
     }
   }
 

@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/user.dto';
 import { UsersRepository } from '../users/user.repository';
-import { MailerService } from '@nestjs-modules/mailer';
 import { MailService } from '../../mail/mail.service';
 
 

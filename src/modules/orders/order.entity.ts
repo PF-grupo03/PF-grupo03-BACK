@@ -19,6 +19,16 @@ export class OrderEntity {
   @Column()
   date: Date;
 
+  @Column({
+    nullable: true,
+  })
+  stripeSessionId: string;
+
+  @Column({
+    default: 'PENDING'
+  })
+  status: string;
+
   @ManyToOne(() => UserEntity, (user) => user.order)
   user: UserEntity;
 
