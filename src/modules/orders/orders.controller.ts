@@ -39,3 +39,20 @@ export class OrdersController {
     }
 }
  */
+
+import { Controller, Post, Body } from '@nestjs/common';
+import { OrdersService } from './orders.service';
+import { CreateOrderDto, OrderResponseDto } from './orders.dto';
+
+
+@Controller('orders')
+export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
+
+  @Post()
+  async createOrder(
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<OrderResponseDto> {
+    return await this.ordersService.createOrder(createOrderDto);
+  }
+}

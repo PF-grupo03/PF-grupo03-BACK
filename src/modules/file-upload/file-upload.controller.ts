@@ -37,6 +37,7 @@ import {
             type: 'string',
             format: 'binary',
           },
+          
           image3: {
             type: 'string',
             format: 'binary',

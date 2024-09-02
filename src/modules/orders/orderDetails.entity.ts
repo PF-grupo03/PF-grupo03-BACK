@@ -1,27 +1,60 @@
+// import {
+//   Column,
+//   Entity,
+//   ManyToMany,
+//   OneToOne,
+//   PrimaryGeneratedColumn,
+// } from 'typeorm';
+// import { OrderEntity } from './order.entity';
+// import { ProductEntity } from '../products/product.entity';
+
+// @Entity('orderDetails')
+// export class OrderDetailsEntity {
+//   @PrimaryGeneratedColumn('uuid')
+//   id: string;
+
+//   @Column()
+//   price: number;
+
+//   @Column()
+//   orderId: string;
+
+// /*   @OneToOne(() => OrderEntity, (order) => order.orderDetails)
+//   order: OrderEntity; */
+
+//   @ManyToMany(() => ProductEntity, (product) => product.orderDetails)
+//   product: ProductEntity[];
+// }
+
 import {
   Column,
   Entity,
-  ManyToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { ProductEntity } from '../products/product.entity';
 
-@Entity('orderDetails')
+@Entity('order_details')
 export class OrderDetailsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
+  quantity: number;
+
+  @Column()
   price: number;
 
   @Column()
-  orderId: string;
+  isAdult: boolean;
 
-/*   @OneToOne(() => OrderEntity, (order) => order.orderDetails)
-  order: OrderEntity; */
+  @ManyToOne(() => OrderEntity, (order) => order.details)
+  @JoinColumn({ name: 'order_id' })
+  order: OrderEntity;
 
-  @ManyToMany(() => ProductEntity, (product) => product.orderDetails)
-  product: ProductEntity[];
+  @ManyToOne(() => ProductEntity)
+  @JoinColumn({ name: 'product_id' })
+  product: ProductEntity;
 }
