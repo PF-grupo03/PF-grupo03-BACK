@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
+/* import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateOrderDto } from './orders.dto';
@@ -19,8 +19,7 @@ export class OrdersController {
     @ApiResponse({ status: 500, description: 'Internal server error' })
     @ApiBody({ type: [CreateOrderDto] })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard, RolesGuard)
-    @Roles(Role.User)
+    @UseGuards(AuthGuard)
     addOrder(@Body() order: CreateOrderDto) {
         const { userId, products} = order;
         return this.orderService.addOrder(userId, products);
@@ -34,8 +33,26 @@ export class OrdersController {
     @ApiResponse({ status: 500, description: 'Internal server error' })
     @ApiBearerAuth()
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles(Role.User)
+    @Roles(Role.User || Role.Admin)
     getOrder(@Param('id', ParseUUIDPipe) id: string) {
         return this.orderService.getOrder(id);
     }
+}
+ */
+
+import { Controller, Post, Body } from '@nestjs/common';
+import { OrdersService } from './orders.service';
+import { CreateOrderDto, OrderResponseDto } from './orders.dto';
+
+
+@Controller('orders')
+export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
+
+  @Post()
+  async createOrder(
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<OrderResponseDto> {
+    return await this.ordersService.createOrder(createOrderDto);
+  }
 }

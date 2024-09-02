@@ -4,17 +4,13 @@ import {
     UploadedFiles,
     UseInterceptors,
     UseGuards,
-    BadRequestException,
     InternalServerErrorException,
     Param,
-    HttpException,
   } from '@nestjs/common';
-  import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+  import { FileFieldsInterceptor } from '@nestjs/platform-express';
   import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { AuthGuard } from '../auth/guards/auth.guard';
   import { FileUploadService } from './file-upload.service';
-  import { diskStorage } from 'multer';
-  import { extname } from 'path';
   
   @ApiTags('file-upload')
   @Controller('file-upload')
@@ -41,6 +37,7 @@ import {
             type: 'string',
             format: 'binary',
           },
+          
           image3: {
             type: 'string',
             format: 'binary',
@@ -65,5 +62,6 @@ import {
         throw new InternalServerErrorException('Error uploading images');
       }
     }
+
   }
   

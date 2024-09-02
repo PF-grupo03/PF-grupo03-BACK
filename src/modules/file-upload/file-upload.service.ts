@@ -10,7 +10,7 @@ export class FileUploadService {
   constructor(
     private readonly fileUploadRepository: FileUploadRepository,
     @InjectRepository(ProductEntity)
-    private readonly productsRepository: Repository<ProductEntity>,
+    private readonly productsRepository: Repository<ProductEntity>
   ) {}
 
   async uploadImages(files: { [key: string]: Express.Multer.File[] }, productId: string) {
@@ -60,5 +60,6 @@ export class FileUploadService {
       throw new InternalServerErrorException('Error al procesar la carga de imágenes');
     }
   }
+
 }
 
