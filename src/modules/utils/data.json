@@ -10,7 +10,8 @@
     "location": "Rome, Italy",
     "duration": "1 Day",
     "stock": 5,
-    "categories": ["diseño de sonrisa", "europa", "italia"]
+    "categories": ["diseño de sonrisa", "europa", "italia"],
+    "isActive": true
   },
   {
     "image": "https://res.cloudinary.com/dfaej4bi8/image/upload/v1724777407/travel_zone_cloudinary/z6lmteo0cuccsrc07xsn.jpg",
@@ -23,7 +24,8 @@
     "location": "New York, USA",
     "duration": "Half Day",
     "stock": 5,
-    "categories": ["américa", "estados unidos"]
+    "categories": ["américa", "estados unidos"],
+    "isActive": true
   },
   {
     "image": "https://res.cloudinary.com/dfaej4bi8/image/upload/v1724778144/travel_zone_cloudinary/dedcwbngy9upagbkyxov.jpg",
@@ -36,7 +38,8 @@
     "location": "Kyoto, Japan",
     "duration": "3 Hours",
     "stock": 5,
-    "categories": ["asia", "japón"]
+    "categories": ["asia", "japón"],
+    "isActive": true
   },
   {
     "image": "https://res.cloudinary.com/dfaej4bi8/image/upload/v1724777506/travel_zone_cloudinary/ikpy0ntya1hwwtcnmtwm.jpg",
@@ -49,7 +52,8 @@
     "location": "Sydney, Australia",
     "duration": "2 Hours",
     "stock": 5,
-    "categories": ["oceanía", "australia"]
+    "categories": ["oceanía", "australia"],
+    "isActive": true
   },
   {
     "image": "https://res.cloudinary.com/dfaej4bi8/image/upload/v1724778073/travel_zone_cloudinary/exhzp5qn2fqq70b92jvm.jpg",
@@ -62,7 +66,8 @@
     "location": "Rio de Janeiro, Brazil",
     "duration": "1 Day",
     "stock": 5,
-    "categories": ["américa", "brasil"]
+    "categories": ["américa", "brasil"],
+    "isActive": true
   },
   {
     "image": "https://res.cloudinary.com/dfaej4bi8/image/upload/v1724775831/travel_zone_cloudinary/buedjhrytuphsivt7sa7.jpg",
@@ -75,7 +80,8 @@
     "location": "Cairo, Egypt",
     "duration": "1 Day",
     "stock": 5,
-    "categories": ["áfrica", "egipto"]
+    "categories": ["áfrica", "egipto"],
+    "isActive": true
   },
   {
     "image": "https://res.cloudinary.com/dfaej4bi8/image/upload/v1724777564/travel_zone_cloudinary/rxbgltyebrp9wryspemz.jpg",
@@ -88,6 +94,9 @@
     "location": "Maui, Hawaii",
     "duration": "2 Hours",
     "stock": 5,
-    "categories": ["oceanía", "hawái"]
+    "categories": ["oceanía", "hawái"],
+    "isActive": true
   }
 ]
+
+

@@ -1,12 +1,49 @@
+// import {
+//   Column,
+//   Entity,
+//   ManyToOne,
+//   OneToOne,
+//   PrimaryGeneratedColumn,
+// } from 'typeorm';
+// import { UserEntity } from '../users/user.entity';
+// import { OrderDetailsEntity } from './orderDetails.entity';
+
+// @Entity('orders')
+// export class OrderEntity {
+//   @PrimaryGeneratedColumn('uuid')
+//   id: string;
+
+//   @Column()
+//   userId: string;
+
+//   @Column()
+//   date: Date;
+
+//   @Column({
+//     nullable: true,
+//   })
+//   stripeSessionId: string;
+
+//   @Column({
+//     default: 'PENDING'
+//   })
+//   status: string;
+
+// /*   @ManyToOne(() => UserEntity, (user) => user.order)
+//   user: UserEntity;
+
+//   @OneToOne(() => OrderDetailsEntity, (orderDetails) => orderDetails.order)
+//   orderDetails: OrderDetailsEntity; */
+// }
+
 import {
   Column,
   Entity,
-  ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
-import { UserEntity } from '../users/user.entity';
 import { OrderDetailsEntity } from './orderDetails.entity';
+
 
 @Entity('orders')
 export class OrderEntity {
@@ -14,24 +51,17 @@ export class OrderEntity {
   id: string;
 
   @Column()
-  userId: string;
+  total: number;
 
   @Column()
-  date: Date;
+  passengerName: string;
 
-  @Column({
-    nullable: true,
-  })
-  stripeSessionId: string;
+  @Column()
+  passengerSurname: string;
 
-  @Column({
-    default: 'PENDING'
-  })
-  status: string;
+  @Column()
+  passengerDni: string;
 
-/*   @ManyToOne(() => UserEntity, (user) => user.order)
-  user: UserEntity;
-
-  @OneToOne(() => OrderDetailsEntity, (orderDetails) => orderDetails.order)
-  orderDetails: OrderDetailsEntity; */
+  @OneToMany(() => OrderDetailsEntity, (orderDetails) => orderDetails.order)
+  details: OrderDetailsEntity[];
 }

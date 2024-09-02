@@ -16,3 +16,21 @@ export class OrdersService {
     }
 }
  */
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrdersRepository } from './orders.repository';
+import { CreateOrderDto, OrderResponseDto } from './orders.dto';
+
+
+@Injectable()
+export class OrdersService {
+  constructor(
+    @InjectRepository(OrdersRepository)
+    private readonly ordersRepo: OrdersRepository,
+  ) {}
+
+  async createOrder(dto: CreateOrderDto): Promise<OrderResponseDto> {
+    return await this.ordersRepo.createOrder(dto);
+  }
+}
+
