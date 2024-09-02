@@ -1,4 +1,5 @@
 import { config as dotenvConfig } from 'dotenv';
+import { truncate } from 'fs/promises';
 dotenvConfig({ path: '.development.env' });
 
 export const DB_NAME = process.env.DB_NAME;

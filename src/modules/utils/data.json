@@ -10,7 +10,8 @@
     "location": "Rome, Italy",
     "duration": "1 Day",
     "stock": 5,
-    "categories": ["diseño de sonrisa", "europa", "italia"]
+    "categories": ["diseño de sonrisa", "europa", "italia"],
+    "isActive": true
   },
   {
     "image": "/Imagenes detalle Paquete/Statue of Liberty/Statue1.jpg",
@@ -23,7 +24,8 @@
     "location": "New York, USA",
     "duration": "Half Day",
     "stock": 5,
-    "categories": ["américa", "estados unidos"]
+    "categories": ["américa", "estados unidos"],
+    "isActive": true
   },
   {
     "image": "/Imagenes detalle Paquete/The big buddha/Buddha1.jpg",
@@ -36,7 +38,8 @@
     "location": "Kyoto, Japan",
     "duration": "3 Hours",
     "stock": 5,
-    "categories": ["asia", "japón"]
+    "categories": ["asia", "japón"],
+    "isActive": true
   },
   {
     "image": "/Imagenes detalle Paquete/Sydney Opera/Sydney1.jpg",
@@ -49,7 +52,8 @@
     "location": "Sydney, Australia",
     "duration": "2 Hours",
     "stock": 5,
-    "categories": ["oceanía", "australia"]
+    "categories": ["oceanía", "australia"],
+    "isActive": true
   },
   {
     "image": "/Imagenes detalle Paquete/Christ the Redeemer/Christ1.jpg",
@@ -62,7 +66,8 @@
     "location": "Rio de Janeiro, Brazil",
     "duration": "1 Day",
     "stock": 5,
-    "categories": ["américa", "brasil"]
+    "categories": ["américa", "brasil"],
+    "isActive": true
   },
   {
     "image": "/Imagenes detalle Paquete/Pyramids of Giza/Pyramids1.jpg",
@@ -75,7 +80,8 @@
     "location": "Cairo, Egypt",
     "duration": "1 Day",
     "stock": 5,
-    "categories": ["áfrica", "egipto"]
+    "categories": ["áfrica", "egipto"],
+    "isActive": true
   },
   {
     "image": "/Imagenes detalle Paquete/Maui/Maui1.jpg",
@@ -88,7 +94,37 @@
     "location": "Maui, Hawaii",
     "duration": "2 Hours",
     "stock": 5,
-    "categories": ["oceanía", "hawái"]
+    "categories": ["oceanía", "hawái"],
+    "isActive": true
+  },
+  {
+    "image": "/Imagenes detalle Paquete/Great Wall of China/GreatWall1.jpg",
+    "image2": "/Imagenes detalle Paquete/Great Wall of China/GreatWall2.jpg",
+    "image3": "/Imagenes detalle Paquete/Great Wall of China/GreatWall3.jpg",
+    "title": "Great Wall of China Full Day Tour",
+    "description": "Explore the majestic Great Wall of China on a full-day guided tour.",
+    "description2": "Este tour de un día completo te lleva a explorar una de las maravillas del mundo antiguo, la Gran Muralla China. Guiado por un experto local, caminarás por secciones de la muralla que ofrecen vistas panorámicas impresionantes y aprenderás sobre su historia y construcción. El recorrido incluye una visita a torres de vigilancia y una oportunidad para disfrutar de la belleza natural que rodea esta histórica estructura. Es una experiencia educativa y visualmente impactante, ideal para quienes desean sumergirse en la historia y cultura china.",
+    "price": 140,
+    "location": "Beijing, China",
+    "duration": "1 Day",
+    "stock": 5,
+    "categories": ["asia", "china"],
+    "isActive": true
+  },
+  {
+    "image": "/Imagenes detalle Paquete/Santorini/Santorini1.jpg",
+    "image2": "/Imagenes detalle Paquete/Santorini/Santorini2.jpg",
+    "image3": "/Imagenes detalle Paquete/Santorini/Santorini3.jpg",
+    "title": "Santorini Sunset Cruise",
+    "description": "Sail around Santorini and witness the stunning sunset views.",
+    "description2": "Este crucero al atardecer por Santorini te ofrece la oportunidad de ver la impresionante belleza de la isla desde el mar. Navegarás alrededor de las costas de Santorini, disfrutando de vistas panorámicas de los acantilados y las casas blancas que se asoman al mar. El tour incluye una parada para nadar en aguas cristalinas y un festín de comidas y bebidas locales mientras el sol se pone en el horizonte, creando una experiencia romántica y memorable.",
+    "price": 220,
+    "location": "Santorini, Greece",
+    "duration": "4 Hours",
+    "stock": 5,
+    "categories": ["europa", "grecia"],
+    "isActive": true
   }
 ]
+
 
