@@ -175,25 +175,6 @@ export class LoginUserDto extends PickType(CreateUserDto, [
 export class mailUserDto extends PickType(CreateUserDto, ['name', 'email']) {}
 
 export class bannedUserDto {
-
-  @ApiProperty({
-    example: 'true',
-  })
-  @IsBoolean()
-  isBanned: boolean;
-
-  @ApiProperty({
-    example: 'johndoe@example.com',
-  })
-  @IsEmail()
-  email: string;
-
-  @ApiProperty({
-    example: 'John Doe',
-  })
-  @IsString()
-  name: string;
-
   @ApiProperty({
     example: 'usuario suspendido por infligir nuestras nomrmas',
   })

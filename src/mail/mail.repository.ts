@@ -1,6 +1,6 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
-import { bannedUserDto, CreateUserDto } from "../modules/users/user.dto";
+import { bannedUserDto, CreateUserDto, UpdateUserDto } from "../modules/users/user.dto";
 import path from "path";
 import fs from 'fs';
 import { existsSync } from 'fs';
@@ -42,7 +42,7 @@ export class MailRepository {
         return user;
     }
 
-    async userSuspensionEmail(userbanned: bannedUserDto) {
+    async userSuspensionEmail(user: UpdateUserDto, userbanned: bannedUserDto) {
 
         const emailTemplatePath = path.resolve(__dirname, 'template', 'emailBaneo.template.html');
 
@@ -52,13 +52,13 @@ export class MailRepository {
         }
 
         let emailHtml = fs.readFileSync(emailTemplatePath, 'utf8');
-        emailHtml = emailHtml.replace(/\[name\]/g, userbanned.name);
+        emailHtml = emailHtml.replace(/\[name\]/g, user.name);
         emailHtml = emailHtml.replace(/\[motive\]/g, userbanned.motive);
-        emailHtml = emailHtml.replace(/\[email\]/g, userbanned.email);
+        emailHtml = emailHtml.replace(/\[email\]/g, user.email);
 
         const mailOptions = {
             from: process.env.MAIL_USER,
-            to: userbanned.email,
+            to: user.email,
             subject: 'Cuenta suspendida en Travel Zone',
             html: emailHtml
         };

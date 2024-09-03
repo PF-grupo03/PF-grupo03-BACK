@@ -37,4 +37,8 @@ export class UsersService {
   async banUser(bannedUserDto: bannedUserDto, id: string) {
     return this.usersRepository.banUser(bannedUserDto, id);
   }
+
+  async unbanUser(id: string) {
+    return this.usersRepository.unbanUser(id);
+  }
 }

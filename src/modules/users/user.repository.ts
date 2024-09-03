@@ -164,10 +164,11 @@ export class UsersRepository {
       const user = await this.getUserById(id);
       if (!user) {
         throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+        console.log('No se encontro el usuario');
       }
       user.isBanned = true;
       await this.usersRepository.save(user);
-      this.mailRepository.userSuspensionEmail(userbanned)
+      this.mailRepository.userSuspensionEmail(user, userbanned)
       return {
         message: 'Usuario baneado correctamente',
       };
@@ -175,4 +176,20 @@ export class UsersRepository {
       throw new InternalServerErrorException('Error baneando el usuario');
     }
 }
+
+  async unbanUser(id: string) {
+    try {
+      const user = await this.getUserById(id);
+      if (!user) {
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+      }
+      user.isBanned = false;
+      await this.usersRepository.save(user);
+      return {
+        message: 'Usuario desbaneado correctamente',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Error desbaneando el usuario');
+    }
+  }
 }
