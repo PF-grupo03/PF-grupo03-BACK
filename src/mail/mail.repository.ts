@@ -12,7 +12,7 @@ export class MailRepository {
 
     async sendWelcomeEmail(user: CreateUserDto) {
 
-        const emailTemplatePath = path.join(__dirname, 'template', 'emailRegistro.template.html');
+        const emailTemplatePath = path.resolve(__dirname, 'template', 'emailRegistro.template.html');
 
         if (!existsSync(emailTemplatePath)) {
             console.error(`El archivo de plantilla no existe: ${emailTemplatePath}`);
@@ -44,7 +44,7 @@ export class MailRepository {
 
     async userSuspensionEmail(userbanned: bannedUserDto) {
 
-        const emailTemplatePath = path.join(__dirname, 'template', 'emailBaneo.template.html');
+        const emailTemplatePath = path.resolve(__dirname, 'template', 'emailBaneo.template.html');
 
         if (!existsSync(emailTemplatePath)) {
             console.error(`El archivo de plantilla no existe: ${emailTemplatePath}`);
