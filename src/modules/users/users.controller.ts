@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { FiltersUsersDto, UpdateUserDto } from './user.dto';
+import { bannedUserDto, FiltersUsersDto, UpdateUserDto } from './user.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Role } from './roles.enum';
@@ -63,7 +63,6 @@ export class UsersController {
   @ApiBody({ type: UpdateUserDto })
   @UseGuards(AuthGuard)
   updateUser(@Param('id', ParseUUIDPipe) id: string,@Body() userBody: UpdateUserDto,) {
-    
   return this.userService.updateUser(id, userBody);
   }
 
@@ -78,7 +77,19 @@ export class UsersController {
   async makeAdmin(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.makeAdmin(id);
   }
-  
+
+  @ApiOperation({ summary: 'Ban user', description: 'Ban user' })
+  @ApiResponse({ status: 200, description: 'User banned successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @ApiBearerAuth()
+  @Put('ban-user/:id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
+  async banUser(@Body() bannedUserDto: bannedUserDto, @Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.banUser(bannedUserDto, id);
+  }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user by ID', description: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })

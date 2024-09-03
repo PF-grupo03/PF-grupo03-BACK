@@ -1,6 +1,6 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "../modules/users/user.dto";
+import { bannedUserDto, CreateUserDto } from "../modules/users/user.dto";
 import path from "path";
 import fs from 'fs';
 import { existsSync } from 'fs';
@@ -11,6 +11,7 @@ export class MailRepository {
     constructor(private mailerService: MailerService) {}
 
     async sendWelcomeEmail(user: CreateUserDto) {
+
         const emailTemplatePath = path.join(__dirname, 'template', 'emailRegistro.template.html');
 
         if (!existsSync(emailTemplatePath)) {
@@ -39,5 +40,37 @@ export class MailRepository {
             }
         });
         return user;
+    }
+
+    async userSuspensionEmail(userbanned: bannedUserDto) {
+
+        const emailTemplatePath = path.join(__dirname, 'template', 'emailBaneo.template.html');
+
+        if (!existsSync(emailTemplatePath)) {
+            console.error(`El archivo de plantilla no existe: ${emailTemplatePath}`);
+            throw new Error('Archivo de plantilla no encontrado');
+        }
+
+        let emailHtml = fs.readFileSync(emailTemplatePath, 'utf8');
+        emailHtml = emailHtml.replace(/\[name\]/g, userbanned.name);
+        emailHtml = emailHtml.replace(/\[motive\]/g, userbanned.motive);
+        emailHtml = emailHtml.replace(/\[email\]/g, userbanned.email);
+
+        const mailOptions = {
+            from: process.env.MAIL_USER,
+            to: userbanned.email,
+            subject: 'Cuenta suspendida en Travel Zone',
+            html: emailHtml
+        };
+
+        mailerConfig.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el correo:', error);
+            } else {
+                console.log('Email de suspensión enviado correctamente: ' + info.response);
+            }
+        });
+
+        return userbanned;
     }
 }

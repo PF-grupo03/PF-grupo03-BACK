@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './user.repository';
-import { CreateUserDto, FiltersUsersDto, UpdateUserDto } from './user.dto';
+import { bannedUserDto, CreateUserDto, FiltersUsersDto, UpdateUserDto } from './user.dto';
 
 @Injectable()
 export class UsersService {
@@ -32,5 +32,9 @@ export class UsersService {
 
   async makeAdmin(id: string) {
     return this.usersRepository.makeAdmin(id);
+  }
+
+  async banUser(bannedUserDto: bannedUserDto, id: string) {
+    return this.usersRepository.banUser(bannedUserDto, id);
   }
 }

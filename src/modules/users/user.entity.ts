@@ -44,6 +44,11 @@ export class UserEntity {
   })
   isAdmin: boolean;
 
+  @Column({
+    default: false,
+  })
+  isBanned: boolean;
+
   /* @OneToMany(() => OrderEntity, (order) => order.user)
   order?: OrderEntity[]; */
 }
