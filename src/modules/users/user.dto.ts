@@ -9,6 +9,7 @@ import {
   IsPositive,
   Min,
   IsEmpty,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -61,6 +62,10 @@ export class CreateUserDto {
   @ApiHideProperty()
   @IsEmpty()
   IsAdmin?: boolean;
+
+  @ApiHideProperty()
+  @IsEmpty()
+  IsBanned?: boolean;
 }
 
 export class UpdateUserDto {
@@ -120,6 +125,10 @@ export class UpdateUserDto {
   @ApiHideProperty()
   @IsEmpty()
   isAdmin?: boolean;
+
+  @ApiHideProperty()
+  @IsEmpty()
+  isBanned?: boolean;
 }
 
 export class FiltersUsersDto {
@@ -164,3 +173,30 @@ export class LoginUserDto extends PickType(CreateUserDto, [
 ]) {}
 
 export class mailUserDto extends PickType(CreateUserDto, ['name', 'email']) {}
+
+export class bannedUserDto {
+
+  @ApiProperty({
+    example: 'true',
+  })
+  @IsBoolean()
+  isBanned: boolean;
+
+  @ApiProperty({
+    example: 'johndoe@example.com',
+  })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
+    example: 'John Doe',
+  })
+  @IsString()
+  name: string;
+
+  @ApiProperty({
+    example: 'usuario suspendido por infligir nuestras nomrmas',
+  })
+  @IsString()
+  motive: string;
+}

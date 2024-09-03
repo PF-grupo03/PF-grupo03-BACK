@@ -7,13 +7,15 @@ import {
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, FiltersUsersDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto, FiltersUsersDto, UpdateUserDto, bannedUserDto } from './user.dto';
+import { MailRepository } from 'src/mail/mail.repository';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private readonly mailRepository: MailRepository
   ) {}
 
   async getUsers(params?: FiltersUsersDto) {
@@ -145,7 +147,7 @@ export class UsersRepository {
       }
       user.isAdmin = true;
       await this.usersRepository.save(user);
-      
+
       const { password, isAdmin, ...userNoPassword} = user;
 
       return {
@@ -156,4 +158,21 @@ export class UsersRepository {
       throw new InternalServerErrorException('Error actualizando el usuario');
     }
   }
+
+  async banUser(userbanned: bannedUserDto, id: string) {
+    try {
+      const user = await this.getUserById(id);
+      if (!user) {
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+      }
+      user.isBanned = true;
+      await this.usersRepository.save(user);
+      this.mailRepository.userSuspensionEmail(userbanned)
+      return {
+        message: 'Usuario baneado correctamente',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Error baneando el usuario');
+    }
+}
 }
