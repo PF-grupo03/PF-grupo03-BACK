@@ -7,7 +7,7 @@ import { MailRepository } from './mail.repository';
 import { MailService } from './mail.service';
 
 @Module({
-    exports: [MailService],
+    exports: [MailService, MailRepository],
     imports: [
     MailerModule.forRootAsync({
         useFactory: async (config: ConfigService) => ({
