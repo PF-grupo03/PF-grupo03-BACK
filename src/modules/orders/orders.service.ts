@@ -26,7 +26,6 @@ import { UserEntity } from '../users/user.entity';
 import { ProductEntity } from '../products/product.entity';
 import { CreateOrderDto } from './orders.dto';
 import { OrdersRepository } from './orders.repository';
-import Stripe from 'stripe';
 
 
 @Injectable()
@@ -37,8 +36,8 @@ export class OrdersService {
     @InjectRepository(ProductEntity) private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async createOrder(createOrderDto: CreateOrderDto): Promise<string> {
-    return await this.orderRepository.addOrder(createOrderDto);
+  async createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
+    return this.orderRepository.addOrder(createOrderDto);
   }
 
   async getOrderById(id: string): Promise<OrderEntity> {
