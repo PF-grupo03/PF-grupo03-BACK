@@ -35,7 +35,7 @@ export class OrdersService {
     @InjectRepository(ProductEntity) private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
+  async createOrder(createOrderDto: CreateOrderDto): Promise<string> {
     return await this.orderRepository.addOrder(createOrderDto);
   }
 
