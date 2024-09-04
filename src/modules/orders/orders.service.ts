@@ -17,16 +17,14 @@ export class OrdersService {
 }
  */
 
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
-import { OrderDetailsEntity } from './orderDetails.entity';
 import { UserEntity } from '../users/user.entity';
 import { ProductEntity } from '../products/product.entity';
 import { CreateOrderDto } from './orders.dto';
 import { OrdersRepository } from './orders.repository';
-import Stripe from 'stripe';
 
 
 @Injectable()
