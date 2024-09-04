@@ -1,4 +1,4 @@
-import {
+/* import {
   BadRequestException,
   Controller,
   Post,
@@ -47,17 +47,11 @@ export class PaymentsController {
         });
 
         const sanitizedOrder = {
-          ...orderConStock,
-          orderDetails: {
-            ...orderConStock.orderDetails,
-            products: orderConStock.orderDetails.map(({ product, ...orderDetailWithoutProduct }) => ({
-              ...orderDetailWithoutProduct,
-              product: {
-                ...product,
-                stock: undefined,
-              },
-            })),
-          },
+            ...orderConStock,
+            orderDetails: {
+                ...orderConStock.orderDetails,
+                products: orderConStock.orderDetails.product.map(({ stock, ...productWithoutStock }) => productWithoutStock)
+            }
         };
 
     res.json({
@@ -93,17 +87,11 @@ export class PaymentsController {
     });
 
     const sanitizedOrder = {
-      ...orderConStock,
-      orderDetails: {
-        ...orderConStock.orderDetails,
-        products: orderConStock.orderDetails.map(({ product, ...orderDetailWithoutProduct }) => ({
-          ...orderDetailWithoutProduct,
-          product: {
-            ...product,
-            stock: undefined,
-          },
-        })),
-      },
+        ...orderConStock,
+        orderDetails: {
+            ...orderConStock.orderDetails,
+            products: orderConStock.orderDetails.product.map(({ stock, ...productWithoutStock }) => productWithoutStock)
+        }
     };
 
     res.json({
@@ -112,3 +100,4 @@ export class PaymentsController {
     });
   }
 }
+ */
