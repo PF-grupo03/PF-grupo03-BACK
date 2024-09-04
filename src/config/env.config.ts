@@ -14,8 +14,6 @@ export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
 export const PORT = process.env.PORT;
 
-export const PORT = process.env.PORT;
-
 
 export const MAIL_HOST = process.env.MAIL_HOST;
 export const MAIL_USER = process.env.MAIL_USER;
