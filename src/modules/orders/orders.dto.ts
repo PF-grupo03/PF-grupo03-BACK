@@ -31,12 +31,13 @@
 
 
 
-import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate } from 'class-validator';
+import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
 
 // Definir un validador personalizado
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 class ProductDto {
   @IsString()
@@ -73,6 +74,14 @@ export class CreateOrderDto {
   @IsNumber()
   @IsPositive() // Verifica que el número sea positivo
   children: number = 0; // Valor por defecto
+
+  @ApiHideProperty()
+  @IsEmpty()
+  stripeSessionId: string;
+
+  @ApiHideProperty()
+  @IsEmpty()
+  status: string;
 
   @Validate(AtLeastOneAdultConstraint) // Aplica la validación personalizada
   validateAdults() {}
