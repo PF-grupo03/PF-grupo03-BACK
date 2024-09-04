@@ -145,7 +145,7 @@ import { OrderDetailsEntity } from "./orderDetails.entity";
 import { UserEntity } from "../users/user.entity";
 import { ProductEntity } from "../products/product.entity";
 import { CreateOrderDto } from "./orders.dto";
-import { stripe } from "../../config/stripe.config";
+// import { stripe } from "../../config/stripe.config";
 
 @Injectable()
 export class OrdersRepository {
@@ -227,30 +227,32 @@ export class OrdersRepository {
         relations: ['orderDetails', 'orderDetails.product'],
       });
 
-      const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
-                const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
+    //   const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
+    //   const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
 
-                const session = await stripe.checkout.sessions.create({
-                    payment_method_types: ['card'],
-                    line_items: orderConStock.orderDetails.map(orderDetail => ({
-                        price_data: {
-                            currency: 'usd',
-                            product_data: {
-                                name: orderDetail.product.title,
-                            },
-                            unit_amount: Math.round((orderDetail.price / orderDetail.quantity) * 100),
-                        },
-                        quantity: orderDetail.quantity,
-                    })),
-                    mode: "payment",
-                    success_url: successUrl,
-                    cancel_url: cancelUrl,
-                })
+    //             const session = await stripe.checkout.sessions.create({
+    //                 payment_method_types: ['card'],
+    //                 line_items: orderConStock.orderDetails.map(orderDetail => ({
+    //                     price_data: {
+    //                         currency: 'usd',
+    //                         product_data: {
+    //                             name: orderDetail.product.title,
+    //                         },
+    //                         unit_amount: Math.round((orderDetail.price / orderDetail.quantity) * 100),
+    //                     },
+    //                     quantity: orderDetail.quantity,
+    //                 })),
+    //                 mode: "payment",
+    //                 success_url: successUrl,
+    //                 cancel_url: cancelUrl,
+    //             })
 
-                newOrder.stripeSessionId = session.id;
-                await transactionalEntityManager.getRepository(OrderEntity).save(newOrder)
+    //             newOrder.stripeSessionId = session.id;
+    //             await transactionalEntityManager.getRepository(OrderEntity).save(newOrder)
 
-                return session.id;
+    //             return session.id;
+
+    return orderConStock
     });
   }
 
