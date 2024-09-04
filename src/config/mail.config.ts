@@ -11,6 +11,7 @@ export const mailerConfig: Transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASSWORD,
   },
   tls: {
+    minVersion: 'TLSv1.2',
     rejectUnauthorized: false,
   },
   logger: true,
