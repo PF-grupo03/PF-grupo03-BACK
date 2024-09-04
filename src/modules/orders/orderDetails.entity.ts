@@ -26,13 +26,7 @@
 //   product: ProductEntity[];
 // }
 
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { ProductEntity } from '../products/product.entity';
 
@@ -41,20 +35,16 @@ export class OrderDetailsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('numeric')
   quantity: number;
 
-  @Column()
+  @Column('numeric')
   price: number;
 
-  @Column()
-  isAdult: boolean;
-
-  @ManyToOne(() => OrderEntity, (order) => order.details)
-  @JoinColumn({ name: 'order_id' })
+  @ManyToOne(() => OrderEntity, (order) => order.orderDetails)
   order: OrderEntity;
 
-  @ManyToOne(() => ProductEntity)
-  @JoinColumn({ name: 'product_id' })
+  @ManyToOne(() => ProductEntity, (product) => product.orderDetails)
   product: ProductEntity;
 }
+

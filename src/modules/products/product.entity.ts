@@ -94,10 +94,10 @@ export class ProductEntity {
   @Column()
   description2: string;
 
-  @Column()
+  @Column('numeric')
   price: number;
 
-  @Column()
+  @Column('numeric')
   stock: number;
 
   @Column()

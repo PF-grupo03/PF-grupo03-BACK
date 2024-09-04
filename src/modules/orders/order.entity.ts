@@ -36,14 +36,9 @@
 //   orderDetails: OrderDetailsEntity; */
 // }
 
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from '../users/user.entity';
 import { OrderDetailsEntity } from './orderDetails.entity';
-
 
 @Entity('orders')
 export class OrderEntity {
@@ -51,17 +46,14 @@ export class OrderEntity {
   id: string;
 
   @Column()
-  total: number;
+  orderDate: Date;
 
-  @Column()
-  passengerName: string;
+  @Column('numeric')
+  totalPrice: number;
 
-  @Column()
-  passengerSurname: string;
-
-  @Column()
-  passengerDni: string;
+  @ManyToOne(() => UserEntity, (user) => user.order)
+  user: UserEntity;
 
   @OneToMany(() => OrderDetailsEntity, (orderDetails) => orderDetails.order)
-  details: OrderDetailsEntity[];
+  orderDetails: OrderDetailsEntity[];
 }

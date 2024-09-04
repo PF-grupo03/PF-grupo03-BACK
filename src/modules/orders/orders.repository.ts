@@ -135,102 +135,111 @@ export class OrdersRepository {
 
  */
 
-import { Repository, EntityRepository } from 'typeorm';
-import { OrderEntity } from './order.entity';
-import { ProductEntity } from '../products/product.entity';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { OrderDetailsEntity } from './orderDetails.entity';
-import { CreateOrderDto, OrderResponseDto } from './orders.dto';
+// 
 
-export class OrdersRepository extends Repository<OrderEntity> {
-  async createOrder(dto: CreateOrderDto): Promise<OrderResponseDto> {
-    const { userId, products } = dto;
+import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
+import { EntityManager, Repository } from "typeorm";
+import { OrderEntity } from "./order.entity";
+import { OrderDetailsEntity } from "./orderDetails.entity";
+import { UserEntity } from "../users/user.entity";
+import { ProductEntity } from "../products/product.entity";
+import { CreateOrderDto } from "./orders.dto";
 
-    // Start transaction
-    return await this.manager.transaction(async (transactionalEntityManager) => {
-      // Calculate total
-      let total = 0;
-      const details = [];
+@Injectable()
+export class OrdersRepository {
+  constructor(
+    @InjectEntityManager() private entityManager: EntityManager,
+    @InjectRepository(OrderEntity) private ordersRepository: Repository<OrderEntity>,
+    @InjectRepository(OrderDetailsEntity) private orderDetailsRepository: Repository<OrderDetailsEntity>,
+    @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
+    @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
+  ) {}
+
+  async addOrder(createOrderDto: CreateOrderDto) {
+    const { userId, products, adults = 0, children = 0 } = createOrderDto;
+    let total = 0;
+
+    
+    return await this.entityManager.transaction(async (transactionalEntityManager) => {
+      
+      const user = await transactionalEntityManager.findOne(UserEntity, { where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`Usuario con id ${userId} no encontrado`);
+      }
+
+     
+      const totalQuantity = adults + children * 0.5;
+
+      const productsArray: OrderDetailsEntity[] = [];
 
       for (const productDto of products) {
-        const product = await transactionalEntityManager.findOne(ProductEntity, {
-          where: { id: productDto.id }
-        });
-
+       
+        const product = await transactionalEntityManager.findOne(ProductEntity, { where: { id: productDto.id } });
         if (!product) {
-          throw new NotFoundException(`Product with ID ${productDto.id} not found`);
+          throw new BadRequestException(`Producto con id ${productDto.id} no encontrado`);
         }
 
-        if (product.stock < (productDto.adults + (productDto.minors || 0))) {
-          throw new BadRequestException(`Not enough stock for product ${productDto.id}`);
+        
+        if (product.stock < totalQuantity) {
+          throw new BadRequestException(`Stock insuficiente para el producto con id ${productDto.id}`);
         }
 
-        const totalAdults = productDto.adults * product.price;
-        const totalMinors = (productDto.minors || 0) * (product.price * 0.5);
-        total += totalAdults + totalMinors;
+       
+        const productTotal = product.price * totalQuantity;
+        total += productTotal;
 
-        for (let i = 0; i < productDto.adults; i++) {
-          details.push({
-            order: new OrderEntity(), // Placeholder
-            product,
-            quantity: 1,
-            price: product.price,
-            isAdult: true,
-          });
-        }
+        
+        product.stock -= totalQuantity;
+        await transactionalEntityManager.save(ProductEntity, product);
 
-        for (let i = 0; i < (productDto.minors || 0); i++) {
-          details.push({
-            order: new OrderEntity(), // Placeholder
-            product,
-            quantity: 1,
-            price: product.price * 0.5,
-            isAdult: false,
-          });
-        }
-
-        // Update stock
-        product.stock -= (productDto.adults + (productDto.minors || 0));
-        await transactionalEntityManager.save(product);
+        
+        const orderDetail = new OrderDetailsEntity();
+        orderDetail.product = product;
+        orderDetail.quantity = totalQuantity;
+        orderDetail.price = productTotal;
+        productsArray.push(orderDetail);
       }
 
-      // Apply tax
+      
       if (total > 200) {
-        total = 200 + (total - 200) * 1.13;
+        total += (total - 200) * 0.13;
       }
 
-      // Create order
-      const order = transactionalEntityManager.create(OrderEntity, {
-        total,
-        passengerName: 'Placeholder Name', // You may want to include these fields in the DTO
-        passengerSurname: 'Placeholder Surname',
-        passengerDni: 'Placeholder DNI',
+      
+      const order = new OrderEntity();
+      order.orderDate = new Date();
+      order.totalPrice = total;
+      order.user = user;
+
+      const newOrder = await transactionalEntityManager.save(OrderEntity, order);
+
+      
+      for (const orderDetail of productsArray) {
+        orderDetail.order = newOrder;
+        await transactionalEntityManager.save(OrderDetailsEntity, orderDetail);
+      }
+
+      
+      const orderConStock = await transactionalEntityManager.findOne(OrderEntity, {
+        where: { id: newOrder.id },
+        relations: ['orderDetails', 'orderDetails.product'],
       });
 
-      await transactionalEntityManager.save(order);
-
-      // Assign order to details
-      details.forEach(detail => {
-        detail.order = order;
-      });
-
-      await transactionalEntityManager.save(OrderDetailsEntity, details);
-
-      // Prepare response
-      return {
-        id: order.id,
-        total,
-        passengerName: order.passengerName,
-        passengerSurname: order.passengerSurname,
-        passengerDni: order.passengerDni,
-        details: details.map(detail => ({
-          productId: detail.product.id,
-          quantity: detail.quantity,
-          price: detail.price,
-          isAdult: detail.isAdult,
-        })),
-      };
+      return orderConStock;
     });
   }
-}
 
+  async getOrder(id: string) {
+    const order = await this.ordersRepository.findOne({
+      where: { id },
+      relations: ['orderDetails', 'orderDetails.product'],
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Orden con id ${id} no encontrada`);
+    }
+
+    return order;
+  }
+}
