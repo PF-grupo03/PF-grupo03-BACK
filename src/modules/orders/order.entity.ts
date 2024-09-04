@@ -51,6 +51,17 @@ export class OrderEntity {
   @Column('numeric')
   totalPrice: number;
 
+    @Column({
+    nullable: true,
+  })
+  stripeSessionId: string;
+
+  @Column({
+    default: 'PENDING'
+  })
+  status: string;
+
+
   @ManyToOne(() => UserEntity, (user) => user.order)
   user: UserEntity;
 
