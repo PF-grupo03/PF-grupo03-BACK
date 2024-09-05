@@ -16,5 +16,5 @@ export const mailerConfig: Transporter = nodemailer.createTransport({
   },
   logger: true,
   debug: true,
-  timeout: 20000,
+  timeout: 30000,
 } as SMTPTransport.Options);

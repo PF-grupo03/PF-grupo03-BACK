@@ -176,7 +176,7 @@ export class mailUserDto extends PickType(CreateUserDto, ['name', 'email']) {}
 
 export class bannedUserDto {
   @ApiProperty({
-    example: 'usuario suspendido por infligir nuestras nomrmas',
+    example: 'usuario suspendido por infligir nuestras normas',
   })
   @IsString()
   motive: string;
