@@ -66,6 +66,10 @@ export class CreateOrderDto {
   products: ProductDto[];
 
   @IsOptional()
+  @IsString()
+  date?: string; 
+
+  @IsOptional()
   @IsNumber()
   @IsPositive() // Verifica que el número sea positivo
   adults: number = 0; // Valor por defecto
