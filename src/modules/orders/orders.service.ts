@@ -16,21 +16,35 @@ export class OrdersService {
     }
 }
  */
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { OrderEntity } from './order.entity';
+import { UserEntity } from '../users/user.entity';
+import { ProductEntity } from '../products/product.entity';
+import { CreateOrderDto } from './orders.dto';
 import { OrdersRepository } from './orders.repository';
-import { CreateOrderDto, OrderResponseDto } from './orders.dto';
 
 
 @Injectable()
 export class OrdersService {
   constructor(
-    @InjectRepository(OrdersRepository)
-    private readonly ordersRepo: OrdersRepository,
+    private readonly orderRepository: OrdersRepository,
+    @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ProductEntity) private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async createOrder(dto: CreateOrderDto): Promise<OrderResponseDto> {
-    return await this.ordersRepo.createOrder(dto);
+  async createOrder(createOrderDto: CreateOrderDto): Promise<string> {
+    return await this.orderRepository.addOrder(createOrderDto);
+  }
+
+  async getOrderById(id: string): Promise<OrderEntity> {
+    const order = await this.orderRepository.getOrder(id);
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${id} not found`);
+    }
+    return order;
   }
 }
 

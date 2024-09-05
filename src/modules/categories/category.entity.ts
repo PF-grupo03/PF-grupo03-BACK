@@ -19,4 +19,7 @@ export class CategoryEntity {
     default: true,
   })
   isActive: boolean;
+
+  @ManyToMany(() => ProductEntity, (product) => product.categories)
+  products: ProductEntity[];
 }

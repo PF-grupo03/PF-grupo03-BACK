@@ -29,115 +29,60 @@
 //     status: string;
 // }
 
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsNotEmpty, IsOptional, ValidateNested, IsArray } from 'class-validator';
+
+
+import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
+
+// Definir un validador personalizado
+import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
+import { ApiHideProperty } from '@nestjs/swagger';
+
 class ProductDto {
-  @ApiProperty({
-    description: 'ID del producto',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @IsNotEmpty()
   @IsString()
   id: string;
+}
 
-  @ApiProperty({
-    description: 'Cantidad de adultos',
-    example: 2,
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  adults: number;
+@ValidatorConstraint({ name: 'atLeastOneAdult', async: false })
+class AtLeastOneAdultConstraint implements ValidatorConstraintInterface {
+  validate(value: any, args: any) {
+    const { adults, children } = args.object as CreateOrderDto;
+    return adults > 0;
+  }
 
-  @ApiProperty({
-    description: 'Cantidad de menores',
-    example: 1,
-  })
-  @IsOptional()
-  @IsNumber()
-  minors?: number;
+  defaultMessage(args: any) {
+    return 'At least one adult must be specified';
+  }
 }
 
 export class CreateOrderDto {
-  @ApiProperty({
-    description: 'ID del usuario que realiza la compra',
-    example: 'eea503b8-2bce-4226-8772-799fcf3ad095',
-  })
-  @IsNotEmpty()
   @IsString()
   userId: string;
 
-  @ApiProperty({
-    description: 'Lista de productos con cantidades',
-    type: [ProductDto],
-  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ProductDto)
   products: ProductDto[];
-}
 
-class OrderDetailDto {
-    @ApiProperty({
-      description: 'ID del producto',
-      example: '123e4567-e89b-12d3-a456-426614174000',
-    })
-    productId: string;
-  
-    @ApiProperty({
-      description: 'Cantidad de productos',
-      example: 1,
-    })
-    quantity: number;
-  
-    @ApiProperty({
-      description: 'Precio del producto',
-      example: 100,
-    })
-    price: number;
-  
-    @ApiProperty({
-      description: 'Indica si el producto es para un adulto',
-      example: true,
-    })
-    isAdult: boolean;
-  }
-  
-  export class OrderResponseDto {
-    @ApiProperty({
-      description: 'ID de la orden',
-      example: 'e4f6a7d8-9b0c-4a6d-a5b1-2c3d4e5f6a7b',
-    })
-    id: string;
-  
-    @ApiProperty({
-      description: 'Total de la orden',
-      example: 300,
-    })
-    total: number;
-  
-    @ApiProperty({
-      description: 'Nombre del pasajero',
-      example: 'John',
-    })
-    passengerName: string;
-  
-    @ApiProperty({
-      description: 'Apellido del pasajero',
-      example: 'Doe',
-    })
-    passengerSurname: string;
-  
-    @ApiProperty({
-      description: 'DNI del pasajero',
-      example: '12345678A',
-    })
-    passengerDni: string;
-  
-    @ApiProperty({
-      description: 'Detalles de la orden',
-      type: [OrderDetailDto],
-    })
-    details: OrderDetailDto[];
-  }
+  @IsOptional()
+  @IsNumber()
+  @IsPositive() // Verifica que el número sea positivo
+  adults: number = 0; // Valor por defecto
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive() // Verifica que el número sea positivo
+  children: number = 0; // Valor por defecto
+
+  @ApiHideProperty()
+  @IsEmpty()
+  stripeSessionId: string;
+
+  @ApiHideProperty()
+  @IsEmpty()
+  status: string;
+
+  @Validate(AtLeastOneAdultConstraint) // Aplica la validación personalizada
+  validateAdults() {}
+}
