@@ -135,125 +135,148 @@ export class OrdersRepository {
 
  */
 
-// 
+//
 
-import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
-import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
-import { EntityManager, Repository } from "typeorm";
-import { OrderEntity } from "./order.entity";
-import { OrderDetailsEntity } from "./orderDetails.entity";
-import { UserEntity } from "../users/user.entity";
-import { ProductEntity } from "../products/product.entity";
-import { CreateOrderDto } from "./orders.dto";
-import { stripe } from "../../config/stripe.config";
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
+import { OrderEntity } from './order.entity';
+import { OrderDetailsEntity } from './orderDetails.entity';
+import { UserEntity } from '../users/user.entity';
+import { ProductEntity } from '../products/product.entity';
+import { CreateOrderDto } from './orders.dto';
+import { stripe } from '../../config/stripe.config';
 
 @Injectable()
 export class OrdersRepository {
   constructor(
     @InjectEntityManager() private entityManager: EntityManager,
-    @InjectRepository(OrderEntity) private ordersRepository: Repository<OrderEntity>,
-    @InjectRepository(OrderDetailsEntity) private orderDetailsRepository: Repository<OrderDetailsEntity>,
-    @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
-    @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
+    @InjectRepository(OrderEntity)
+    private ordersRepository: Repository<OrderEntity>,
+    @InjectRepository(OrderDetailsEntity)
+    private orderDetailsRepository: Repository<OrderDetailsEntity>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
+    @InjectRepository(ProductEntity)
+    private productsRepository: Repository<ProductEntity>,
   ) {}
 
   async addOrder(createOrderDto: CreateOrderDto) {
     const { userId, products, adults = 0, children = 0 } = createOrderDto;
     let total = 0;
 
-    
-    return await this.entityManager.transaction(async (transactionalEntityManager) => {
-      
-      const user = await transactionalEntityManager.findOne(UserEntity, { where: { id: userId } });
-      if (!user) {
-        throw new NotFoundException(`Usuario con id ${userId} no encontrado`);
-      }
-
-     
-      const totalQuantity = adults + children * 0.5;
-
-      const productsArray: OrderDetailsEntity[] = [];
-
-      for (const productDto of products) {
-       
-        const product = await transactionalEntityManager.findOne(ProductEntity, { where: { id: productDto.id } });
-        if (!product) {
-          throw new BadRequestException(`Producto con id ${productDto.id} no encontrado`);
+    return await this.entityManager.transaction(
+      async (transactionalEntityManager) => {
+        const user = await transactionalEntityManager.findOne(UserEntity, {
+          where: { id: userId },
+        });
+        if (!user) {
+          throw new NotFoundException(`Usuario con id ${userId} no encontrado`);
         }
 
-        
-        if (product.stock < totalQuantity) {
-          throw new BadRequestException(`Stock insuficiente para el producto con id ${productDto.id}`);
+        const totalQuantity = adults + children * 0.5;
+
+        const productsArray: OrderDetailsEntity[] = [];
+
+        for (const productDto of products) {
+          const product = await transactionalEntityManager.findOne(
+            ProductEntity,
+            { where: { id: productDto.id } },
+          );
+          if (!product) {
+            throw new BadRequestException(
+              `Producto con id ${productDto.id} no encontrado`,
+            );
+          }
+
+          if (product.stock < totalQuantity) {
+            throw new BadRequestException(
+              `Stock insuficiente para el producto con id ${productDto.id}`,
+            );
+          }
+
+          const productTotal = product.price * totalQuantity;
+          total += productTotal;
+
+          product.stock -= totalQuantity;
+          await transactionalEntityManager.save(ProductEntity, product);
+
+          const orderDetail = new OrderDetailsEntity();
+          orderDetail.product = product;
+          orderDetail.quantity = totalQuantity;
+          orderDetail.price = productTotal;
+          productsArray.push(orderDetail);
         }
 
-       
-        const productTotal = product.price * totalQuantity;
-        total += productTotal;
+        if (total > 200) {
+          total += (total - 200) * 0.13;
+        }
 
-        
-        product.stock -= totalQuantity;
-        await transactionalEntityManager.save(ProductEntity, product);
+        const order = new OrderEntity();
+        order.orderDate = new Date();
+        order.totalPrice = total;
+        order.user = user;
 
-        
-        const orderDetail = new OrderDetailsEntity();
-        orderDetail.product = product;
-        orderDetail.quantity = totalQuantity;
-        orderDetail.price = productTotal;
-        productsArray.push(orderDetail);
-      }
+        const newOrder = await transactionalEntityManager.save(
+          OrderEntity,
+          order,
+        );
 
-      
-      if (total > 200) {
-        total += (total - 200) * 0.13;
-      }
+        for (const orderDetail of productsArray) {
+          orderDetail.order = newOrder;
+          await transactionalEntityManager.save(
+            OrderDetailsEntity,
+            orderDetail,
+          );
+        }
 
-      
-      const order = new OrderEntity();
-      order.orderDate = new Date();
-      order.totalPrice = total;
-      order.user = user;
+        const orderConStock = await transactionalEntityManager.findOne(
+          OrderEntity,
+          {
+            where: { id: newOrder.id },
+            relations: ['orderDetails', 'orderDetails.product'],
+          },
+        );
 
-      const newOrder = await transactionalEntityManager.save(OrderEntity, order);
+        //   const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
+        //   const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
 
-      
-      for (const orderDetail of productsArray) {
-        orderDetail.order = newOrder;
-        await transactionalEntityManager.save(OrderDetailsEntity, orderDetail);
-      }
+        const successUrl = 'http://localhost:3006/payment-success';
+        const cancelUrl = 'http://localhost:3006/payment-cancel';
 
-      
-      const orderConStock = await transactionalEntityManager.findOne(OrderEntity, {
-        where: { id: newOrder.id },
-        relations: ['orderDetails', 'orderDetails.product'],
-      });
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: orderConStock.orderDetails.map((orderDetail) => ({
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: orderDetail.product.title,
+              },
+              unit_amount: Math.round(
+                (orderDetail.price / orderDetail.quantity) * 100,
+              ),
+            },
+            quantity: orderDetail.quantity,
+          })),
+          mode: 'payment',
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+        });
 
-      const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
-      const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
+        newOrder.stripeSessionId = session.id;
+        await transactionalEntityManager
+          .getRepository(OrderEntity)
+          .save(newOrder);
 
-                const session = await stripe.checkout.sessions.create({
-                    payment_method_types: ['card'],
-                    line_items: orderConStock.orderDetails.map(orderDetail => ({
-                        price_data: {
-                            currency: 'usd',
-                            product_data: {
-                                name: orderDetail.product.title,
-                            },
-                            unit_amount: Math.round((orderDetail.price / orderDetail.quantity) * 100),
-                        },
-                        quantity: orderDetail.quantity,
-                    })),
-                    mode: "payment",
-                    success_url: successUrl,
-                    cancel_url: cancelUrl,
-                })
+        return session.id;
 
-                newOrder.stripeSessionId = session.id;
-                await transactionalEntityManager.getRepository(OrderEntity).save(newOrder)
-
-                return session.id;
-
-    // return orderConStock
-    });
+        // return orderConStock
+      },
+    );
   }
 
   async getOrder(id: string) {
