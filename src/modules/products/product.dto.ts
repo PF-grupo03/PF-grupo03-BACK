@@ -126,6 +126,13 @@ export class CreateProductDto {
     return value; // Si ya es un array, lo devuelve tal cual
   })
   categories: string[];
+
+  @ApiProperty({
+    description: 'Fechas disponibles para el paquete de viaje',
+    example: { availableDates: ['2024-09-10', '2024-09-11'] },
+  })
+  @IsOptional()
+  travelDate?: { availableDates: string[] };
 }
 
 export class UpdateProductDto {
@@ -218,6 +225,13 @@ export class UpdateProductDto {
   @ApiHideProperty()
   @IsEmpty()
   categories?: CategoryEntity[];
+
+  @ApiPropertyOptional({
+    description: 'Fechas disponibles para el paquete de viaje',
+    example: { availableDates: ['2024-09-10', '2024-09-11'] },
+  })
+  @IsOptional()
+  travelDate?: { availableDates: string[] };
 }
 
 export class FiltersProductsDto {
