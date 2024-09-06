@@ -25,12 +25,14 @@ import { OrderEntity } from './order.entity';
 import { UserEntity } from '../users/user.entity';
 import { OrdersRepository } from './orders.repository';
 import { OrderDetailsEntity } from './orderDetails.entity';
+import { PassengerEntity } from './passenger.entity';
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, OrderDetailsEntity, ProductEntity, UserEntity]),
+    TypeOrmModule.forFeature([OrderEntity, OrderDetailsEntity, ProductEntity, UserEntity, PassengerEntity]),
+    
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository],

@@ -22,4 +22,4 @@ export const MAIL_FROM = process.env.MAIL_FROM;
 
 export const STRIPE_PRIVATE_KEY = process.env.STRIPE_PRIVATE_KEY;
 
-export const RESTART_SCHEMA = false;
+export const RESTART_SCHEMA = true;
