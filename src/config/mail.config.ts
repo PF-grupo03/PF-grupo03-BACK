@@ -15,7 +15,7 @@ export const mailerConfig: Transporter = nodemailer.createTransport({
     ciphers: 'TLS_AES_256_GCM_SHA384',
     rejectUnauthorized: false,
   },
-  logger: true,
-  debug: true,
+  logger: false,
+  debug: false,
   timeout: 30000,
 } as SMTPTransport.Options);

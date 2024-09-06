@@ -25,45 +25,45 @@ export class ProductsRepository {
   ) {}
 
   async getProducts(params?: FiltersProductsDto) {
-    const { limit, page, title, location, price, duration, categories } = params;
+    const { limit, page, title, location, maxPrice, duration, categories } = params;
     try {
       const whereClause: TWhereClause = {};
       if (title) whereClause.title = title;
       if (location) whereClause.location = location;
-      if (price) whereClause.price = price;
       if (duration) whereClause.duration = duration;
       whereClause.isActive = true;
-  
+
       const query = this.productsRepository.createQueryBuilder('product')
         .leftJoinAndSelect('product.categories', 'category');
-  
+
       if (title) query.andWhere('product.title = :title', { title });
       if (location) query.andWhere('product.location = :location', { location });
-      if (price) query.andWhere('product.price = :price', { price });
       if (duration) query.andWhere('product.duration = :duration', { duration });
-      
-      // Si 'categories' es un string, convertirlo en un array con un solo elemento
+
+      const maxAllowedPrice = maxPrice || 5000;
+      query.andWhere('product.price BETWEEN :minPrice AND :maxPrice', { minPrice: 0, maxPrice: maxAllowedPrice });
+
       const categoriesArray = categories
         ? (Array.isArray(categories) ? categories : [categories])
         : [];
-  
-      // Aplicar filtro de categorías solo si `categoriesArray` tiene elementos
+
       if (categoriesArray.length > 0) {
         query.andWhere('category.name IN (:...categories)', { categories: categoriesArray });
       }
-  
+
       const products = await query
         .take(limit || undefined)
         .skip(page ? (page - 1) * limit : undefined)
         .getMany();
-  
+
       return products;
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Error obteniendo productos');
     }
   }
-  
+
+
 
 
 
@@ -80,7 +80,7 @@ export class ProductsRepository {
       }
       return product;
     } catch (error) {
-      throw new InternalServerErrorException('Error obteniendo el producto');  
+      throw new InternalServerErrorException('Error obteniendo el producto');
     }
   }
 
