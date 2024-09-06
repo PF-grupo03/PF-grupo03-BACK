@@ -36,9 +36,17 @@ export class ProductsRepository {
       const query = this.productsRepository.createQueryBuilder('product')
         .leftJoinAndSelect('product.categories', 'category');
 
-      if (title) query.andWhere('product.title = :title', { title });
-      if (location) query.andWhere('product.location = :location', { location });
-      if (duration) query.andWhere('product.duration = :duration', { duration });
+        if (title) {
+          query.andWhere('product.title ILIKE :title', { title: `%${title}%` });
+        }
+
+        if (duration) {
+          query.andWhere('product.duration ILIKE :duration', { duration: `%${duration}%` });
+        }
+
+      if (location) {
+        query.andWhere('product.location ILIKE :location', { location: `%${location}%` });
+      }
 
       const maxAllowedPrice = maxPrice || 5000;
       query.andWhere('product.price BETWEEN :minPrice AND :maxPrice', { minPrice: 0, maxPrice: maxAllowedPrice });

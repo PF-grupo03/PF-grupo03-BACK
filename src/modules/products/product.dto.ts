@@ -264,6 +264,15 @@ export class FiltersProductsDto {
   duration?: string;
 
   @ApiPropertyOptional({
+    description: 'Filtrar por precio máximo',
+    example: 5000,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @Max(5000)
+  maxPrice?: number;
+
+  @ApiPropertyOptional({
     description: 'Filtrar por estado activo',
     example: true,
   })
@@ -296,14 +305,6 @@ export class FiltersProductsDto {
   @IsString({ each: true })
   categories?: string[];
 
-  @ApiPropertyOptional({
-    description: 'Filtrar por precio máximo',
-    example: 5000,
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @Max(5000)
-  maxPrice?: number;
 }
 
 export type TWhereClause = {

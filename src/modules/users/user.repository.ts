@@ -151,9 +151,23 @@ export class UsersRepository {
       const { password, isAdmin, ...userNoPassword} = user;
 
       return {
-        message: 'Usuario actualizado correctamente',
+        message: 'Usuario asignado el rol de administrador correctamente',
         userNoPassword,
       };
+    } catch (error) {
+      throw new InternalServerErrorException('Error actualizando el usuario');
+    }
+  }
+
+  async removeAdmin(id: string) {
+    try {
+      const user = await this.usersRepository.findOneBy({ id });
+      if (!user) {
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+      }
+      user.isAdmin = false;
+      await this.usersRepository.save(user);
+      return { message: 'Rol de administrador removido correctamente' };
     } catch (error) {
       throw new InternalServerErrorException('Error actualizando el usuario');
     }
