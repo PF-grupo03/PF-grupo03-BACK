@@ -31,9 +31,8 @@
 
 
 
-import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty } from 'class-validator';
+import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty, IsBoolean, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-
 
 // Definir un validador personalizado
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
@@ -47,8 +46,8 @@ class ProductDto {
 @ValidatorConstraint({ name: 'atLeastOneAdult', async: false })
 class AtLeastOneAdultConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: any) {
-    const { adults, children } = args.object as CreateOrderDto;
-    return adults > 0;
+    const { adults } = args.object as CreateOrderDto;
+    return adults > 0; // Solo se verifica que haya al menos un adulto
   }
 
   defaultMessage(args: any) {
@@ -67,17 +66,18 @@ export class CreateOrderDto {
 
   @IsOptional()
   @IsString()
-  date?: string; 
+  date?: string;
 
   @IsOptional()
   @IsNumber()
-  @IsPositive() // Verifica que el número sea positivo
-  adults: number = 0; // Valor por defecto
+  @IsPositive()
+  @Min(1)
+  adults: number = 0; 
 
   @IsOptional()
   @IsNumber()
-  @IsPositive() // Verifica que el número sea positivo
-  children: number = 0; // Valor por defecto
+  @Min(0)
+  children: number = 0; 
 
   @ApiHideProperty()
   @IsEmpty()
@@ -87,6 +87,28 @@ export class CreateOrderDto {
   @IsEmpty()
   status: string;
 
-  @Validate(AtLeastOneAdultConstraint) // Aplica la validación personalizada
+  @Validate(AtLeastOneAdultConstraint) 
   validateAdults() {}
+
+  @IsBoolean()
+  medicalInsurance: boolean = false; 
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PassengerDto)
+  passengers: PassengerDto[];
+}
+
+class PassengerDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  email: string;
+
+  @IsString()
+  cellphone: string;
+
+  @IsString()
+  dni: string;
 }

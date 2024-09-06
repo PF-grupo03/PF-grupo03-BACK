@@ -513,6 +513,7 @@ import { UserEntity } from "../users/user.entity";
 import { ProductEntity } from "../products/product.entity";
 import { CreateOrderDto } from "./orders.dto";
 import { stripe } from "../../config/stripe.config";
+import { PassengerEntity } from "./passenger.entity";
 
 @Injectable()
 export class OrdersRepository {
@@ -522,10 +523,11 @@ export class OrdersRepository {
     @InjectRepository(OrderDetailsEntity) private orderDetailsRepository: Repository<OrderDetailsEntity>,
     @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
     @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
+    @InjectRepository(PassengerEntity) private passengersRepository: Repository<PassengerEntity>,
   ) {}
 
   async addOrder(createOrderDto: CreateOrderDto) {
-    const { userId, products, adults = 0, children = 0 } = createOrderDto;
+    const { userId, products, adults = 0, children = 0, medicalInsurance, passengers } = createOrderDto;
     let total = 0;
 
     return await this.entityManager.transaction(async (transactionalEntityManager) => {
@@ -535,6 +537,7 @@ export class OrdersRepository {
       }
 
       const productsArray: OrderDetailsEntity[] = [];
+      const passengersArray: PassengerEntity[] = [];
 
       for (const productDto of products) {
         const product = await transactionalEntityManager.findOne(ProductEntity, { where: { id: productDto.id } });
@@ -590,6 +593,10 @@ export class OrdersRepository {
         productsArray.push(orderDetail);
       }
 
+      if (medicalInsurance) {
+        total += 100;
+      }
+
       if (total > 200) {
         const excessAmount = total - 200;
         const tax = excessAmount * 0.13;
@@ -600,6 +607,7 @@ export class OrdersRepository {
       order.orderDate = new Date();
       order.totalPrice = total;
       order.user = user;
+      order.medicalInsurance = medicalInsurance;
 
       const newOrder = await transactionalEntityManager.save(OrderEntity, order);
 
@@ -607,10 +615,26 @@ export class OrdersRepository {
         orderDetail.order = newOrder;
         await transactionalEntityManager.save(OrderDetailsEntity, orderDetail);
       }
-      
+
+      // Guardar la información de los pasajeros
+      if (passengers && passengers.length > 0) {
+        for (const passengerDto of passengers) {
+          const passenger = new PassengerEntity();
+          passenger.name = passengerDto.name;
+          passenger.email = passengerDto.email;
+          passenger.cellphone = passengerDto.cellphone;
+          passenger.dni = passengerDto.dni;
+          passenger.order = newOrder;
+
+          passengersArray.push(passenger);
+        }
+
+        await transactionalEntityManager.save(PassengerEntity, passengersArray);
+      }
+
       const orderConStock = await transactionalEntityManager.findOne(OrderEntity, {
         where: { id: newOrder.id },
-        relations: ['orderDetails', 'orderDetails.product'],
+        relations: ['orderDetails', 'orderDetails.product', 'passengers'],
       });
 
       // Agregar fechas de salida y regreso a la respuesta
