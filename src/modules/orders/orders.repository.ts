@@ -154,8 +154,8 @@ export class OrdersRepository {
       };
 
         const successUrl = 'http://localhost:3006/payment-success';
-        const cancelUrl = 'http://localhost:3006/payment-cancel';
-
+        const cancelUrl = 'http://localhost:3006/payment-cancel'; 
+        
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: orderWithDates.orderDetails.map(orderDetail => ({
@@ -169,6 +169,9 @@ export class OrdersRepository {
           quantity: orderDetail.quantity,
         })),
         mode: "payment",
+          metadata: {
+            order_id: newOrder.id,
+          },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
