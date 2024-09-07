@@ -246,8 +246,8 @@ export class OrdersRepository {
         //   const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
 
         const successUrl = 'http://localhost:3006/payment-success';
-        const cancelUrl = 'http://localhost:3006/payment-cancel';
-
+        const cancelUrl = 'http://localhost:3006/payment-cancel'; 
+        
         const session = await stripe.checkout.sessions.create({
           payment_method_types: ['card'],
           line_items: orderConStock.orderDetails.map((orderDetail) => ({

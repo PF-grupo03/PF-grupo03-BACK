@@ -3,6 +3,7 @@ import { StripeService } from './payment.service';
 import { Request } from 'express';
 import Stripe from 'stripe';
 import { stripe } from 'src/config/stripe.config';
+import { STRIPE_WEBHOOK_PRIVATE_SIGNING } from 'src/config/env.config';
 
 // @Controller()
 // export class PaymentsController {
@@ -106,18 +107,16 @@ export class StripeController {
   constructor(private readonly stripeService: StripeService) {}
 
   @Post('webhook')
-  // @UsePipes(RawBody)
   async handleWebhook(
     @Req() req: Request,
     @Headers('stripe-signature') signature: string,
   ) {
-    const endpointSecret = 'whsec_c83f3ab35c25cc99b51084561baeabb3692b8fb4f451a1fc42057bd995c8f446';
     let event: Stripe.Event;
     try {
       event = stripe.webhooks.constructEvent(
         req["rawBody"],
         signature,
-        endpointSecret,
+        STRIPE_WEBHOOK_PRIVATE_SIGNING,
       );
     } catch (error) {
       console.log(error);
