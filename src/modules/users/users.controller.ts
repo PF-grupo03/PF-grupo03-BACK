@@ -78,6 +78,18 @@ export class UsersController {
     return this.userService.makeAdmin(id);
   }
 
+  @ApiOperation({ summary: 'Remove admin role', description: 'Remove admin role' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @ApiBearerAuth()
+  @Put('remove-admin/:id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
+  async removeAdmin(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.removeAdmin(id);
+  }
+
   @ApiOperation({ summary: 'Ban user', description: 'Ban user' })
   @ApiResponse({ status: 200, description: 'User banned successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })

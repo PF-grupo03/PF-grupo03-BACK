@@ -34,6 +34,10 @@ export class UsersService {
     return this.usersRepository.makeAdmin(id);
   }
 
+  async removeAdmin(id: string) {
+    return this.usersRepository.removeAdmin(id);
+  }
+
   async banUser(bannedUserDto: bannedUserDto, id: string) {
     return this.usersRepository.banUser(bannedUserDto, id);
   }

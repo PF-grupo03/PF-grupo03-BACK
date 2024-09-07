@@ -27,12 +27,14 @@ import { OrdersRepository } from './orders.repository';
 import { OrderDetailsEntity } from './orderDetails.entity';
 import { StripeService } from './payment.service';
 import { StripeController } from './payment.controller';
+import { PassengerEntity } from './passenger.entity';
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, OrderDetailsEntity, ProductEntity, UserEntity]),
+    TypeOrmModule.forFeature([OrderEntity, OrderDetailsEntity, ProductEntity, UserEntity, PassengerEntity]),
+    
   ],
   controllers: [OrdersController, StripeController],
   providers: [OrdersService, OrdersRepository, StripeService],

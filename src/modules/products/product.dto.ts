@@ -14,6 +14,7 @@ import {
   IsArray,
   IsBoolean,
   IsNotEmpty,
+  Max,
 } from 'class-validator';
 import { CategoryEntity } from '../categories/category.entity';
 
@@ -125,6 +126,13 @@ export class CreateProductDto {
     return value; // Si ya es un array, lo devuelve tal cual
   })
   categories: string[];
+
+  @ApiProperty({
+    description: 'Fechas disponibles para el paquete de viaje',
+    example: { availableDates: ['2024-09-10', '2024-09-11'] },
+  })
+  @IsOptional()
+  travelDate?: { availableDates: string[] };
 }
 
 export class UpdateProductDto {
@@ -217,6 +225,13 @@ export class UpdateProductDto {
   @ApiHideProperty()
   @IsEmpty()
   categories?: CategoryEntity[];
+
+  @ApiPropertyOptional({
+    description: 'Fechas disponibles para el paquete de viaje',
+    example: { availableDates: ['2024-09-10', '2024-09-11'] },
+  })
+  @IsOptional()
+  travelDate?: { availableDates: string[] };
 }
 
 export class FiltersProductsDto {
@@ -255,21 +270,21 @@ export class FiltersProductsDto {
   location?: string;
 
   @ApiPropertyOptional({
-    description: 'Filtrar por precio',
-    example: 100,
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @Min(0)
-  price?: number;
-
-  @ApiPropertyOptional({
     description: 'Filtrar por duración del paquete de viaje',
     example: '1 Day',
   })
   @IsOptional()
   @IsString()
   duration?: string;
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por precio máximo',
+    example: 5000,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @Max(5000)
+  maxPrice?: number;
 
   @ApiPropertyOptional({
     description: 'Filtrar por estado activo',
@@ -286,27 +301,24 @@ export class FiltersProductsDto {
   })
   @IsOptional()
   @Transform(({ value }) => {
-    // Si el valor es un string que no parece un array, lo convertimos a array
     if (typeof value === 'string' && !value.startsWith('[')) {
       return [value];
     }
-  
-    // Si ya es un array de strings o un string en formato JSON, lo procesamos
+
     if (typeof value === 'string') {
       try {
         return JSON.parse(value);
       } catch (e) {
-        // Si falla el parseo, lo dejamos como un array con el string original
         return [value];
       }
     }
-  
-    return value; // Si ya es un array, lo devuelve tal cual
+
+    return value;
   })
   @IsArray()
   @IsString({ each: true })
   categories?: string[];
-  
+
 }
 
 export type TWhereClause = {
