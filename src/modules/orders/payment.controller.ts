@@ -1,20 +1,6 @@
-// import {
-//   BadRequestException,
-//   Controller,
-//   Post,
-//   Req,
-//   Res,
-// } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import { OrderEntity } from './order.entity';
-// import { Request, Response } from 'express';
-// import { stripe } from 'src/config/stripe.config';
-// import { OrderStatus } from './orderStatus.enum';
-
-import { Controller, Headers, Post, Req, Res } from '@nestjs/common';
+import { Controller, Headers, Post, RawBody, Req, UsePipes } from '@nestjs/common';
 import { StripeService } from './payment.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import Stripe from 'stripe';
 import { stripe } from 'src/config/stripe.config';
 
@@ -120,16 +106,16 @@ export class StripeController {
   constructor(private readonly stripeService: StripeService) {}
 
   @Post('webhook')
+  // @UsePipes(RawBody)
   async handleWebhook(
     @Req() req: Request,
-    @Res() res: Response,
     @Headers('stripe-signature') signature: string,
   ) {
-    const endpointSecret = 'clidev_1Pw6MRRsgw4cKaffDtYY7NY6';
+    const endpointSecret = 'whsec_c83f3ab35c25cc99b51084561baeabb3692b8fb4f451a1fc42057bd995c8f446';
     let event: Stripe.Event;
     try {
       event = stripe.webhooks.constructEvent(
-        req['rawBody'],
+        req["rawBody"],
         signature,
         endpointSecret,
       );
