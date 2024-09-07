@@ -70,7 +70,7 @@ export class PaymentsController {
   async handleCancel(@Req() req: Request, @Res() res: Response) {
     const sessionId = req.body.session_id;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    
+
     const orderId = session.metadata.order_id;
     const order = await this.ordersRepository.findOne({
       where: { id: orderId },
