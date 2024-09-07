@@ -263,6 +263,9 @@ export class OrdersRepository {
             quantity: orderDetail.quantity,
           })),
           mode: 'payment',
+          metadata: {
+            order_id: newOrder.id,
+          },
           success_url: successUrl,
           cancel_url: cancelUrl,
         });
