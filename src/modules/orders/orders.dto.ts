@@ -1,6 +1,5 @@
 import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty, IsBoolean, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 import { ApiHideProperty } from '@nestjs/swagger';
 
@@ -65,7 +64,7 @@ export class CreateOrderDto {
   passengers: PassengerDto[];
 }
 
-class PassengerDto {
+export class PassengerDto {
   @IsString()
   name: string;
 
