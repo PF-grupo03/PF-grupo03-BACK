@@ -89,7 +89,7 @@ export class UsersRepository {
       };
     } catch (error) {
         if (error instanceof NotFoundException || error instanceof BadRequestException) {
-          throw error; // Propaga el error NotFoundException
+          throw error; 
         }
         throw new InternalServerErrorException('Error al eliminar el usuario: ' + error.message);
     }

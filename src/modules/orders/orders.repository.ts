@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
 import { OrderEntity } from "./order.entity";
@@ -19,6 +19,48 @@ export class OrdersRepository {
     @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
     @InjectRepository(PassengerEntity) private passengersRepository: Repository<PassengerEntity>,
   ) {}
+
+  async getOrders(page: number, limit: number) {
+    
+    if (page <= 0 || limit <= 0) {
+      throw new BadRequestException('Los valores de "page" y "limit" deben ser mayores que cero.');
+    }
+  
+    const skip = (page - 1) * limit;
+  
+    try {
+    
+      const [orders, total] = await this.ordersRepository.findAndCount({
+        relations: ['orderDetails', 'orderDetails.product', 'passengers'],
+        skip,
+        take: limit,
+        order: {
+          orderDate: 'DESC',
+        },
+      });
+  
+      
+      if (orders.length === 0) {
+        throw new NotFoundException('No se encontraron órdenes para los parámetros proporcionados.');
+      }
+  
+      return {
+        data: orders,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      };
+    } catch (error) {
+      
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error; 
+      }
+  
+      
+      throw new InternalServerErrorException(`Error al obtener órdenes: ${error.message}`);
+    }
+  }
+  
 
   async addOrder(createOrderDto: CreateOrderDto) {
     const { userId, products, adults = 0, children = 0, medicalInsurance, passengers } = createOrderDto;
@@ -204,6 +246,27 @@ export class OrdersRepository {
       where: { user: { id: userId}},
       relations: ['orderDetails', 'orderDetails.product', 'passengers'],
     });
+  }
+
+  async deleteOrder(id: string) {
+    try {
+      const orderById = await this.ordersRepository.findOne({
+        where: { id, isActive: true},
+      });
+      if(!orderById) {
+        throw new NotFoundException(`Orden con ID ${id} no encontrada`);
+      }
+      orderById.isActive = false;
+      await this.ordersRepository.save(orderById);
+      return {
+        Message: 'Orden eliminada correctamente',
+      };
+    } catch (error) {
+      if(error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Error al eliminar la orden: ' + error.message);
+    }
   }
 }
 

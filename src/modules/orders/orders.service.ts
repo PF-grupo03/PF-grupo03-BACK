@@ -16,6 +16,10 @@ export class OrdersService {
     @InjectRepository(ProductEntity) private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
+  async getOrders(page: number, limit: number) {
+    return this.orderRepository.getOrders(page, limit);
+  }
+
   async createOrder(createOrderDto: CreateOrderDto) {
     return await this.orderRepository.addOrder(createOrderDto);
   }
@@ -34,6 +38,10 @@ export class OrdersService {
       throw new NotFoundException(`No hay ordenes registrada para el usuario de ID ${userId}`);
     }
     return orders;
+  }
+
+  async deleteOrder(id: string) {
+    return this.orderRepository.deleteOrder(id);
   }
 }
 
