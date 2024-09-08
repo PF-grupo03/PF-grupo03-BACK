@@ -23,4 +23,4 @@ export const STRIPE_PRIVATE_KEY = process.env.STRIPE_PRIVATE_KEY;
 export const STRIPE_WEBHOOK_PRIVATE_SIGNING =
   process.env.STRIPE_WEBHOOK_PRIVATE_SIGNING;
 
-export const RESTART_SCHEMA = true;
+export const RESTART_SCHEMA = false;
