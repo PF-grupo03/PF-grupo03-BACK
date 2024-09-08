@@ -198,5 +198,12 @@ export class OrdersRepository {
 
     return order;
   }
+
+  async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
+    return await this.ordersRepository.find({
+      where: { user: { id: userId}},
+      relations: ['orderDetails', 'orderDetails.product', 'passengers'],
+    });
+  }
 }
 
