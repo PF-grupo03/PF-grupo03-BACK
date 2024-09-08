@@ -22,7 +22,7 @@ export class OrdersController {
     return this.ordersService.getOrderById(id);
   }
 
-  @Get('useer/:userId')
+  @Get(':userId')
   async getOrdersByUserId(@Param('userId') userId: string): Promise<OrderEntity[]> {
     return this.ordersService.getOrdersByUserId(userId);
   }
