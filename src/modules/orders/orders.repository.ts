@@ -60,7 +60,7 @@ export class OrdersRepository {
           productDuration = endDate.getDate() - selectedDate.getDate() + 1;
         }
 
-        // Calcula el precio basado en adultos y niños
+        
         const adultPrice = product.price;
         const childPrice = adultPrice * 0.5;
         const totalAdults = adults;
@@ -69,8 +69,8 @@ export class OrdersRepository {
         const totalChildPrice = totalChildren * childPrice;
         const totalProductPrice = totalAdultPrice + totalChildPrice;
 
-        // Ajusta la cantidad de stock considerando los niños como pasajeros completos
-        const totalQuantity = totalAdults + totalChildren; // Redondear a entero, ya que se cuenta como 1 pasajero por niño
+        
+        const totalQuantity = totalAdults + totalChildren; 
         if (product.stock < totalQuantity) {
           throw new BadRequestException(`Stock insuficiente para el producto con id ${productDto.id}`);
         }
@@ -110,7 +110,6 @@ export class OrdersRepository {
         await transactionalEntityManager.save(OrderDetailsEntity, orderDetail);
       }
 
-      // Guardar la información de los pasajeros
       if (passengers && passengers.length > 0) {
         for (const passengerDto of passengers) {
           const passenger = new PassengerEntity();
@@ -131,7 +130,6 @@ export class OrdersRepository {
         relations: ['orderDetails', 'orderDetails.product', 'passengers'],
       });
 
-      // Agregar fechas de salida y regreso a la respuesta
       const orderWithDates = {
         ...orderConStock,
         orderDetails: orderConStock.orderDetails.map(detail => {
@@ -159,8 +157,8 @@ export class OrdersRepository {
         //   const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
 
         const successUrl = 'http://localhost:3006/payment-success';
-        const cancelUrl = 'http://localhost:3006/payment-cancel';
-
+        const cancelUrl = 'http://localhost:3006/payment-cancel'; 
+        
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: orderWithDates.orderDetails.map(orderDetail => ({
@@ -174,6 +172,9 @@ export class OrdersRepository {
           quantity: orderDetail.quantity,
         })),
         mode: "payment",
+          metadata: {
+            order_id: newOrder.id,
+          },
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
