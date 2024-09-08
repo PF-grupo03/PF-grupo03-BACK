@@ -1,4 +1,4 @@
-import { Controller, Headers, Post, RawBody, Req, UsePipes } from '@nestjs/common';
+import { Controller, Headers, Post, Req } from '@nestjs/common';
 import { StripeService } from './payment.service';
 import { Request } from 'express';
 import Stripe from 'stripe';
@@ -112,14 +112,14 @@ export class StripeController {
     @Headers('stripe-signature') signature: string,
   ) {
     let event: Stripe.Event;
-    try {
+    try { 
       event = stripe.webhooks.constructEvent(
         req["rawBody"],
         signature,
         STRIPE_WEBHOOK_PRIVATE_SIGNING,
       );
     } catch (error) {
-      console.log(error);
+      console.log(error, event);
     }
     switch (event.type) {
       case 'checkout.session.completed':
