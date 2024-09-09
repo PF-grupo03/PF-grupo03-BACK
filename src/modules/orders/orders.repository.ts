@@ -153,9 +153,6 @@ export class OrdersRepository {
 
       // return { order: orderWithDates };
 
-        //   const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
-        //   const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
-
         const successUrl = 'http://localhost:3006/payment-success';
         const cancelUrl = 'http://localhost:3006/payment-cancel'; 
         
