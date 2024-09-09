@@ -15,9 +15,10 @@ async function bootstrap() {
   .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-  app.enableCors(cors({origin: ['http://localhost:3000', 'https://travelzone-git-develop-grupo03s-projects.vercel.app/']
+  app.enableCors({
+    origin: ['http://localhost:3000', 'https://travelzone-git-develop-grupo03s-projects.vercel.app/']
   , credentials: true
-  }));
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
