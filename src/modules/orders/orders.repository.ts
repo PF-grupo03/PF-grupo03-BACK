@@ -20,6 +20,7 @@ export class OrdersRepository {
     @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
     @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
     @InjectRepository(PassengerEntity) private passengersRepository: Repository<PassengerEntity>,
+    private readonly mailRepository: MailRepository
   ) {}
 
   async getOrders(page: number, limit: number) {
@@ -104,7 +105,7 @@ export class OrdersRepository {
           productDuration = endDate.getDate() - selectedDate.getDate() + 1;
         }
 
-        
+
         const adultPrice = product.price;
         const childPrice = adultPrice * 0.5;
         const totalAdults = adults;
@@ -113,8 +114,8 @@ export class OrdersRepository {
         const totalChildPrice = totalChildren * childPrice;
         const totalProductPrice = totalAdultPrice + totalChildPrice;
 
-        
-        const totalQuantity = totalAdults + totalChildren; 
+
+        const totalQuantity = totalAdults + totalChildren;
         if (product.stock < totalQuantity) {
           throw new BadRequestException(`Stock insuficiente para el producto con id ${productDto.id}`);
         }
@@ -198,7 +199,7 @@ export class OrdersRepository {
       await this.mailRepository.sendOrderConfirmationEmail(orderWithDates, user);
 
         const successUrl = 'https://pf-grupo03.vercel.app/payment-success';
-        const cancelUrl = 'https://pf-grupo03.vercel.app/payment-failed'; 
+        const cancelUrl = 'https://pf-grupo03.vercel.app/payment-failed';
         
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
