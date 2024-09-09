@@ -181,3 +181,13 @@ export class bannedUserDto {
   @IsString()
   motive: string;
 }
+
+
+  export class UpdateUserPasswordDto {
+    @ApiPropertyOptional({
+      description: 'Password of the user',
+      example: 'password123',
+    })
+    @IsString()
+    password: string;
+  }

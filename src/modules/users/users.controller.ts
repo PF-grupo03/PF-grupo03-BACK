@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { bannedUserDto, FiltersUsersDto, UpdateUserDto } from './user.dto';
+import { bannedUserDto, FiltersUsersDto, UpdateUserDto, UpdateUserPasswordDto } from './user.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Role } from './roles.enum';
@@ -64,6 +64,16 @@ export class UsersController {
   @UseGuards(AuthGuard)
   updateUser(@Param('id', ParseUUIDPipe) id: string,@Body() userBody: UpdateUserDto,) {
   return this.userService.updateUser(id, userBody);
+  }
+
+  @ApiOperation({ summary: 'Change password of user by ID', description: 'Change password of user by ID' })
+  @ApiResponse({ status: 200, description: 'Password updated successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid password' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  @Put('change-password/:id')
+  async changePassword(@Param('id', ParseUUIDPipe) id: string, @Body() newPassword: UpdateUserPasswordDto) {
+    return this.userService.changePassword(id, newPassword);
   }
 
   @ApiOperation({ summary: 'Make user admin', description: 'Make user admin' })
