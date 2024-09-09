@@ -36,7 +36,7 @@ export class MailRepository {
             if (error) {
                 console.error('Error al enviar el correo:', error);
             } else {
-                console.log('Email enviado correctamente: ' + info.response);
+                console.log('Email de bienvenida enviado correctamente: ' + info.response);
             }
         });
         return user;

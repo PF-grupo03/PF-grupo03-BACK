@@ -13,7 +13,7 @@ class ProductDto {
 class AtLeastOneAdultConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: any) {
     const { adults } = args.object as CreateOrderDto;
-    return adults > 0; 
+    return adults > 0;
   }
 
   defaultMessage(args: any) {
