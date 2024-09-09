@@ -1,22 +1,3 @@
-/* import { Injectable } from '@nestjs/common';
-import { OrdersRepository } from './orders.repository';
-import { CreateOrderDto } from './orders.dto';
-
-@Injectable()
-export class OrdersService {
-    constructor(private readonly ordersRepository: OrdersRepository){}
-
-    addOrder(userId: string, products: CreateOrderDto['products']) {
-        return this.ordersRepository.addOrder(userId, products);
-    }
-
-
-    getOrder(id: string) {
-        return this.ordersRepository.getOrder(id);
-    }
-}
- */
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -35,6 +16,10 @@ export class OrdersService {
     @InjectRepository(ProductEntity) private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
+  async getOrders(page: number, limit: number) {
+    return this.orderRepository.getOrders(page, limit);
+  }
+
   async createOrder(createOrderDto: CreateOrderDto) {
     return await this.orderRepository.addOrder(createOrderDto);
   }
@@ -45,6 +30,18 @@ export class OrdersService {
       throw new NotFoundException(`Order with ID ${id} not found`);
     }
     return order;
+  }
+
+  async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
+    const orders = await this.orderRepository.getOrdersByUserId(userId);
+    if(!orders || orders.length === 0) {
+      throw new NotFoundException(`No hay ordenes registrada para el usuario de ID ${userId}`);
+    }
+    return orders;
+  }
+
+  async deleteOrder(id: string) {
+    return this.orderRepository.deleteOrder(id);
   }
 }
 

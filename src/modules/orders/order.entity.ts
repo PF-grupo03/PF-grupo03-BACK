@@ -24,6 +24,11 @@ export class OrderEntity {
   })
   status: string;
 
+  @Column({
+    default: true,
+  })
+  isActive: boolean;
+
 
   @ManyToOne(() => UserEntity, (user) => user.order)
   user: UserEntity;

@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PORT } from './config/env.config';
+import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -14,7 +15,10 @@ async function bootstrap() {
   .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-  app.enableCors()
+  app.enableCors();
+  //   origin: ['http://localhost:3000', 'https://travelzone-git-develop-grupo03s-projects.vercel.app/', 'http://localhost:3006', 'http://localhost:3000/dashboard/profile' ]
+  // , credentials: true
+
 
   app.useGlobalPipes(
     new ValidationPipe({

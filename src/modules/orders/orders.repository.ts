@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
 import { OrderEntity } from "./order.entity";
@@ -8,6 +8,8 @@ import { ProductEntity } from "../products/product.entity";
 import { CreateOrderDto } from "./orders.dto";
 import { stripe } from "../../config/stripe.config";
 import { PassengerEntity } from "./passenger.entity";
+import { MailRepository } from 'src/mail/mail.repository';
+
 
 @Injectable()
 export class OrdersRepository {
@@ -18,7 +20,50 @@ export class OrdersRepository {
     @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
     @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
     @InjectRepository(PassengerEntity) private passengersRepository: Repository<PassengerEntity>,
+    private readonly mailRepository: MailRepository
   ) {}
+
+  async getOrders(page: number, limit: number) {
+    
+    if (page <= 0 || limit <= 0) {
+      throw new BadRequestException('Los valores de "page" y "limit" deben ser mayores que cero.');
+    }
+  
+    const skip = (page - 1) * limit;
+  
+    try {
+    
+      const [orders, total] = await this.ordersRepository.findAndCount({
+        relations: ['orderDetails', 'orderDetails.product', 'passengers'],
+        skip,
+        take: limit,
+        order: {
+          orderDate: 'DESC',
+        },
+      });
+  
+      
+      if (orders.length === 0) {
+        throw new NotFoundException('No se encontraron órdenes para los parámetros proporcionados.');
+      }
+  
+      return {
+        data: orders,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      };
+    } catch (error) {
+      
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error; 
+      }
+  
+      
+      throw new InternalServerErrorException(`Error al obtener órdenes: ${error.message}`);
+    }
+  }
+  
 
   async addOrder(createOrderDto: CreateOrderDto) {
     const { userId, products, adults = 0, children = 0, medicalInsurance, passengers } = createOrderDto;
@@ -39,7 +84,7 @@ export class OrdersRepository {
           throw new BadRequestException(`Producto con id ${productDto.id} no encontrado`);
         }
 
-        const selectedDate = new Date(createOrderDto.date); // Suponiendo que la fecha se pasa en el DTO
+        const selectedDate = new Date(createOrderDto.date);
         let productDuration = parseInt(product.duration.split(' ')[0], 10);
         const availableDates = product.travelDate?.availableDates || [];
         const selectedDateString = selectedDate.toISOString().split('T')[0];
@@ -60,7 +105,7 @@ export class OrdersRepository {
           productDuration = endDate.getDate() - selectedDate.getDate() + 1;
         }
 
-        
+
         const adultPrice = product.price;
         const childPrice = adultPrice * 0.5;
         const totalAdults = adults;
@@ -69,8 +114,8 @@ export class OrdersRepository {
         const totalChildPrice = totalChildren * childPrice;
         const totalProductPrice = totalAdultPrice + totalChildPrice;
 
-        
-        const totalQuantity = totalAdults + totalChildren; 
+
+        const totalQuantity = totalAdults + totalChildren;
         if (product.stock < totalQuantity) {
           throw new BadRequestException(`Stock insuficiente para el producto con id ${productDto.id}`);
         }
@@ -151,10 +196,10 @@ export class OrdersRepository {
         }),
       };
 
-      // return { order: orderWithDates };
+      await this.mailRepository.sendOrderConfirmationEmail(orderWithDates, user);
 
-        const successUrl = 'http://localhost:3006/payment-success';
-        const cancelUrl = 'http://localhost:3006/payment-cancel'; 
+        const successUrl = 'https://pf-grupo03.vercel.app/pay-success';
+        const cancelUrl = 'https://pf-grupo03.vercel.app/pay-failed';
         
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -194,6 +239,34 @@ export class OrdersRepository {
     }
 
     return order;
+  }
+
+  async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
+    return await this.ordersRepository.find({
+      where: { user: { id: userId}},
+      relations: ['orderDetails', 'orderDetails.product', 'passengers'],
+    });
+  }
+
+  async deleteOrder(id: string) {
+    try {
+      const orderById = await this.ordersRepository.findOne({
+        where: { id, isActive: true},
+      });
+      if(!orderById) {
+        throw new NotFoundException(`Orden con ID ${id} no encontrada`);
+      }
+      orderById.isActive = false;
+      await this.ordersRepository.save(orderById);
+      return {
+        Message: 'Orden eliminada correctamente',
+      };
+    } catch (error) {
+      if(error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Error al eliminar la orden: ' + error.message);
+    }
   }
 }
 

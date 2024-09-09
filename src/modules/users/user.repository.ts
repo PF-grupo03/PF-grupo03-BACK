@@ -7,8 +7,10 @@ import {
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, FiltersUsersDto, UpdateUserDto, bannedUserDto } from './user.dto';
+import { CreateUserDto, FiltersUsersDto, UpdateUserDto, UpdateUserPasswordDto, bannedUserDto } from './user.dto';
 import { MailRepository } from 'src/mail/mail.repository';
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class UsersRepository {
@@ -89,7 +91,7 @@ export class UsersRepository {
       };
     } catch (error) {
         if (error instanceof NotFoundException || error instanceof BadRequestException) {
-          throw error; // Propaga el error NotFoundException
+          throw error; 
         }
         throw new InternalServerErrorException('Error al eliminar el usuario: ' + error.message);
     }
@@ -206,4 +208,27 @@ export class UsersRepository {
       throw new InternalServerErrorException('Error desbaneando el usuario');
     }
   }
+
+  async changePassword(id: string, newPassword: UpdateUserPasswordDto) {
+    try {
+      const user = await this.usersRepository.findOneBy({ id });
+      if (!user) {
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+      }
+
+      if (!newPassword.password) {
+        throw new BadRequestException('Debe proporcionar una nueva contraseña');
+      }
+
+      user.password = await bcrypt.hash(newPassword.password, 10);
+      await this.usersRepository.save(user);
+
+      return {
+        message: 'Contraseña cambiada correctamente',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Error cambiando la contraseña');
+    }
+  }
+
 }
