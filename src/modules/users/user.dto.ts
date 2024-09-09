@@ -9,7 +9,6 @@ import {
   IsPositive,
   Min,
   IsEmpty,
-  IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -129,6 +128,10 @@ export class UpdateUserDto {
   @ApiHideProperty()
   @IsEmpty()
   isBanned?: boolean;
+
+  @ApiHideProperty()
+  @IsEmpty()
+  imageProfile?: string;
 }
 
 export class FiltersUsersDto {

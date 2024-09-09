@@ -198,8 +198,8 @@ export class OrdersRepository {
 
       await this.mailRepository.sendOrderConfirmationEmail(orderWithDates, user);
 
-        const successUrl = 'https://pf-grupo03.vercel.app/payment-success';
-        const cancelUrl = 'https://pf-grupo03.vercel.app/payment-failed';
+        const successUrl = 'https://pf-grupo03.vercel.app/pay-success';
+        const cancelUrl = 'https://pf-grupo03.vercel.app/pay-failed';
         
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],

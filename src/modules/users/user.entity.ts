@@ -6,6 +6,11 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({
+    default: undefined
+  })
+  imageProfile: string;
+
   @Column()
   username: string;
 
