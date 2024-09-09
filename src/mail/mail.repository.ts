@@ -51,6 +51,9 @@ export class MailRepository {
             throw new Error('Archivo de plantilla no encontrado');
         }
 
+        if (!user)
+            throw new Error('Usuario no encontrado');
+
         let emailHtml = fs.readFileSync(emailTemplatePath, 'utf8');
         emailHtml = emailHtml.replace(/\[name\]/g, user.name);
         emailHtml = emailHtml.replace(/\[motive\]/g, userbanned.motive);
