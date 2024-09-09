@@ -7,7 +7,7 @@ export class UserEntity {
   id: string;
 
   @Column({
-    default: undefined
+    default: null,
   })
   imageProfile: string;
 
