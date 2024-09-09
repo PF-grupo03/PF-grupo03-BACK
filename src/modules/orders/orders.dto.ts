@@ -38,12 +38,12 @@ export class CreateOrderDto {
   @IsNumber()
   @IsPositive()
   @Min(1)
-  adults: number = 0; 
+  adults: number = 0;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
-  children: number = 0; 
+  children: number = 0;
 
   @ApiHideProperty()
   @IsEmpty()
@@ -53,11 +53,11 @@ export class CreateOrderDto {
   @IsEmpty()
   status: string;
 
-  @Validate(AtLeastOneAdultConstraint) 
+  @Validate(AtLeastOneAdultConstraint)
   validateAdults() {}
 
   @IsBoolean()
-  medicalInsurance: boolean = false; 
+  medicalInsurance: boolean = false;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -65,7 +65,7 @@ export class CreateOrderDto {
   passengers: PassengerDto[];
 }
 
-class PassengerDto {
+export class PassengerDto {
   @IsString()
   name: string;
 

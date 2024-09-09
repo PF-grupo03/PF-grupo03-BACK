@@ -76,4 +76,50 @@ export class MailRepository {
 
         return userbanned;
     }
+
+    async sendOrderConfirmationEmail(order, user: UpdateUserDto) {
+        const emailTemplatePath = path.resolve(__dirname, 'template', 'emailCompra.template.html');
+
+        if (!existsSync(emailTemplatePath)) {
+            console.error(`El archivo de plantilla no existe: ${emailTemplatePath}`);
+            throw new Error('Archivo de plantilla no encontrado');
+        }
+
+        let emailHtml = fs.readFileSync(emailTemplatePath, 'utf8');
+
+        emailHtml = emailHtml.replace(/\[email\]/g, user.email);
+        emailHtml = emailHtml.replace(/\[nombre\]/g, user.name);
+        emailHtml = emailHtml.replace(/\[orderNumber\]/g, order.id);
+        emailHtml = emailHtml.replace(/\[purchaseDate\]/g, order.orderDate.toISOString().split('T')[0]);
+        emailHtml = emailHtml.replace(/\[destination\]/g, order.orderDetails[0].product.destination || 'N/A');
+        emailHtml = emailHtml.replace(/\[flightDate\]/g, order.orderDetails[0].product.startDate || 'N/A');
+
+        const passengerListHtml = order.passengers
+            .map(passenger => `
+                <li>
+                    <strong>Nombre:</strong> ${passenger.name}<br>
+                    <strong>Email:</strong> ${passenger.email}<br>
+                    <strong>Teléfono:</strong> ${passenger.cellphone}<br>
+                    <strong>DNI:</strong> ${passenger.dni}
+                </li>`)
+            .join('');
+        emailHtml = emailHtml.replace(/\[passengerList\]/g, passengerListHtml);
+
+        const mailOptions = {
+            from: process.env.MAIL_USER,
+            to: user.email,
+            subject: 'Confirmacion de compra en Travel Zone',
+            html: emailHtml
+        };
+
+        mailerConfig.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el correo de compra:', error);
+            } else {
+                console.log('Email de confirmación de compra enviado correctamente: ' + info.response);
+            }
+        });
+    }
+
+
 }

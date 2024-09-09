@@ -8,6 +8,8 @@ import { ProductEntity } from "../products/product.entity";
 import { CreateOrderDto } from "./orders.dto";
 import { stripe } from "../../config/stripe.config";
 import { PassengerEntity } from "./passenger.entity";
+import { MailRepository } from 'src/mail/mail.repository';
+
 
 @Injectable()
 export class OrdersRepository {
@@ -81,7 +83,7 @@ export class OrdersRepository {
           throw new BadRequestException(`Producto con id ${productDto.id} no encontrado`);
         }
 
-        const selectedDate = new Date(createOrderDto.date); // Suponiendo que la fecha se pasa en el DTO
+        const selectedDate = new Date(createOrderDto.date);
         let productDuration = parseInt(product.duration.split(' ')[0], 10);
         const availableDates = product.travelDate?.availableDates || [];
         const selectedDateString = selectedDate.toISOString().split('T')[0];
@@ -193,10 +195,7 @@ export class OrdersRepository {
         }),
       };
 
-      // return { order: orderWithDates };
-
-        //   const successUrl = 'https://pf-grupo03-back.onrender.com/payment-success';
-        //   const cancelUrl = 'https://pf-grupo03-back.onrender.com/payment-cancel';
+      await this.mailRepository.sendOrderConfirmationEmail(orderWithDates, user);
 
         const successUrl = 'https://pf-grupo03.vercel.app/payment-success';
         const cancelUrl = 'https://pf-grupo03.vercel.app/payment-failed'; 

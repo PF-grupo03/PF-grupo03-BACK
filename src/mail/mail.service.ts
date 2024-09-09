@@ -13,4 +13,8 @@ export class MailService {
     userSuspensionEmail(user: UpdateUserDto, userbanned: bannedUserDto): Promise<Partial<bannedUserDto>> {
         return this.mailRepository.userSuspensionEmail(user, userbanned);
     }
+
+    sendOrderConfirmationEmail(order, user: UpdateUserDto) {
+        return this.mailRepository.sendOrderConfirmationEmail(order, user);
+    }
 }
