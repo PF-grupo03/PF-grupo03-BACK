@@ -15,7 +15,7 @@ export class StripeController {
     @Headers('stripe-signature') signature: string,
   ) {
     let event: Stripe.Event;
-    try { 
+    try {
       event = stripe.webhooks.constructEvent(
         req["rawBody"],
         signature,
