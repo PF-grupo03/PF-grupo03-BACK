@@ -17,7 +17,7 @@ export class StripeController {
     let event: Stripe.Event;
     try {
       event = stripe.webhooks.constructEvent(
-        req["rawBody"],
+        req['rawBody'],
         signature,
         STRIPE_WEBHOOK_PRIVATE_SIGNING,
       );
@@ -30,7 +30,28 @@ export class StripeController {
           const session = event.data.object as Stripe.Checkout.Session;
           await this.stripeService.handlePaymentSuccess(session);
         }
+        break;
+      case 'checkout.session.expired':
+        {
+          const session = event.data.object as Stripe.Checkout.Session;
+          await this.stripeService.handlePaymentCancel(session);
+        }
+        break;
+      case 'payment_intent.succeeded':
+        {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          await this.stripeService.handlePaymentIntentSuccess(paymentIntent);
+        }
+        break;
+      case 'payment_intent.payment_failed':
+        {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          await this.stripeService.handlePaymentIntentFailed(paymentIntent);
+        }
+        break;
+      default:
         return { received: true };
     }
+    return { received: true };
   }
 }
