@@ -174,10 +174,10 @@ export class ProductsRepository {
       // Eliminar imágenes de Cloudinary si existen
       for (const field of imageFields) {
         if (productById[field] && productById[field].includes("res.cloudinary.com")) {
-          const publicId = productById[field].split("/").pop()?.split(".")[0];
+          const publicId = productById[field].split("/").slice(-2).join('/').split(".")[0];
           if (publicId) {
             try {
-              await cloudinary.uploader.destroy(`travel_zone_cloudinary/${publicId}`);
+              await cloudinary.uploader.destroy(publicId);
             } catch (destroyError) {
               console.error(`Error al eliminar la imagen ${field} de Cloudinary:`, destroyError);
               throw new InternalServerErrorException(`Error al eliminar la imagen ${field} de Cloudinary`);
