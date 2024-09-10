@@ -10,7 +10,7 @@
     "location": "Rome, Italy",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["diseño de sonrisa", "europa", "italia"],
+    "categories": ["tours", "europa", "italia"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -130,7 +130,7 @@
     "location": "New York, USA",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["américa", "estados unidos"],
+    "categories": ["tours", "américa", "estados unidos"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -250,7 +250,7 @@
     "location": "Kyoto, Japan",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["asia", "japón"],
+    "categories": ["tours", "asia", "japón"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -370,7 +370,7 @@
     "location": "Sydney, Australia",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["oceanía", "australia"],
+    "categories": ["tours","oceanía", "australia"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -490,7 +490,7 @@
     "location": "Rio de Janeiro, Brazil",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["américa", "brasil"],
+    "categories": ["tours","américa", "brasil"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -610,7 +610,7 @@
     "location": "Cairo, Egypt",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["áfrica", "egipto"],
+    "categories": ["tours","áfrica", "egipto"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -730,7 +730,7 @@
     "location": "Maui, Hawaii",
     "duration": "1 día",
     "stock": 100,
-    "categories": ["oceanía", "hawái"],
+    "categories": ["tours","oceanía", "hawái"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -850,7 +850,7 @@
     "location": "Río de Janeiro, Brasil",
     "duration": "10 Días",
     "stock": 100,
-    "categories": ["sudamérica", "playa", "brasil"],
+    "categories": ["américa", "brasil"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -962,7 +962,7 @@
     "location": "Cartagena, Colombia",
     "duration": "10 Días",
     "stock": 100,
-    "categories": ["sudamérica", "caribe", "colombia"],
+    "categories": ["américa", "colombia"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1078,7 +1078,7 @@
     "location": "Madrid, España",
     "duration": "20 Días",
     "stock": 100,
-    "categories": ["europa", "españa", "ciudad"],
+    "categories": ["europa", "españa"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1198,7 +1198,7 @@
     "location": "Roma, Italia",
     "duration": "20 Días",
     "stock": 100,
-    "categories": ["europa", "italia", "ciudad"],
+    "categories": ["europa", "italia"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1318,7 +1318,7 @@
     "location": "Buenos Aires, Argentina",
     "duration": "10 Días",
     "stock": 100,
-    "categories": ["sudamérica", "ciudad", "argentina"],
+    "categories": ["américa", "argentina"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1433,7 +1433,7 @@
     "location": "Miami, Florida, USA",
     "duration": "10 Días",
     "stock": 100,
-    "categories": ["américa del norte", "playa", "ee.uu."],
+    "categories": ["américa", "ee.uu."],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1548,7 +1548,7 @@
     "location": "Nueva York, Nueva York, USA",
     "duration": "10 Días",
     "stock": 100,
-    "categories": ["américa del norte", "ciudad", "ee.uu."],
+    "categories": ["américa", "ee.uu."],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1663,7 +1663,7 @@
     "location": "Punta Cana, República Dominicana",
     "duration": "10 Días",
     "stock": 100,
-    "categories": ["caribe", "playa", "república dominicana"],
+    "categories": ["america", "república dominicana"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1778,7 +1778,7 @@
     "location": "París, Francia",
     "duration": "20 Días",
     "stock": 100,
-    "categories": ["europa", "francia", "ciudad"],
+    "categories": ["europa", "francia"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -1898,7 +1898,7 @@
     "location": "Londres, Reino Unido",
     "duration": "20 Días",
     "stock": 100,
-    "categories": ["europa", "reino unido", "ciudad"],
+    "categories": ["europa", "reino unido"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -2018,7 +2018,7 @@
     "location": "Amazonas, Perú",
     "duration": "3 Días",
     "stock": 20,
-    "categories": ["aventura", "naturaleza", "suramérica"],
+    "categories": ["avistamiento de aves", "américa"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -2138,7 +2138,7 @@
     "location": "Patagonia, Argentina",
     "duration": "1 Día",
     "stock": 50,
-    "categories": ["deporte", "naturaleza", "suramérica"],
+    "categories": ["pesca deportiva", "américa"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
@@ -2378,7 +2378,7 @@
     "location": "Bogota, Colombia",
     "duration": "7 Días",
     "stock": 10,
-    "categories": ["salud", "asia", "turismo médico"],
+    "categories": ["salud", "diseño de sonrisa"],
     "isActive": true,
     "travelDate": {
       "availableDates": [
