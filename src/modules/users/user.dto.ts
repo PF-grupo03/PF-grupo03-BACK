@@ -45,13 +45,15 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({
-    description: 'Contraseña del usuario. Debe tener entre 8 y 15 caracteres, incluir al menos una letra minúscula, una mayúscula, un número y un carácter especial (!@#$%^&*).',
-    example: 'aaBB33##',
+    description: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres',
+    example: 'aaBB3366',
   })
   @IsString()
   @MinLength(8)
   @MaxLength(15)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/, { message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial: !@#$%^&*' })
+  @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+  })
   password: string;
 
   @ApiProperty({
@@ -111,14 +113,16 @@ export class UpdateUserDto {
   email?: string;
 
   @ApiPropertyOptional({
-    description: 'Contraseña del usuario. Debe tener entre 8 y 15 caracteres, incluir al menos una letra minúscula, una mayúscula, un número y un carácter especial (!@#$%^&*).',
-    example: 'aaBB33##',
+    description: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres',
+    example: 'aaBB3366',
   })
   @IsOptional()
   @IsString()
   @MinLength(8)
   @MaxLength(15)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/, { message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial: !@#$%^&*' })
+  @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+  })
   password?: string;
 
   @ApiPropertyOptional({
@@ -210,11 +214,13 @@ export class bannedUserDto {
   export class UpdateUserPasswordDto {
     @ApiPropertyOptional({
       description: 'Password del usuario',
-      example: 'aaBB33##',
+      example: 'aaBB3366',
     })
     @IsString()
     @MinLength(8)
     @MaxLength(15)
-    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/, { message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número y un carácter especial: !@#$%^&*' })
+    @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+      message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+    })
     password: string;
   }

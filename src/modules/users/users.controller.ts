@@ -106,8 +106,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('ban-user/:id')
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(AuthGuard,RolesGuard)
   async banUser(@Body() bannedUserDto: bannedUserDto, @Param('id', ParseUUIDPipe) id: string) {
     return this.userService.banUser(bannedUserDto, id);
   }
@@ -118,8 +118,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('unban-user/:id')
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(AuthGuard,RolesGuard)
   async unbanUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.unbanUser(id);
   }
@@ -129,8 +129,8 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(AuthGuard,RolesGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteUser(id);
   }
