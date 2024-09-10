@@ -8,6 +8,7 @@ import { ProductEntity } from "../products/product.entity";
 import { CreateOrderDto } from "./orders.dto";
 import { stripe } from "../../config/stripe.config";
 import { PassengerEntity } from "./passenger.entity";
+import { MailRepository } from 'src/mail/mail.repository';
 
 
 @Injectable()
@@ -19,18 +20,19 @@ export class OrdersRepository {
     @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
     @InjectRepository(ProductEntity) private productsRepository: Repository<ProductEntity>,
     @InjectRepository(PassengerEntity) private passengersRepository: Repository<PassengerEntity>,
+    private readonly mailRepository: MailRepository
   ) {}
 
   async getOrders(page: number, limit: number) {
-
+    
     if (page <= 0 || limit <= 0) {
       throw new BadRequestException('Los valores de "page" y "limit" deben ser mayores que cero.');
     }
-
+  
     const skip = (page - 1) * limit;
-
+  
     try {
-
+    
       const [orders, total] = await this.ordersRepository.findAndCount({
         relations: ['orderDetails', 'orderDetails.product', 'passengers'],
         skip,
@@ -39,12 +41,12 @@ export class OrdersRepository {
           orderDate: 'DESC',
         },
       });
-
-
+  
+      
       if (orders.length === 0) {
         throw new NotFoundException('No se encontraron órdenes para los parámetros proporcionados.');
       }
-
+  
       return {
         data: orders,
         total,
@@ -52,16 +54,16 @@ export class OrdersRepository {
         totalPages: Math.ceil(total / limit),
       };
     } catch (error) {
-
+      
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
-        throw error;
+        throw error; 
       }
-
-
+  
+      
       throw new InternalServerErrorException(`Error al obtener órdenes: ${error.message}`);
     }
   }
-
+  
 
   async addOrder(createOrderDto: CreateOrderDto) {
     const { userId, products, adults = 0, children = 0, medicalInsurance, passengers } = createOrderDto;
@@ -194,9 +196,11 @@ export class OrdersRepository {
         }),
       };
 
-        const successUrl = 'https://pf-grupo03.vercel.app/pay-success';
-        const cancelUrl = 'https://pf-grupo03.vercel.app/pay-failed';
+      await this.mailRepository.sendOrderConfirmationEmail(orderWithDates, user);
 
+        const successUrl = 'https://pf-grupo03.vercel.app/pay-succes';
+        const cancelUrl = 'https://pf-grupo03.vercel.app/pay-failed';
+        
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: orderWithDates.orderDetails.map(orderDetail => ({
