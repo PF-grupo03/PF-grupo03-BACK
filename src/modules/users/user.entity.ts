@@ -55,5 +55,5 @@ export class UserEntity {
   isBanned: boolean;
 
   @OneToMany(() => OrderEntity, (order) => order.user)
-  order?: OrderEntity[]; 
+  order?: OrderEntity[];
 }
