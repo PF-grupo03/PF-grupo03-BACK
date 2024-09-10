@@ -182,16 +182,32 @@ export class UsersRepository {
         console.log('No se encontro el usuario');
         throw new NotFoundException(`Usuario con id ${id} no encontrado`);
       }
+
       user.isBanned = true;
       await this.usersRepository.save(user);
-      this.mailRepository.userSuspensionEmail(user, userbanned)
+
+      const updatedUser: UpdateUserDto = {
+        imageProfile: user.imageProfile,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        password: '',
+        dni: user.dni,
+        phone: user.phone,
+        isActive: user.isActive,
+        isBanned: user.isBanned,
+      };
+
+      this.mailRepository.userSuspensionEmail(updatedUser, userbanned);
+
       return {
         message: 'Usuario baneado correctamente',
       };
     } catch (error) {
       throw new InternalServerErrorException('Error baneando el usuario');
     }
-}
+  }
+
 
   async unbanUser(id: string) {
     try {

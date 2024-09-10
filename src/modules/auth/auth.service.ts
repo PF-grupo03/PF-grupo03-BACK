@@ -22,8 +22,7 @@ export class AuthService {
     }
 
     async findUserByEmail(email: string) {
-        const userDb= this.usersRepository.getUserByEmail(email);  
-        
+        const userDb= this.usersRepository.getUserByEmail(email);
         return userDb;
     }
 

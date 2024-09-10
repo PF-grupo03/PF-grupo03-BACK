@@ -9,61 +9,77 @@ import {
   IsPositive,
   Min,
   IsEmpty,
+  Matches,
+  MinLength,
+  MaxLength,
+  Length,
 } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
-    description: 'Username of the user',
-    example: 'john_doe',
+    description: 'Nombre de usuario que debe ser único y contener solo caracteres alfanuméricos y guiones bajos. Se utiliza como identificador en la plataforma.',
+    example: 'user_name123',
+    minLength: 3,
+    maxLength: 20,
   })
   @IsString()
+  @Length(3, 20, { message: 'El nombre de usuario debe tener entre 3 y 20 caracteres' })
+  @Matches(/^[a-zA-Z0-9_]+$/, { message: 'El nombre de usuario solo puede contener letras, números y guiones bajos' })
   username: string;
 
   @ApiProperty({
-    description: 'Name of the user',
+    description: 'Nombre completo del usuario, solo se permiten letras y espacios.',
     example: 'John Doe',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(80)
+  @Matches(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/, {message: 'El nombre no puede contener numeros ni caracteres especiales, solo se aceptan letras'})
   name: string;
 
   @ApiProperty({
-    description: 'Email of the user',
+    description: 'Correo electrónico válido del usuario. Debe seguir el formato estándar de emails.',
     example: 'johndoe@example.com',
   })
   @IsEmail()
   email: string;
 
   @ApiProperty({
-    description: 'Password of the user',
-    example: 'password123',
+    description: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres',
+    example: 'aaBB3366',
   })
   @IsString()
+  @MinLength(8)
+  @MaxLength(15)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+  })
   password: string;
 
   @ApiProperty({
-    description: 'DNI of the user',
+    description: 'Número de identificación nacional del usuario (DNI).',
     example: 12345678,
   })
   @IsNumber()
   dni: number;
 
   @ApiProperty({
-    description: 'Phone number of the user',
+    description: 'Número de teléfono del usuario, debe contener solo números.',
     example: 1123456789,
   })
   @IsNumber()
   phone: number;
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   isActive?: boolean;
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   IsAdmin?: boolean;
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   IsBanned?: boolean;
 
   @ApiHideProperty()
@@ -73,7 +89,7 @@ export class CreateUserDto {
 
 export class UpdateUserDto {
   @ApiPropertyOptional({
-    description: 'Username of the user',
+    description: 'Nombre de usuario único, debe contener solo caracteres alfanuméricos y guiones bajos. Se utiliza como identificador en la plataforma.',
     example: 'john_doe',
   })
   @IsOptional()
@@ -81,7 +97,7 @@ export class UpdateUserDto {
   username?: string;
 
   @ApiPropertyOptional({
-    description: 'Name of the user',
+    description: 'Nombre completo del usuario, solo se permiten letras y espacios.',
     example: 'John Doe',
   })
   @IsOptional()
@@ -89,23 +105,28 @@ export class UpdateUserDto {
   name?: string;
 
   @ApiPropertyOptional({
-    description: 'Email of the user',
+    description: 'Correo electrónico válido del usuario. Debe seguir el formato estándar de emails.',
     example: 'johndoe@example.com',
   })
   @IsOptional()
   @IsEmail()
   email?: string;
 
+  @MinLength(8)
   @ApiPropertyOptional({
-    description: 'Password of the user',
-    example: 'password123',
+    description: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres',
+    example: 'aaBB3366',
   })
   @IsOptional()
+  @MaxLength(15)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+    })
   @IsString()
   password?: string;
 
   @ApiPropertyOptional({
-    description: 'DNI of the user',
+    description: 'Número de identificación nacional del usuario (DNI).',
     example: 12345678,
   })
   @IsOptional()
@@ -113,7 +134,7 @@ export class UpdateUserDto {
   dni?: number;
 
   @ApiPropertyOptional({
-    description: 'Phone number of the user',
+    description: 'Número de teléfono del usuario, debe contener solo números.',
     example: 1123456789,
   })
   @IsOptional()
@@ -122,15 +143,15 @@ export class UpdateUserDto {
 
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   isActive?: boolean;
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   isAdmin?: boolean;
 
   @ApiHideProperty()
-  @IsEmpty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   isBanned?: boolean;
 
   @ApiHideProperty()
@@ -192,9 +213,14 @@ export class bannedUserDto {
 
   export class UpdateUserPasswordDto {
     @ApiPropertyOptional({
-      description: 'Password of the user',
-      example: 'password123',
+      description: 'Password del usuario',
+      example: 'aaBB3366',
     })
     @IsString()
+    @MinLength(8)
+    @MaxLength(15)
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+      message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+    })
     password: string;
   }

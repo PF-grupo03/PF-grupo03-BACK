@@ -1,8 +1,8 @@
-import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty, IsBoolean, Min } from 'class-validator';
+import { IsString, IsArray, ValidateNested, IsOptional, IsNumber, IsPositive, Validate, IsEmpty, IsBoolean, Min, IsNotEmpty, IsUUID, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
 
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-import { ApiHideProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 class ProductDto {
   @IsString()
@@ -22,14 +22,24 @@ class AtLeastOneAdultConstraint implements ValidatorConstraintInterface {
 }
 
 export class CreateOrderDto {
-  @IsString()
+  @ApiProperty({
+    description: 'Identificador único del usuario generado por la base de datos (UUID v4)',
+    example: '123e4567-e89b-12d3-a456-426614174000'
+  })
+  @IsNotEmpty()
+  @IsUUID()
   userId: string;
 
   @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => ProductDto)
   products: ProductDto[];
 
+  @ApiProperty({
+    description: 'fecha de inicio del viaje',
+    example: '2024-09-12'
+  })
   @IsOptional()
   @IsString()
   date?: string;

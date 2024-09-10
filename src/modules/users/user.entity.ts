@@ -7,7 +7,7 @@ export class UserEntity {
   id: string;
 
   @Column({
-    default: undefined
+    default: null,
   })
   imageProfile: string;
 
@@ -55,5 +55,5 @@ export class UserEntity {
   isBanned: boolean;
 
   @OneToMany(() => OrderEntity, (order) => order.user)
-  order?: OrderEntity[]; 
+  order?: OrderEntity[];
 }
