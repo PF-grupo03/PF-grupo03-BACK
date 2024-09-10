@@ -176,8 +176,10 @@ export class ProductsRepository {
 
       // Eliminar imágenes de Cloudinary si existen
       for (const field of imageFields) {
-        if (productById[field] && productById[field].includes("res.cloudinary.com")) {
-          const publicId = productById[field].split("/").slice(-2).join('/').split(".")[0];
+        const imageUrl = productById[field];
+      if (imageUrl && imageUrl.includes("res.cloudinary.com")) {
+        const publicId = imageUrl.split('/').slice(-2).join('/').split('.')[0]; 
+
           if (publicId) {
             try {
               await cloudinary.uploader.destroy(publicId);
