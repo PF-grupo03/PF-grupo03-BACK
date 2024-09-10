@@ -1,8 +1,9 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from '../users/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,12 +21,25 @@ export class AuthController {
     }
 
     @Post('signup')
+    @UseInterceptors(FileInterceptor('file'))
     @ApiOperation({ summary: 'signup', description: 'signup' })
     @ApiResponse({ status: 200, description: 'signup retrieved successfully' })
     @ApiResponse({ status: 404, description: 'signup not found' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
-    signIn(@Body() user: CreateUserDto) {
-        return this.authService.signUp(user);
+    signUp(@Body() user: CreateUserDto, @UploadedFile( new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 200000,
+            message: 'Supera el peso máximo permitido (no mayor a 200kb)',
+          }),
+          new FileTypeValidator({
+            fileType: /(jpg|jpeg|png|webp|svg|gif)/,
+          }),
+        ],
+      }),
+    )
+    file?: Express.Multer.File) {
+        return this.authService.signUp(user, file);
     }
 
     @Post('signin')
@@ -33,7 +47,7 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'User signed in successfully' })
     @ApiResponse({ status: 400, description: 'Invalid credentials' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
-    async signUp(@Body() credential: LoginUserDto) {
+    async signIn(@Body() credential: LoginUserDto) {
     const { email, password } = credential;
     return await this.authService.signIn(email, password);
 }

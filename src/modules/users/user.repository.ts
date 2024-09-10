@@ -179,8 +179,8 @@ export class UsersRepository {
     try {
       const user = await this.getUserById(id);
       if (!user) {
-        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
         console.log('No se encontro el usuario');
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
       }
       user.isBanned = true;
       await this.usersRepository.save(user);

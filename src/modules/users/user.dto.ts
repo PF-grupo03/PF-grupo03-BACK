@@ -65,6 +65,10 @@ export class CreateUserDto {
   @ApiHideProperty()
   @IsEmpty()
   IsBanned?: boolean;
+
+  @ApiHideProperty()
+  @IsEmpty()
+  imageProfile?: string;
 }
 
 export class UpdateUserDto {
