@@ -48,7 +48,7 @@ export class UsersRepository {
 
       const { password, isAdmin, ...userNoPassword } = userById;
             return userNoPassword;
-      
+
     } catch (error) {
       throw new InternalServerErrorException('Error obteniendo usuarios');
     }
@@ -91,7 +91,7 @@ export class UsersRepository {
       };
     } catch (error) {
         if (error instanceof NotFoundException || error instanceof BadRequestException) {
-          throw error; 
+          throw error;
         }
         throw new InternalServerErrorException('Error al eliminar el usuario: ' + error.message);
     }

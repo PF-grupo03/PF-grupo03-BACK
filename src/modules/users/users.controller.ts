@@ -49,10 +49,10 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @Get(':email')
-  getUserByEmail(@Param('email') email: string) {
-    return this.userService.getUserByEmail(email);
-  }
+  @Get('getByEmail/:email')
+async getUserByEmail(@Param('email') email: string) {
+        return this.userService.getUserByEmail(email);
+}
 
   @ApiOperation({ summary: 'Update user by ID', description: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
@@ -134,6 +134,5 @@ export class UsersController {
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteUser(id);
   }
-
 
 }
