@@ -123,7 +123,7 @@ export class UpdateUserDto {
   @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
     message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
   })
-  password?: string;
+  password: string;
 
   @ApiPropertyOptional({
     description: 'Número de identificación nacional del usuario (DNI).',
