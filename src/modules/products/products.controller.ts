@@ -60,8 +60,8 @@ export class ProductsController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: [CreateProductDto] })
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+/*   @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin) */
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'image', maxCount: 1 },
@@ -81,7 +81,7 @@ export class ProductsController {
     return this.productsService.createProduct(product, files);
   }
 
-  @Put()
+  @Put(':id')
   @ApiOperation({
     summary: 'Update product',
     description: 'Update product using product ID',
@@ -91,7 +91,7 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: [UpdateProductDto] })
-  @UseGuards(AuthGuard)
+  /* @UseGuards(AuthGuard) */
   updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() product: UpdateProductDto,
@@ -108,8 +108,8 @@ export class ProductsController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+/*   @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin) */
   deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.deleteProduct(id);
   }
