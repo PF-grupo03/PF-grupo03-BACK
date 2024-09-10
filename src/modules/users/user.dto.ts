@@ -51,7 +51,9 @@ export class CreateUserDto {
   @IsString()
   @MinLength(8)
   @MaxLength(15)
-  @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres' })
+  @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+  })
   password: string;
 
   @ApiProperty({
@@ -118,8 +120,10 @@ export class UpdateUserDto {
   @IsString()
   @MinLength(8)
   @MaxLength(15)
-  @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres' })
-  password?: string;
+  @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+  })
+  password: string;
 
   @ApiPropertyOptional({
     description: 'Número de identificación nacional del usuario (DNI).',
@@ -215,6 +219,8 @@ export class bannedUserDto {
     @IsString()
     @MinLength(8)
     @MaxLength(15)
-    @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, { message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres' })
+    @Matches(/^(?=.[a-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+      message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
+    })
     password: string;
   }
