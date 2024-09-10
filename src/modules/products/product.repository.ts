@@ -192,6 +192,7 @@ export class ProductsRepository {
       await this.productsRepository.save(productById);
       return 'Producto eliminado correctamente';
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException('Error eliminando el producto');
     }
   }
