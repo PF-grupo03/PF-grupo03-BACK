@@ -7,17 +7,24 @@ import {
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, FiltersUsersDto, UpdateUserDto, UpdateUserPasswordDto, bannedUserDto } from './user.dto';
+import {
+  CreateUserDto,
+  FiltersUsersDto,
+  UpdateUserDto,
+  UpdateUserPasswordDto,
+  bannedUserDto,
+} from './user.dto';
 import { MailRepository } from 'src/mail/mail.repository';
 import * as bcrypt from 'bcrypt';
-
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import toStream = require('buffer-to-stream');
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-    private readonly mailRepository: MailRepository
+    private readonly mailRepository: MailRepository,
   ) {}
 
   async getUsers(params?: FiltersUsersDto) {
@@ -47,8 +54,7 @@ export class UsersRepository {
       }
 
       const { password, isAdmin, ...userNoPassword } = userById;
-            return userNoPassword;
-
+      return userNoPassword;
     } catch (error) {
       throw new InternalServerErrorException('Error obteniendo usuarios');
     }
@@ -57,13 +63,14 @@ export class UsersRepository {
   async updateUser(id: string, userBody: UpdateUserDto) {
     try {
       const result = await this.usersRepository.update(id, userBody);
-      if (result.affected === 0) throw new NotFoundException(`Usuario con id ${id} no encontrado`);
+      if (result.affected === 0)
+        throw new NotFoundException(`Usuario con id ${id} no encontrado`);
 
       const userById = await this.usersRepository.findOne({
         where: { id, isActive: true },
       });
 
-      const { password, isAdmin, ...userNoPassword} = userById
+      const { password, isAdmin, ...userNoPassword } = userById;
       return {
         message: 'Usuario actualizado correctamente',
         userNoPassword,
@@ -71,8 +78,88 @@ export class UsersRepository {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error; // Propaga el error NotFoundException
-    }
+      }
       throw new InternalServerErrorException('Error obteniendo usuarios');
+    }
+  }
+
+  async updateImageProfile(id: string, file: Express.Multer.File) {
+    try {
+      const userById = await this.usersRepository.findOne({
+        where: { id, isActive: true },
+      });
+      if (!userById)
+        throw new BadRequestException(
+          'No existe el usuario con el ID brindado',
+        );
+      const response = async (): Promise<UploadApiResponse> => {
+        return new Promise((resolve, reject) => {
+          const upload = cloudinary.uploader.upload_stream(
+            { resource_type: 'auto', folder: 'travel_zone_cloudinary' },
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result);
+              }
+            },
+          );
+          toStream(file.buffer).pipe(upload);
+        });
+      };
+
+      const imageResult = await response();
+      userById.imageProfile = imageResult.secure_url;
+      await this.usersRepository.save(userById);
+      return {
+        message: 'Foto de perfil actualizada',
+        userById,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        'Error actualizando imagen de usuario',
+      );
+    }
+  }
+
+  async deleteProfileImage(id: string, file: Express.Multer.File) {
+    try {
+      const userById = await this.usersRepository.findOne({
+        where: { id, isActive: true },
+      });
+      if (!userById)
+        throw new BadRequestException(
+          'No existe el usuario con el ID brindado',
+        );
+
+      const imageProfileUser = userById.imageProfile;
+
+      if (imageProfileUser && imageProfileUser.includes('res.cloudinary.com')) {
+        const publicId = imageProfileUser
+          .split('/')
+          .slice(-2)
+          .join('/')
+          .split('.')[0];
+        if (publicId) {
+          try {
+            await cloudinary.uploader.destroy(publicId);
+          } catch (destroyError) {
+            console.log(destroyError);
+            throw new InternalServerErrorException(
+              'Error en Cloudinary para eliminar imagen de usuario',
+            );
+          }
+        }
+      }
+      userById.imageProfile = null;
+      await this.usersRepository.save(userById);
+      return 'Imagen de usuario eliminada correctamente';
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        'Error eliminando imagen de usuario',
+      );
     }
   }
 
@@ -90,27 +177,32 @@ export class UsersRepository {
         message: 'Usuario eliminado correctamente',
       };
     } catch (error) {
-        if (error instanceof NotFoundException || error instanceof BadRequestException) {
-          throw error;
-        }
-        throw new InternalServerErrorException('Error al eliminar el usuario: ' + error.message);
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Error al eliminar el usuario: ' + error.message,
+      );
     }
   }
 
   async getUserByEmail(email: string): Promise<UserEntity> {
     try {
-
       const userByEmail = await this.usersRepository.findOneBy({ email });
 
       if (!userByEmail) throw new NotFoundException('Usuario no encontrado');
 
       return userByEmail;
-
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException('Error al obtener el usuario por email: ' + error.message);
+      throw new InternalServerErrorException(
+        'Error al obtener el usuario por email: ' + error.message,
+      );
     }
   }
 
@@ -133,7 +225,6 @@ export class UsersRepository {
 
       const { password, isAdmin, ...userNoPassword } = dbUser;
       return userNoPassword;
-
     } catch (error) {
       throw new BadRequestException(
         'Error al agregar el usuario: ' + error.message,
@@ -150,7 +241,7 @@ export class UsersRepository {
       user.isAdmin = true;
       await this.usersRepository.save(user);
 
-      const { password, isAdmin, ...userNoPassword} = user;
+      const { password, isAdmin, ...userNoPassword } = user;
 
       return {
         message: 'Usuario asignado el rol de administrador correctamente',
@@ -208,7 +299,6 @@ export class UsersRepository {
     }
   }
 
-
   async unbanUser(id: string) {
     try {
       const user = await this.getUserById(id);
@@ -246,5 +336,4 @@ export class UsersRepository {
       throw new InternalServerErrorException('Error cambiando la contraseña');
     }
   }
-
 }

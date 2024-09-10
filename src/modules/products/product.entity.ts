@@ -9,7 +9,6 @@ import {
 import { CategoryEntity } from '../categories/category.entity';
 import { OrderDetailsEntity } from '../orders/orderDetails.entity';
 
-
 @Entity('products')
 export class ProductEntity {
   @PrimaryGeneratedColumn('uuid')
