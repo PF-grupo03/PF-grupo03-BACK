@@ -120,9 +120,9 @@ export class UpdateUserDto {
   @IsString()
   @MinLength(8)
   @MaxLength(15)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+ /*  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
     message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
-  })
+  }) */
   password?: string;
 
   @ApiPropertyOptional({
