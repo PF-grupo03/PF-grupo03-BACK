@@ -27,8 +27,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+/*   @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard) */
   getUsers(@Query() params?: FiltersUsersDto) {
     return this.userService.getUsers(params);
   }
@@ -40,7 +40,7 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Get(':id')
-  @UseGuards(AuthGuard)
+  /* @UseGuards(AuthGuard) */
   getUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.getUserById(id);
   }
@@ -61,7 +61,7 @@ export class UsersController {
   @ApiBearerAuth()
   @Put(':id')
   @ApiBody({ type: UpdateUserDto })
-  @UseGuards(AuthGuard)
+ /*  @UseGuards(AuthGuard) */
   updateUser(@Param('id', ParseUUIDPipe) id: string,@Body() userBody: UpdateUserDto,) {
   return this.userService.updateUser(id, userBody);
   }
@@ -82,8 +82,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('make-admin/:id')
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
+/*   @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard) */
   async makeAdmin(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.makeAdmin(id);
   }
@@ -94,8 +94,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('remove-admin/:id')
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
+/*   @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard) */
   async removeAdmin(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.removeAdmin(id);
   }
