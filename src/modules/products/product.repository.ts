@@ -27,11 +27,11 @@ export class ProductsRepository {
   async getProducts(params?: FiltersProductsDto) {
     const { limit, page, title, location, maxPrice, duration, categories } = params;
     try {
-      const whereClause: TWhereClause = {};
-      if (title) whereClause.title = title;
-      if (location) whereClause.location = location;
-      if (duration) whereClause.duration = duration;
-      whereClause.isActive = true;
+      // const whereClause: TWhereClause = {};
+      // if (title) whereClause.title = title;
+      // if (location) whereClause.location = location;
+      // if (duration) whereClause.duration = duration;
+      // whereClause.isActive = true;
 
       const query = this.productsRepository.createQueryBuilder('product')
         .leftJoinAndSelect('product.categories', 'category');
@@ -118,6 +118,9 @@ export class ProductsRepository {
   }
 
   async updateProduct(id: string, product: UpdateProductDto) {
+    if (!product || Object.keys(product).length === 0) {
+      throw new BadRequestException('Introduce al menos un campo a actualizar');
+    }
     try {
       const existingProduct = await this.productsRepository.findOne({
         where: { id, isActive: true },

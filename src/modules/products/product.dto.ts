@@ -172,7 +172,7 @@ export class UpdateProductDto {
   duration?: string;
 
   @ApiHideProperty()
-  @IsBoolean()
+  @IsEmpty()
   isActive?: boolean;
 
   @ApiHideProperty()
@@ -239,14 +239,14 @@ export class FiltersProductsDto {
   @Max(5000)
   maxPrice?: number;
 
-  @ApiPropertyOptional({
-    description: 'Filtrar por estado activo',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  @Type(() => Boolean)
-  isActive?: boolean;
+  // @ApiPropertyOptional({
+  //   description: 'Filtrar por estado activo',
+  //   example: true,
+  // })
+  // @IsOptional()
+  // @IsBoolean()
+  // @Type(() => Boolean)
+  // isActive?: boolean;
 
   @ApiPropertyOptional({
     description: 'Filtrar por categorías',
