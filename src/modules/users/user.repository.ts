@@ -206,7 +206,10 @@ export class UsersRepository {
     }
   }
 
-  async addUser(user: CreateUserDto): Promise<Partial<UserEntity>> {
+  async addUser(
+    user: CreateUserDto,
+    file?: Express.Multer.File,
+  ): Promise<Partial<UserEntity>> {
     try {
       const existingUser = await this.usersRepository.findOneBy({
         email: user.email,
@@ -216,6 +219,28 @@ export class UsersRepository {
       }
 
       const newUser = await this.usersRepository.save(user);
+
+      if (file) {
+        const response = async (): Promise<UploadApiResponse> => {
+          return new Promise((resolve, reject) => {
+            const upload = cloudinary.uploader.upload_stream(
+              { resource_type: 'auto', folder: 'travel_zone_cloudinary' },
+              (error, result) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(result);
+                }
+              },
+            );
+            toStream(file.buffer).pipe(upload);
+          });
+        };
+
+        const imageResult = await response();
+        newUser.imageProfile = imageResult.secure_url;
+        await this.usersRepository.save(newUser);
+      }
 
       const dbUser = await this.usersRepository.findOneBy({ id: newUser.id });
       if (!dbUser)

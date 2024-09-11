@@ -4,9 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/user.dto';
 import { UsersRepository } from '../users/user.repository';
 import { MailService } from '../../mail/mail.service';
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-import toStream = require('buffer-to-stream');
-
 
 @Injectable()
 export class AuthService {
@@ -56,30 +53,11 @@ export class AuthService {
 
         //* Hashear la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const response = async (): Promise<UploadApiResponse> => {
-            return new Promise((resolve, reject) => {
-                const upload = cloudinary.uploader.upload_stream(
-                     { resource_type: 'auto', folder: 'travel_zone_cloudinary' },
-                     (error, result) => {
-                        if (error) {
-                          reject(error);
-                        } else {
-                          resolve(result);
-                        }
-                      },
-                )
-                toStream(file.buffer).pipe(upload);
-            })
-        }
-
-        const imageResult = await response();
-
+        
         //* Crear usuario en BBDD:
         const newUser = await this.usersRepository.addUser({
             ...user,
             password: hashedPassword,
-            imageProfile: imageResult.secure_url
         })
 
         await this.mailService.sendWelcomeEmail(user);
