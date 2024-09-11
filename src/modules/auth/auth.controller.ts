@@ -136,19 +136,19 @@ export class AuthController {
 
       // User object retrieved from GoogleStrategy
       if (!user) {
-        return res.status(400).json({ message: 'No se pudo autenticar el usuario' });
+        return res.redirect('https://pf-grupo03.vercel.app/register');
       }
 
-      // Check user existence and role (optional)
+      
       if (user.message === 'Usuario no encontrado') {
-        // Redirect to registration page
+        
         return res.redirect('https://pf-grupo03.vercel.app/register');
       } else if (user.isAdmin) {
-        // Redirect to admin dashboard
+        
         return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
       } 
 
-      // Default redirect to home for other users
+      
       res.cookie('authToken', user.token, { httpOnly: true });
       return res.redirect('https://pf-grupo03.vercel.app/');
 
