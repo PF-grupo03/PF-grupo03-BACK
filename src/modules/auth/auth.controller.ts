@@ -93,7 +93,8 @@ signUp(
         res.setHeader('Authorization', `Bearer ${user.token}`);
         res.json(user);
         // const redirectUrl = 'https://pf-grupo03.vercel.app';
-        // return res.redirect(redirectUrl);
+        const redirectUrl = `https://pf-grupo03.vercel.app/dashboard?token=${user.token}`;
+        return res.redirect(redirectUrl);
     }
     
 
