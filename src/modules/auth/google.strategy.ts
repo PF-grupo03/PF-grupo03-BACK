@@ -12,7 +12,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
         super({
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_SECRET,
-            callbackURL: 'https://pf-grupo03.vercel.app/auth/google/callback',
+            callbackURL: 'http://localhost:3006/auth/google/callback',
             scope: ['email', 'profile']
         })
     }
