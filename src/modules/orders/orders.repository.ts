@@ -5,10 +5,11 @@ import { OrderEntity } from "./order.entity";
 import { OrderDetailsEntity } from "./orderDetails.entity";
 import { UserEntity } from "../users/user.entity";
 import { ProductEntity } from "../products/product.entity";
-import { CreateOrderDto } from "./orders.dto";
+import { CreateOrderDto, UpdateOrderDto } from "./orders.dto";
 import { stripe } from "../../config/stripe.config";
 import { PassengerEntity } from "./passenger.entity";
 import { MailRepository } from 'src/mail/mail.repository';
+import { classToPlain, instanceToPlain } from "class-transformer";
 
 
 @Injectable()
@@ -240,12 +241,25 @@ export class OrdersRepository {
     return order;
   }
 
-  async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
-    return await this.ordersRepository.find({
+  async getOrdersByUserId(userId: string): Promise<Partial<UpdateOrderDto[]>> {
+   return await this.ordersRepository.find({
       where: { user: { id: userId}},
       relations: ['orderDetails', 'orderDetails.product', 'passengers'],
+    });}
+
+/*     const orders = await this.ordersRepository.find({
+      where: { user: { id: userId } },
+      relations: ['orderDetails', 'orderDetails.product', 'passengers'],
     });
-  }
+
+    return orders.map(order => {
+      const plainOrder = instanceToPlain(order);
+      plainOrder.orderDetails.forEach(detail => {
+        delete detail.product.travelDate;
+      });
+      return plainOrder;
+    });
+  } */
 
   async deleteOrder(id: string) {
     try {

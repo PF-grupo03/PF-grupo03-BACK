@@ -88,3 +88,40 @@ export class PassengerDto {
   @IsString()
   dni: string;
 }
+
+export class UpdateOrderDto {
+  @IsOptional()
+  @IsBoolean()
+  medicalInsurance?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PassengerDto)
+  passengers?: PassengerDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductDto)
+  products?: ProductDto[];
+
+  @IsOptional()
+  @IsString()
+  date?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  adults?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  children?: number;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+}
