@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { UserEntity } from '../users/user.entity';
 import { ProductEntity } from '../products/product.entity';
-import { CreateOrderDto } from './orders.dto';
+import { CreateOrderDto, UpdateOrderDto } from './orders.dto';
 import { OrdersRepository } from './orders.repository';
 
 
@@ -32,7 +32,7 @@ export class OrdersService {
     return order;
   }
 
-  async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
+  async getOrdersByUserId(userId: string): Promise<UpdateOrderDto[]> {
     const orders = await this.orderRepository.getOrdersByUserId(userId);
     if(!orders || orders.length === 0) {
       throw new NotFoundException(`No hay ordenes registrada para el usuario de ID ${userId}`);

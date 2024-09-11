@@ -197,24 +197,14 @@ export class UsersController {
     return this.userService.deleteUser(id);
   }
 
+  @ApiOperation({
+    summary: 'Delete profile image user',
+    description: 'Delete profile image user',
+  })
+  // @Roles(Role.User)
+  // @UseGuards(AuthGuard, RolesGuard)
   @Delete('image-profile/:id')
-  deleteProfileImage(
-    @Param('id', ParseUUIDPipe) id: string,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({
-            maxSize: 200000,
-            message: 'Supera el peso máximo permitido (no mayor a 200kb)',
-          }),
-          new FileTypeValidator({
-            fileType: /(jpg|jpeg|png|webp|svg|gif)/,
-          }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    return this.userService.deleteProfileImage(id, file);
+  deleteProfileImage(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.deleteProfileImage(id);
   }
 }

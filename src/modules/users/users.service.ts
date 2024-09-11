@@ -32,8 +32,8 @@ export class UsersService {
     return this.usersRepository.updateImageProfile(id, file);
   }
 
-  deleteProfileImage(id: string, file: Express.Multer.File) {
-    return this.usersRepository.deleteProfileImage(id, file);
+  deleteProfileImage(id: string) {
+    return this.usersRepository.deleteProfileImage(id);
   }
 
   deleteUser(id: string) {
