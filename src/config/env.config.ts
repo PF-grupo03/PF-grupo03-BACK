@@ -25,6 +25,6 @@ export const STRIPE_WEBHOOK_PRIVATE_SIGNING =
 export const STRIPE_WEBHOOK_LOCAL_SIGNING =
   process.env.STRIPE_WEBHOOK_LOCAL_SIGNING;
 
-export const RESTART_SCHEMA = false;
+export const RESTART_SCHEMA = true;
 export const DEFAULT_PROFILE_IMAGE_USER =
   'https://res.cloudinary.com/dfaej4bi8/image/upload/v1726057501/travel_zone_cloudinary/v5qriuhntjyjlveu2zdn.jpg';
