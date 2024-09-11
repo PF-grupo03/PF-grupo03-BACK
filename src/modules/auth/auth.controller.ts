@@ -133,6 +133,8 @@ export class AuthController {
 
     try {
       const { user } = req;
+      console.log(user);
+      
 
       // User object retrieved from GoogleStrategy
       if (!user) {
