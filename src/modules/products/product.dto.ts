@@ -309,7 +309,6 @@ export class FiltersProductsDto {
   @IsArray()
   @IsString({ each: true })
   categories?: string[];
-
 }
 
 export type TWhereClause = {
