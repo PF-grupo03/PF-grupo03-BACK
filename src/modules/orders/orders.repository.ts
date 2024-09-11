@@ -242,12 +242,12 @@ export class OrdersRepository {
   }
 
   async getOrdersByUserId(userId: string): Promise<Partial<UpdateOrderDto[]>> {
-   return await this.ordersRepository.find({
+ /*   return await this.ordersRepository.find({
       where: { user: { id: userId}},
       relations: ['orderDetails', 'orderDetails.product', 'passengers'],
-    });}
+    });} */
 
-/*     const orders = await this.ordersRepository.find({
+   const orders = await this.ordersRepository.find({
       where: { user: { id: userId } },
       relations: ['orderDetails', 'orderDetails.product', 'passengers'],
     });
@@ -259,7 +259,7 @@ export class OrdersRepository {
       });
       return plainOrder;
     });
-  } */
+  }
 
   async deleteOrder(id: string) {
     try {

@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Param, Body, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './orders.dto';
+import { CreateOrderDto, UpdateOrderDto } from './orders.dto';
 import { OrderEntity } from './order.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -36,7 +36,7 @@ export class OrdersController {
   @ApiResponse({ status: 404, description: 'user not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @Get('GetOrdersByUser/:userId')
-  async getOrdersByUserId(@Param('userId') userId: string): Promise<OrderEntity[]> {
+  async getOrdersByUserId(@Param('userId') userId: string): Promise<UpdateOrderDto[]> {
     return this.ordersService.getOrdersByUserId(userId);
   }
 
