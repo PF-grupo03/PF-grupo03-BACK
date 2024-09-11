@@ -139,17 +139,24 @@ export class AuthController {
         return res.redirect('https://pf-grupo03.vercel.app/register');
       }
 
-      
-      if (user.message === 'Usuario no encontrado') {
-        
+      const existingUser = await this.authService.findUserByEmail(user.email);
+
+      if (!existingUser) {
+        console.log('Usuario no encontrado en la base de datos');
         return res.redirect('https://pf-grupo03.vercel.app/register');
-      } else if (user.isAdmin) {
-        
-        return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
-      } 
+      }
 
       
-      res.cookie('authToken', user.token, { httpOnly: true });
+      // if (user.message === 'Usuario no encontrado') {
+        
+      //   return res.redirect('https://pf-grupo03.vercel.app/register');
+      // } else if (user.isAdmin) {
+        
+      //   return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
+      // } 
+
+      const token = await this.authService.generateJwt(existingUser);
+      res.cookie('authToken', token, { httpOnly: true });
       return res.redirect('https://pf-grupo03.vercel.app/');
 
     } catch (error) {
