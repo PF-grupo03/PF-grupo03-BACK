@@ -153,7 +153,7 @@ export class UsersRepository {
           }
         }
       }
-      userById.imageProfile = null;
+      userById.imageProfile = DEFAULT_PROFILE_IMAGE_USER;
       await this.usersRepository.save(userById);
       return 'Imagen de usuario eliminada correctamente';
     } catch (error) {
