@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, NotFoundException, ParseFilePipe, Post, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from '../users/user.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -96,31 +96,67 @@ export class AuthController {
     //     // return res.redirect(redirectUrl);
     // }
 
+  //   try {
+  //     const { user } = req;
+  
+  //     if (!user) {
+  //       throw new UnauthorizedException('Error de autenticación: Usuario no encontrado');
+  //     }
+  
+  //     if (user.message === 'Usuario no encontrado') {
+  //       return await res.redirect('https://pf-grupo03.vercel.app/register');
+  //     }
+  
+  //     // Usuario autenticado correctamente
+  //     res.setHeader('Authorization', `Bearer ${user.token}`);
+  //     res.json(user);
+      
+  
+  //   } catch (error) {
+  //     console.error('Error en la autenticación de Google:', error);
+  //   //   if (error instanceof UnauthorizedException) {
+  //   //     // Manejar error de autenticación no autorizado
+  //   //     return res.status(401).json({ message: error.message });
+  //   //   } else {
+  //   //     // Manejar otros errores
+  //   //     return res.status(500).json({ message: 'Error interno del servidor' });
+  //   //   }
+  //   // }
+  //   if (error instanceof UnauthorizedException) {
+  //     return res.status(401).json({ message: 'Credenciales inválidas' });
+  //   } else if (error instanceof NotFoundException) {
+  //     return res.redirect('https://pf-grupo03.vercel.app/register');
+  //   } else {
+  //     return res.status(500).json({ message: 'Error interno del servidor' });
+  //   }
+  // }
+
     try {
       const { user } = req;
-  
-      if (!user) {
-        throw new UnauthorizedException('Error de autenticación: Usuario no encontrado');
-      }
-  
-      if (user.message === 'Usuario no encontrado') {
+
+      // User object retrieved from GoogleStrategy
+      // if (!user) {
+      //   return res.status(400).json({ message: 'No se pudo autenticar el usuario' });
+      // }
+
+      // Check user existence and role (optional)
+      if (user && user.message === 'Usuario no encontrado') {
+        // Redirect to registration page
         return res.redirect('https://pf-grupo03.vercel.app/register');
-      }
-  
-      // Usuario autenticado correctamente
-      res.setHeader('Authorization', `Bearer ${user.token}`);
-      res.json(user);
-  
+      } else if (user.isAdmin) {
+        // Redirect to admin dashboard
+        return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
+      } 
+
+      // Default redirect to home for other users
+      res.cookie('authToken', user.token, { httpOnly: true });
+      return res.redirect('https://pf-grupo03.vercel.app/');
+
     } catch (error) {
       console.error('Error en la autenticación de Google:', error);
-      if (error instanceof UnauthorizedException) {
-        // Manejar error de autenticación no autorizado
-        return res.status(401).json({ message: error.message });
-      } else {
-        // Manejar otros errores
-        return res.status(500).json({ message: 'Error interno del servidor' });
-      }
+      return res.status(500).json({ message: 'Error interno del servidor' });
     }
+
   }
     
 
