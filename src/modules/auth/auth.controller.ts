@@ -80,13 +80,13 @@ export class AuthController {
         }
     
         if (user.message === 'Usuario no encontrado') {
-            return res.redirect('/auth/signup');
+            return res.redirect('https://pf-grupo03.vercel.app/auth/signup');
         }
     
-        const redirectUrl = 'http://localhost:3000/';
+        res.setHeader('Authorization', `Bearer ${user.token}`);
+        res.json(user);
+        const redirectUrl = 'https://pf-grupo03.vercel.app';
         return res.redirect(redirectUrl);
-        // res.setHeader('Authorization', `Bearer ${user.token}`);
-        // res.json(user);
     }
     
 
