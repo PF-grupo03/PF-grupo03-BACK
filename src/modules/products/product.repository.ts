@@ -36,7 +36,8 @@ export class ProductsRepository {
 
       const query = this.productsRepository
         .createQueryBuilder('product')
-        .leftJoinAndSelect('product.categories', 'category');
+        .leftJoinAndSelect('product.categories', 'category')
+        .where('product.isActive = :isActive', { isActive: true });
 
       if (title) {
         query.andWhere('product.title ILIKE :title', { title: `%${title}%` });
