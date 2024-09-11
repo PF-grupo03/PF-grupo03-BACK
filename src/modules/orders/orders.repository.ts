@@ -24,15 +24,15 @@ export class OrdersRepository {
   ) {}
 
   async getOrders(page: number, limit: number) {
-    
+
     if (page <= 0 || limit <= 0) {
       throw new BadRequestException('Los valores de "page" y "limit" deben ser mayores que cero.');
     }
-  
+
     const skip = (page - 1) * limit;
-  
+
     try {
-    
+
       const [orders, total] = await this.ordersRepository.findAndCount({
         relations: ['orderDetails', 'orderDetails.product', 'passengers'],
         skip,
@@ -41,12 +41,12 @@ export class OrdersRepository {
           orderDate: 'DESC',
         },
       });
-  
-      
+
+
       if (orders.length === 0) {
         throw new NotFoundException('No se encontraron órdenes para los parámetros proporcionados.');
       }
-  
+
       return {
         data: orders,
         total,
@@ -54,16 +54,15 @@ export class OrdersRepository {
         totalPages: Math.ceil(total / limit),
       };
     } catch (error) {
-      
+
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
-        throw error; 
+        throw error;
       }
-  
-      
+
       throw new InternalServerErrorException(`Error al obtener órdenes: ${error.message}`);
     }
   }
-  
+
 
   async addOrder(createOrderDto: CreateOrderDto) {
     const { userId, products, adults = 0, children = 0, medicalInsurance, passengers } = createOrderDto;

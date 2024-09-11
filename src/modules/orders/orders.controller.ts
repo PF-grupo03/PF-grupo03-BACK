@@ -35,7 +35,7 @@ export class OrdersController {
   @ApiResponse({ status: 404, description: 'Orders not found' })
   @ApiResponse({ status: 404, description: 'user not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @Get(':userId')
+  @Get('GetOrdersByUser/:userId')
   async getOrdersByUserId(@Param('userId') userId: string): Promise<OrderEntity[]> {
     return this.ordersService.getOrdersByUserId(userId);
   }
