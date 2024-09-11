@@ -140,8 +140,8 @@ export class AuthController {
       }
 
       const existingUser = await this.authService.findUserByEmail(user.email);
-
-      if (!existingUser) {
+      
+      if (!existingUser || existingUser === null) {
         console.log('Usuario no encontrado en la base de datos');
         return res.redirect('https://pf-grupo03.vercel.app/register');
       }
