@@ -4,7 +4,7 @@ import { CreateUserDto, LoginUserDto } from '../users/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { log } from 'console';
+
 
 @ApiTags('auth')
 @Controller('auth')

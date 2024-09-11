@@ -18,6 +18,7 @@ import { MailRepository } from 'src/mail/mail.repository';
 import * as bcrypt from 'bcrypt';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import toStream = require('buffer-to-stream');
+import { log } from 'handlebars';
 
 @Injectable()
 export class UsersRepository {
@@ -189,9 +190,13 @@ export class UsersRepository {
     }
   }
 
-  async getUserByEmail(email: string): Promise<UserEntity | null> {
+  async getUserByEmail(email: string): Promise<UserEntity> {
     try {
+      console.log(email);
+      
       const userByEmail = await this.usersRepository.findOneBy({ email });
+      console.log(userByEmail);
+      
 
       if (!userByEmail) throw new NotFoundException('Usuario no encontrado');
 
@@ -361,4 +366,6 @@ export class UsersRepository {
       throw new InternalServerErrorException('Error cambiando la contraseña');
     }
   }
+
+  
 }

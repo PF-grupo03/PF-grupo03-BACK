@@ -3,6 +3,8 @@ import { PassportStrategy} from '@nestjs/passport';
 import {Strategy, VerifyCallback} from 'passport-google-oauth20';
 import { GOOGLE_CLIENT_ID, GOOGLE_SECRET } from "src/config/env.config";
 import { AuthService } from "./auth.service";
+import { CreateUserDto } from "../users/user.dto";
+import { UserEntity } from "../users/user.entity";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy){
@@ -29,13 +31,19 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
     
             const email = emails[0].value;
             const profileImage = photos && photos.length > 0 ? photos[0].value : 'URL_DE_IMAGEN_DEFAULT';
+
+            console.log(email);
+            
             
                 // Aquí puedes extraer más datos del perfil si es necesario
             const user = await this.authService.findUserByEmail(email);
+            console.log(user);
+            
     
             if(!user) {
                 console.log('Error: Usuario no encontrado');
                 return done(null, { message: 'Usuario no encontrado' });
+                
             }
     
             const token = await this.authService.generateJwt(user);
