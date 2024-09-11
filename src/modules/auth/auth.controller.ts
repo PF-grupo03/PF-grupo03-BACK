@@ -150,7 +150,7 @@ export class AuthController {
 
       // Default redirect to home for other users
       res.cookie('authToken', user.token, { httpOnly: true });
-      return res.redirect('/');
+      return res.redirect('https://pf-grupo03.vercel.app/');
 
     } catch (error) {
       console.error('Error en la autenticación de Google:', error);
