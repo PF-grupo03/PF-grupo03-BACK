@@ -10,7 +10,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
         super({
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_SECRET,
-            callbackURL: 'https://pf-grupo03-back.onrender.com/auth/google/callback',
+            callbackURL: 'http://localhost:3006/auth/google/callback',
             scope: ['email', 'profile']
         })
     }
@@ -23,6 +23,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             const { emails, name, photos } = profile;
     
             if(!emails || !name) {
+                console.log('Error: No se pudo obtener la información de perfil');
                 return done(new Error('No se pudo obtener la informacion de perfil'), false)
             }
     
@@ -33,7 +34,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             const user = await this.authService.findUserByEmail(email);
     
             if(!user) {
-                return done(new Error('Usuario no encontrado'), false)
+                console.log('Error: Usuario no encontrado');
+                return done(null, { message: 'Usuario no encontrado' });
             }
     
             const token = await this.authService.generateJwt(user);

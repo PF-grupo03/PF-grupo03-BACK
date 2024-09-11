@@ -9,7 +9,6 @@ import {
 import { CategoryEntity } from '../categories/category.entity';
 import { OrderDetailsEntity } from '../orders/orderDetails.entity';
 
-
 @Entity('products')
 export class ProductEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -44,6 +43,12 @@ export class ProductEntity {
 
   @Column()
   duration: string;
+
+  @Column('numeric', { nullable: true })
+  latitude?: number;
+
+  @Column('numeric', { nullable: true })
+  longitude?: number;
 
   @Column({
     default: true,

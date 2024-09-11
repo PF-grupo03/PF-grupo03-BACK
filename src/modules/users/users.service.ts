@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './user.repository';
-import { bannedUserDto, CreateUserDto, FiltersUsersDto, UpdateUserDto, UpdateUserPasswordDto } from './user.dto';
+import {
+  bannedUserDto,
+  CreateUserDto,
+  FiltersUsersDto,
+  UpdateUserDto,
+  UpdateUserPasswordDto,
+} from './user.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +26,14 @@ export class UsersService {
 
   updateUser(id: string, userBody: UpdateUserDto) {
     return this.usersRepository.updateUser(id, userBody);
+  }
+
+  updateImageProfile(id: string, file: Express.Multer.File) {
+    return this.usersRepository.updateImageProfile(id, file);
+  }
+
+  deleteProfileImage(id: string) {
+    return this.usersRepository.deleteProfileImage(id);
   }
 
   deleteUser(id: string) {

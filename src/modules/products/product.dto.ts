@@ -15,6 +15,8 @@ import {
   IsBoolean,
   IsNotEmpty,
   Max,
+  IsLatitude,
+  IsLongitude,
 } from 'class-validator';
 import { CategoryEntity } from '../categories/category.entity';
 
@@ -79,6 +81,24 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsString()
   duration: string;
+
+  @ApiPropertyOptional({
+    description: 'Latitud de la ubicación del producto',
+    example: 40.416775,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsLatitude()
+  latitude?: number;
+
+  @ApiPropertyOptional({
+    description: 'Longitud de la ubicación del producto',
+    example: -3.703790,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsLongitude()
+  longitude?: number;
 
   @ApiHideProperty()
   @IsEmpty()
@@ -171,8 +191,26 @@ export class UpdateProductDto {
   @IsString()
   duration?: string;
 
+  @ApiPropertyOptional({
+    description: 'Latitud de la ubicación del producto',
+    example: 40.416775,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsLatitude()
+  latitude?: number;
+
+  @ApiPropertyOptional({
+    description: 'Longitud de la ubicación del producto',
+    example: -3.703790,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsLongitude()
+  longitude?: number;
+
   @ApiHideProperty()
-  @IsBoolean()
+  @IsEmpty()
   isActive?: boolean;
 
   @ApiHideProperty()
@@ -239,14 +277,14 @@ export class FiltersProductsDto {
   @Max(5000)
   maxPrice?: number;
 
-  @ApiPropertyOptional({
-    description: 'Filtrar por estado activo',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  @Type(() => Boolean)
-  isActive?: boolean;
+  // @ApiPropertyOptional({
+  //   description: 'Filtrar por estado activo',
+  //   example: true,
+  // })
+  // @IsOptional()
+  // @IsBoolean()
+  // @Type(() => Boolean)
+  // isActive?: boolean;
 
   @ApiPropertyOptional({
     description: 'Filtrar por categorías',
@@ -271,7 +309,6 @@ export class FiltersProductsDto {
   @IsArray()
   @IsString({ each: true })
   categories?: string[];
-
 }
 
 export type TWhereClause = {
