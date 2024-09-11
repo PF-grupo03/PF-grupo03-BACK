@@ -21,26 +21,31 @@ export class AuthController {
     }
 
     @Post('signup')
-    @UseInterceptors(FileInterceptor('file'))
-    @ApiOperation({ summary: 'signup', description: 'signup' })
-    @ApiResponse({ status: 200, description: 'signup retrieved successfully' })
-    @ApiResponse({ status: 404, description: 'signup not found' })
-    @ApiResponse({ status: 500, description: 'Internal server error' })
-    signUp(@Body() user: CreateUserDto, @UploadedFile( new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({
-            maxSize: 200000,
-            message: 'Supera el peso máximo permitido (no mayor a 200kb)',
-          }),
-          new FileTypeValidator({
-            fileType: /(jpg|jpeg|png|webp|svg|gif)/,
-          }),
-        ],
-      }),
-    )
-    file?: Express.Multer.File) {
-        return this.authService.signUp(user, file);
+@UseInterceptors(FileInterceptor('file'))
+@ApiOperation({ summary: 'signup', description: 'signup' })
+@ApiResponse({ status: 200, description: 'signup retrieved successfully' })
+@ApiResponse({ status: 404, description: 'signup not found' })
+@ApiResponse({ status: 500, description: 'Internal server error' })
+signUp(
+  @Body() user: CreateUserDto,
+  @UploadedFile() file?: Express.Multer.File
+) {
+  if (file) {
+    const maxSize = 200000;
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+
+    if (file.size > maxSize) {
+      throw new BadRequestException('Supera el peso máximo permitido (no mayor a 200kb)');
     }
+
+    if (!validTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Tipo de archivo no permitido (jpg, jpeg, png, webp, svg, gif)');
+    }
+  }
+
+  return this.authService.signUp(user, file);
+}
+
 
     @Post('signin')
     @ApiOperation({ summary: 'signin', description: 'Signin user' })
