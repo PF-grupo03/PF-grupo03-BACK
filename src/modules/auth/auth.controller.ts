@@ -4,6 +4,7 @@ import { CreateUserDto, LoginUserDto } from '../users/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { log } from 'console';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -63,8 +64,8 @@ signUp(
     @ApiResponse({ status: 404, description: 'Google auth not found' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
     @UseGuards(AuthGuard('google'))
-    async googlelogin() {
-
+    async googlelogin(@Req() req, @Res() res) {
+        res.redirect('/auth/google/callback');
     }
 
     @Get('google/callback')
@@ -75,9 +76,9 @@ signUp(
     @UseGuards(AuthGuard('google'))
     
     async callback(@Req() req, @Res() res) {
-        console.log(req);
         const { user } = req;
-        console.log(user);
+        console.log('User object in callback:', user);
+        
         
     
         if (!user) {
@@ -85,13 +86,14 @@ signUp(
         }
     
         if (user.message === 'Usuario no encontrado') {
-            return res.redirect('https://pf-grupo03.vercel.app/auth/signup');
+            return res.redirect('https://pf-grupo03.vercel.app/register');
         }
     
+        // res.clearCookie('auth_token');
         res.setHeader('Authorization', `Bearer ${user.token}`);
         res.json(user);
-        const redirectUrl = 'https://pf-grupo03.vercel.app';
-        return res.redirect(redirectUrl);
+        // const redirectUrl = 'https://pf-grupo03.vercel.app';
+        // return res.redirect(redirectUrl);
     }
     
 

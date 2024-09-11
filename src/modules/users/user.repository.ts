@@ -189,7 +189,7 @@ export class UsersRepository {
     }
   }
 
-  async getUserByEmail(email: string): Promise<UserEntity> {
+  async getUserByEmail(email: string): Promise<UserEntity | null> {
     try {
       const userByEmail = await this.usersRepository.findOneBy({ email });
 
