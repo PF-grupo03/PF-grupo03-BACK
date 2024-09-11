@@ -36,32 +36,25 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             
             
                 // Aquí puedes extraer más datos del perfil si es necesario
-            // const user = await this.authService.findUserByEmail(email);
-            // console.log(user);
+            const user = await this.authService.findUserByEmail(email);
+            console.log(user);
             
     
-            // if(!user) {
-            //     console.log('Error: Usuario no encontrado');
-            //     return done(null, { message: 'Usuario no encontrado' });
+            if(!user) {
+                console.log('Error: Usuario no encontrado');
+                return done(null, { message: 'Usuario no encontrado' });
                 
-            // }
-
-            
-    //         const token = await this.authService.generateJwt(user);
-    //         console.log('Token:', token);
-            
-    //         done(null,{...user, token, profileImage});
-                
-    //     } catch (error) {
-    //         console.error('Error en la validación de GoogleStrategy:', error);
-    //         done(error, false);
-    //     }
-    // };
-             return done(null, { email, name, profileImage });
-            } catch (error) {
-                console.error('Error en la validación de GoogleStrategy:', error);
-                done(error, false);
             }
-  }
+    
+            const token = await this.authService.generateJwt(user);
+            console.log('Token:', token);
+            
+            done(null,{...user, token, profileImage});
+                
+        } catch (error) {
+            console.error('Error en la validación de GoogleStrategy:', error);
+            done(error, false);
+        }
+    };
     
 }

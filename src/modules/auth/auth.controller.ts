@@ -133,34 +133,23 @@ export class AuthController {
 
     try {
       const { user } = req;
-      console.log(user);
-      
 
       // User object retrieved from GoogleStrategy
-      if (!user) {
+      // if (!user) {
+      //   return res.status(400).json({ message: 'No se pudo autenticar el usuario' });
+      // }
+
+      // Check user existence and role (optional)
+      if (user && user.message === 'Usuario no encontrado') {
+        // Redirect to registration page
         return res.redirect('https://pf-grupo03.vercel.app/register');
-      }
+      } else if (user.isAdmin) {
+        // Redirect to admin dashboard
+        return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
+      } 
 
-      const existingUser = await this.authService.findUserByEmail(user.email);
-      console.log(existingUser);
-      
-      
-      if (!existingUser) {
-        console.log('Usuario no encontrado en la base de datos');
-        return res.redirect('https://pf-grupo03.vercel.app/register');
-      }
-
-      
-      // if (user.message === 'Usuario no encontrado') {
-        
-      //   return res.redirect('https://pf-grupo03.vercel.app/register');
-      // } else if (user.isAdmin) {
-        
-      //   return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
-      // } 
-
-      const token = await this.authService.generateJwt(existingUser);
-      res.cookie('authToken', token, { httpOnly: true });
+      // Default redirect to home for other users
+      res.cookie('authToken', user.token, { httpOnly: true });
       return res.redirect('https://pf-grupo03.vercel.app/');
 
     } catch (error) {
