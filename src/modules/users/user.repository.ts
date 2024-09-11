@@ -18,6 +18,7 @@ import { MailRepository } from 'src/mail/mail.repository';
 import * as bcrypt from 'bcrypt';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import toStream = require('buffer-to-stream');
+import { DEFAULT_PROFILE_IMAGE_USER } from 'src/config/env.config';
 
 @Injectable()
 export class UsersRepository {
@@ -171,6 +172,14 @@ export class UsersRepository {
       if (!userById) {
         throw new NotFoundException(`Usuario con id ${id} no encontrado`);
       }
+
+      if (userById.imageProfile && userById.imageProfile.includes("res.cloudinary.com") && userById.imageProfile !== DEFAULT_PROFILE_IMAGE_USER) {
+        const publicId = userById.imageProfile.split("/").pop()?.split(".")[0];
+        if (publicId) {
+          await cloudinary.uploader.destroy(publicId);
+        }
+      }
+
       userById.isActive = false;
       await this.usersRepository.save(userById);
       return {

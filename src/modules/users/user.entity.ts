@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderEntity } from '../orders/order.entity';
+import { DEFAULT_PROFILE_IMAGE_USER } from 'src/config/env.config';
 
 @Entity('users')
 export class UserEntity {
@@ -7,7 +8,7 @@ export class UserEntity {
   id: string;
 
   @Column({
-    default: null,
+      default: DEFAULT_PROFILE_IMAGE_USER,
   })
   imageProfile: string;
 
