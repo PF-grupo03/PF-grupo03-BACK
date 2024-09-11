@@ -123,7 +123,7 @@ export class UsersRepository {
     }
   }
 
-  async deleteProfileImage(id: string, file: Express.Multer.File) {
+  async deleteProfileImage(id: string) {
     try {
       const userById = await this.usersRepository.findOne({
         where: { id, isActive: true },
