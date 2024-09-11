@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from '../users/user.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -22,30 +22,30 @@ export class AuthController {
     }
 
     @Post('signup')
-@UseInterceptors(FileInterceptor('file'))
-@ApiOperation({ summary: 'signup', description: 'signup' })
-@ApiResponse({ status: 200, description: 'signup retrieved successfully' })
-@ApiResponse({ status: 404, description: 'signup not found' })
-@ApiResponse({ status: 500, description: 'Internal server error' })
-signUp(
-  @Body() user: CreateUserDto,
-  @UploadedFile() file?: Express.Multer.File
-) {
-  if (file) {
-    const maxSize = 200000;
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiOperation({ summary: 'signup', description: 'signup' })
+    @ApiResponse({ status: 200, description: 'signup retrieved successfully' })
+    @ApiResponse({ status: 404, description: 'signup not found' })
+    @ApiResponse({ status: 500, description: 'Internal server error' })
+    async signUp(
+      @Body() user: CreateUserDto,
+      @UploadedFile() file?: Express.Multer.File
+    ) {
+      if (file) {
+        const maxSize = 200000;
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
 
-    if (file.size > maxSize) {
-      throw new BadRequestException('Supera el peso máximo permitido (no mayor a 200kb)');
+        if (file.size > maxSize) {
+          throw new BadRequestException('Supera el peso máximo permitido (no mayor a 200kb)');
+        }
+
+        if (!validTypes.includes(file.mimetype)) {
+          throw new BadRequestException('Tipo de archivo no permitido (jpg, jpeg, png, webp, svg, gif)');
+        }
+      }
+
+      return await this.authService.signUp(user, file);
     }
-
-    if (!validTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Tipo de archivo no permitido (jpg, jpeg, png, webp, svg, gif)');
-    }
-  }
-
-  return this.authService.signUp(user, file);
-}
 
 
     @Post('signin')
@@ -54,9 +54,9 @@ signUp(
     @ApiResponse({ status: 400, description: 'Invalid credentials' })
     @ApiResponse({ status: 500, description: 'Internal server error' })
     async signIn(@Body() credential: LoginUserDto) {
-    const { email, password } = credential;
-    return await this.authService.signIn(email, password);
-}
+      const { email, password } = credential;
+      return await this.authService.signIn(email, password);
+    }
 
     @Get('google')
     @ApiOperation({ summary: 'Get google auth', description: 'Get google auth' })
@@ -76,25 +76,52 @@ signUp(
     @UseGuards(AuthGuard('google'))
     
     async callback(@Req() req, @Res() res) {
-        const { user } = req;
-        console.log('User object in callback:', user);
+    //     const { user } = req;
+    //     console.log('User object in callback:', user);
         
         
     
-        if (!user) {
-            return res.status(400).send('No se pudo autenticar el usuario');
-        }
+    //     if (!user) {
+    //         return res.status(400).send('No se pudo autenticar el usuario');
+    //     }
     
-        if (user.message === 'Usuario no encontrado') {
-            return res.redirect('https://pf-grupo03.vercel.app/register');
-        }
+    //     if (user.message === 'Usuario no encontrado') {
+    //         return res.redirect('https://pf-grupo03.vercel.app/register');
+    //     }
     
-        // res.clearCookie('auth_token');
-        res.setHeader('Authorization', `Bearer ${user.token}`);
-        res.json(user);
-        // const redirectUrl = 'https://pf-grupo03.vercel.app';
-        // return res.redirect(redirectUrl);
+    //     // res.clearCookie('auth_token');
+    //     res.setHeader('Authorization', `Bearer ${user.token}`);
+    //     res.json(user);
+    //     // const redirectUrl = 'https://pf-grupo03.vercel.app';
+    //     // return res.redirect(redirectUrl);
+    // }
+
+    try {
+      const { user } = req;
+  
+      if (!user) {
+        throw new UnauthorizedException('Error de autenticación: Usuario no encontrado');
+      }
+  
+      if (user.message === 'Usuario no encontrado') {
+        return res.redirect('https://pf-grupo03.vercel.app/register');
+      }
+  
+      // Usuario autenticado correctamente
+      res.setHeader('Authorization', `Bearer ${user.token}`);
+      res.json(user);
+  
+    } catch (error) {
+      console.error('Error en la autenticación de Google:', error);
+      if (error instanceof UnauthorizedException) {
+        // Manejar error de autenticación no autorizado
+        return res.status(401).json({ message: error.message });
+      } else {
+        // Manejar otros errores
+        return res.status(500).json({ message: 'Error interno del servidor' });
+      }
     }
+  }
     
 
     @Get('test')

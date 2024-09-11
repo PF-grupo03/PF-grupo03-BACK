@@ -14,7 +14,7 @@ import { JWT_SECRET } from 'src/config/env.config';
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     MailModule,
-    PassportModule.register({ defaultStrategy: 'google' }), // Asegúrate de registrar PassportModule
+    PassportModule, // Asegúrate de registrar PassportModule
     JwtModule.register({
       secret: JWT_SECRET, // Cambia esto por tu secreto real
       signOptions: { expiresIn: '60m' }, // Ajusta el tiempo de expiración según sea necesario
