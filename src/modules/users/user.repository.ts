@@ -110,7 +110,7 @@ export class UsersRepository {
       };
 
       const imageResult = await response();
-      userById.imageProfile = imageResult.secure_url;
+      userById.imageProfile = imageResult.secure_url || DEFAULT_PROFILE_IMAGE_USER;
       await this.usersRepository.save(userById);
       return {
         message: 'Foto de perfil actualizada',
