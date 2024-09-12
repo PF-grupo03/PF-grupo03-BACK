@@ -221,6 +221,27 @@ export class UsersRepository {
     }
   }
 
+  async getUserByEmailGoogle(email: string): Promise<UserEntity> {
+    try {
+      console.log(email);
+      
+      const userByEmail = await this.usersRepository.findOne({
+        where: { email, isActive: true }
+      });
+      console.log(userByEmail);
+      
+
+
+      return userByEmail;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Error al obtener el usuario por email: ' + error.message,
+      );
+    }
+  }
   async addUser(
     user: CreateUserDto,
     file?: Express.Multer.File,

@@ -28,6 +28,11 @@ export class AuthService {
     return userDb;
   }
 
+  async findUserByEmailGoogle(email: string) {
+    const userDb = this.usersRepository.getUserByEmailGoogle(email);
+    return userDb;
+  }
+
   async generateJwt(user: any) {
     const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
     return this.jwtService.sign(payload);

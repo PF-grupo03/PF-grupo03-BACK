@@ -32,7 +32,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             const profileImage = photos && photos.length > 0 ? photos[0].value : 'URL_DE_IMAGEN_DEFAULT';
             
                 // Aquí puedes extraer más datos del perfil si es necesario
-            let user = await this.authService.findUserByEmail(email);
+            let user = await this.authService.findUserByEmailGoogle(email);
             if (!user) {
             user = await this.authService.createUserGoogle({email, name});
             }
