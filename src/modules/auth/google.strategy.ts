@@ -12,8 +12,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
         super({
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_SECRET,
-            // callbackURL: 'https://pf-grupo03-back.onrender.com/auth/google/callback',
-            callbackURL: 'http://localhost:3006/auth/google/callback',
+            callbackURL: 'https://pf-grupo03-back.onrender.com/auth/google/callback',
+            // callbackURL: 'http://localhost:3006/auth/google/callback',
             scope: ['email', 'profile']
         })
     }
