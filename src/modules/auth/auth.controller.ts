@@ -140,7 +140,7 @@ export class AuthController {
       // }
 
       // Check user existence and role (optional)
-      if (user && user.message === 'Usuario no encontrado') {
+      if (user && user.userExists) {
         // Redirect to registration page
         return res.redirect('https://pf-grupo03.vercel.app/register');
       } else if (user.isAdmin) {

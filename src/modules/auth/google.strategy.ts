@@ -42,7 +42,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
     
             if(!user) {
                 console.log('Error: Usuario no encontrado');
-                return done(null, { message: 'Usuario no encontrado' });
+                // return done(null, { message: 'Usuario no encontrado' });
+                return done(null, { userExists: false });
                 
             }
     
