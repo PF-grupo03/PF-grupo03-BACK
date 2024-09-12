@@ -1,76 +1,77 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto, UpdateUserDto } from '../users/user.dto';
 import { UsersRepository } from '../users/user.repository';
 import { MailService } from '../../mail/mail.service';
+import { UserEntity } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
-    constructor (
-        private readonly usersRepository: UsersRepository,
-        private readonly jwtService: JwtService,
-        private readonly mailService: MailService
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
+  ) {}
 
-    ) {}
+  getAuth(): string {
+    return 'Autenticación...';
+  }
 
-    getAuth(): string {
-        return "Autenticación...";
-    }
+  async findUserByEmail(email: string) {
+    const userDb = this.usersRepository.getUserByEmail(email);
+    return userDb;
+  }
 
-    async findUserByEmail(email: string) {
-        const userDb= this.usersRepository.getUserByEmail(email);
-        return userDb;
-    }
+  async generateJwt(user: any) {
+    const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
+    return this.jwtService.sign(payload);
+  }
 
-    async generateJwt(user: any) {
-        const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
-        return this.jwtService.sign(payload);
-    }
+  async signIn(email: string, password: string) {
+    const user = await this.usersRepository.getUserByEmail(email);
 
-    
-    
+    if (!user) throw new BadRequestException('Credenciales incorrectas');
 
-    async signIn(email: string, password: string) {
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) throw new BadRequestException('Credenciales Invalidas');
 
-        const user = await this.usersRepository.getUserByEmail(email);
+    const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
+    const token = this.jwtService.sign(payload);
 
-        if(!user) throw new BadRequestException('Credenciales incorrectas');
+    return {
+      message: ' Usuario Logueado...',
+      token,
+      user,
+    };
+  }
 
-        const validPassword = await bcrypt.compare(password, user.password);
-        if(!validPassword) throw new BadRequestException('Credenciales Invalidas');
+  async signUp(user: CreateUserDto, file?: Express.Multer.File) {
+    const { password } = user;
 
-        const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
-        const token = this.jwtService.sign(payload);
+    //* Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        return {
-            message: ' Usuario Logueado...',
-            token,
-            user
-        };
+    //* Crear usuario en BBDD:
+    const newUser = await this.usersRepository.addUser({
+      ...user,
+      password: hashedPassword,
+    });
 
-    }
+    await this.mailService.sendWelcomeEmail(user);
 
-    
-    
-    async signUp(user: CreateUserDto, file?: Express.Multer.File) {
-        const { password } = user;
+    return {
+      message: 'Usuario registrado exitosamente',
+      user: newUser,
+    };
+  }
 
-        //* Hashear la contraseña
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
-        //* Crear usuario en BBDD:
-        const newUser = await this.usersRepository.addUser({
-            ...user,
-            password: hashedPassword,
-        })
-
-        await this.mailService.sendWelcomeEmail(user);
-
-                return {
-            message: 'Usuario registrado exitosamente',
-            user: newUser
-        };
-    }
-
+  async createUserGoogle(userGoogle: any): Promise<any> {
+    return await this.usersRepository.createUserGoogle(userGoogle);
+  }
 }

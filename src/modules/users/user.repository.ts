@@ -377,5 +377,17 @@ export class UsersRepository {
     }
   }
 
+  async createUserGoogle(userGoogle: any) {
+    const newUser = new UserEntity();
+    newUser.email = userGoogle.email;
+    newUser.name = userGoogle.name;
+    newUser.username = "usernameGoogle"
+    newUser.dni = 10000897628
+    newUser.phone = 3015523112
+
+    newUser.password = "Pass1234"
+
+    return this.usersRepository.save(newUser)
+  }
   
 }

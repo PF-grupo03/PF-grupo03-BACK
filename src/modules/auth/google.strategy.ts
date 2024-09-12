@@ -12,7 +12,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
         super({
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_SECRET,
-            callbackURL: 'https://pf-grupo03-back.onrender.com/auth/google/callback',
+            // callbackURL: 'https://pf-grupo03-back.onrender.com/auth/google/callback',
+            callbackURL: 'http://localhost:3006/auth/google/callback',
             scope: ['email', 'profile']
         })
     }
@@ -30,7 +31,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             const email = emails[0].value;
             const profileImage = photos && photos.length > 0 ? photos[0].value : 'URL_DE_IMAGEN_DEFAULT';
             
-            
+            await this.authService.createUserGoogle({email, name});
                 // Aquí puedes extraer más datos del perfil si es necesario
             const user = await this.authService.findUserByEmail(email);
             console.log(user);

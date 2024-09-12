@@ -112,17 +112,8 @@ export class UpdateUserDto {
   @IsEmail()
   email?: string;
 
-  @MinLength(8)
-  @ApiPropertyOptional({
-    description: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, y un número, y tener al menos 8 caracteres',
-    example: 'aaBB3366',
-  })
-  @IsOptional()
-  @MaxLength(15)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-    message: 'La contraseña debe contener al menos una letra minúscula, una letra mayúscula, un número, y tener al menos 8 caracteres',
-    })
-  @IsString()
+  @ApiHideProperty()
+  @IsEmpty({ message: 'Este campo es manejado internamente y no debe ser modificado.' })
   password?: string;
 
   @ApiPropertyOptional({
