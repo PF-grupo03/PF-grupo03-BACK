@@ -223,6 +223,7 @@ export class UpdateProductDto {
     description: 'Categorías asociadas al paquete de viaje',
     example: ['adventure', 'history'],
   })
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
   @Transform(({ value }) => {
@@ -242,7 +243,7 @@ export class UpdateProductDto {
     }
     return value; // Si ya es un array, lo devuelve tal cual
   })
-  categories: string[];
+  categories?: string[];
 
   @ApiPropertyOptional({
     description: 'Fechas disponibles para el paquete de viaje',
