@@ -163,12 +163,17 @@ export class ProductsRepository {
             'Una o más categorías no fueron encontradas',
           );
         }
-  
-        product.categories = categories;
+
+        existingProduct.categories = categories;
       }
-  
-      await this.productsRepository.update(id, product);
-  
+
+      await this.productsRepository.save(existingProduct);
+      const { categories, ...productData } = product;
+
+      if (Object.keys(productData).length > 0) {
+        await this.productsRepository.update(id, productData);
+      }
+
       return await this.productsRepository.findOne({
         where: { id, isActive: true },
         relations: {
@@ -176,7 +181,7 @@ export class ProductsRepository {
         },
       });
     } catch (error) {
-      console.error('Error al actualizar el producto:', error); // Aquí el log
+      console.log(error)
       throw new InternalServerErrorException('Error actualizando el producto');
     }
   }

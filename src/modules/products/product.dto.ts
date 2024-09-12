@@ -19,6 +19,7 @@ import {
   IsLongitude,
 } from 'class-validator';
 import { CategoryEntity } from '../categories/category.entity';
+import { BadRequestException } from '@nestjs/common';
 
 export class CreateProductDto {
 
@@ -112,10 +113,17 @@ export class CreateProductDto {
   @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
+      // Intenta convertir el string a un array
       try {
-        return JSON.parse(value);
+        const parsedValue = JSON.parse(value);
+        // Verifica si lo que obtuviste es realmente un array
+        if (Array.isArray(parsedValue)) {
+          return parsedValue;
+        }
+        throw new Error('El valor no es un array válido');
       } catch (e) {
-        return [];
+        // Si no se puede convertir, lanza una excepción de error de formato
+        throw new BadRequestException('Formato de categorías inválido');
       }
     }
     return value;
@@ -211,24 +219,31 @@ export class UpdateProductDto {
   @IsEmpty()
   isActive?: boolean;
 
-
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Categorías asociadas al paquete de viaje',
-    example: ['Brasil', 'America'],
+    example: ['adventure', 'history'],
   })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
+      // Intenta convertir el string a un array
       try {
-        return JSON.parse(value);
+        const parsedValue = JSON.parse(value);
+        // Verifica si lo que obtuviste es realmente un array
+        if (Array.isArray(parsedValue)) {
+          return parsedValue;
+        }
+        throw new Error('El valor no es un array válido');
       } catch (e) {
-        return [];
+        // Si no se puede convertir, lanza una excepción de error de formato
+        throw new BadRequestException('Formato de categorías inválido');
       }
     }
-    return value;
+    return value; // Si ya es un array, lo devuelve tal cual
   })
-  @IsArray()
-  @IsOptional()
-  categories?: CategoryEntity[];
+  categories?: string[];
 
   @ApiPropertyOptional({
     description: 'Fechas disponibles para el paquete de viaje',
