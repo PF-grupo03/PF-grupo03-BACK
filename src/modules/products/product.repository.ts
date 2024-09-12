@@ -130,9 +130,14 @@ export class ProductsRepository {
   }
 
   async updateProduct(id: string, product: UpdateProductDto) {
-    if (!product || Object.keys(product).length === 0) {
+    const fieldsToUpdate = Object.keys(product).filter(
+      (key) => product[key] !== undefined && product[key] !== null,
+    );
+  
+    if (fieldsToUpdate.length === 0) {
       throw new BadRequestException('Introduce al menos un campo a actualizar');
     }
+  
     try {
       const existingProduct = await this.productsRepository.findOne({
         where: { id, isActive: true },
@@ -140,30 +145,30 @@ export class ProductsRepository {
           categories: true,
         },
       });
-
+  
       if (!existingProduct) {
         throw new BadRequestException('ID de producto inexistente');
       }
-
+  
       if (product.categories) {
         const categories = await this.categoriesRepository.find({
           where: {
-            name: In(product.categories),
+            name: In(product.categories.map((category) => category.name)),
             isActive: true,
           },
         });
-
+  
         if (categories.length !== product.categories.length) {
           throw new BadRequestException(
             'Una o más categorías no fueron encontradas',
           );
         }
-
+  
         product.categories = categories;
       }
-
+  
       await this.productsRepository.update(id, product);
-
+  
       return await this.productsRepository.findOne({
         where: { id, isActive: true },
         relations: {
@@ -171,9 +176,11 @@ export class ProductsRepository {
         },
       });
     } catch (error) {
+      console.error('Error al actualizar el producto:', error); // Aquí el log
       throw new InternalServerErrorException('Error actualizando el producto');
     }
   }
+  
 
   async deleteProduct(id: string) {
     try {

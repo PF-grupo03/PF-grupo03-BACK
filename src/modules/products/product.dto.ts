@@ -111,16 +111,14 @@ export class CreateProductDto {
   @IsArray()
   @IsString({ each: true })
   @Transform(({ value }) => {
-    // Intenta convertir el string a un array
     if (typeof value === 'string') {
       try {
         return JSON.parse(value);
       } catch (e) {
-        // Si no se puede convertir, retorna un array vacío o lanza un error
         return [];
       }
     }
-    return value; // Si ya es un array, lo devuelve tal cual
+    return value;
   })
   categories: string[];
 
@@ -213,8 +211,23 @@ export class UpdateProductDto {
   @IsEmpty()
   isActive?: boolean;
 
-  @ApiHideProperty()
-  @IsEmpty()
+
+  @ApiPropertyOptional({
+    description: 'Categorías asociadas al paquete de viaje',
+    example: ['Brasil', 'America'],
+  })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        return [];
+      }
+    }
+    return value;
+  })
+  @IsArray()
+  @IsOptional()
   categories?: CategoryEntity[];
 
   @ApiPropertyOptional({
