@@ -203,8 +203,8 @@ export class UsersController {
     summary: 'Delete profile image user',
     description: 'Delete profile image user',
   })
-  @Roles(Role.User)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User)
+  // @UseGuards(AuthGuard, RolesGuard)
   @Delete('image-profileDelete/:id')
   deleteProfileImage(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteProfileImage(id);
