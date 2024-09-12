@@ -140,7 +140,8 @@ export class AuthController {
       // }
 
       // Check user existence and role (optional)
-      if (user.userExists) {
+      
+      if (!user.userExists) {
         // Redirect to registration page
         return res.redirect('https://pf-grupo03.vercel.app/register');
       } else if (user.isAdmin) {
