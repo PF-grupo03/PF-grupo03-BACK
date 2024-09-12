@@ -19,6 +19,7 @@ import {
   IsLongitude,
 } from 'class-validator';
 import { CategoryEntity } from '../categories/category.entity';
+import { BadRequestException } from '@nestjs/common';
 
 export class CreateProductDto {
 
@@ -111,13 +112,18 @@ export class CreateProductDto {
   @IsArray()
   @IsString({ each: true })
   @Transform(({ value }) => {
-    // Intenta convertir el string a un array
     if (typeof value === 'string') {
+      // Intenta convertir el string a un array
       try {
-        return JSON.parse(value);
+        const parsedValue = JSON.parse(value);
+        // Verifica si lo que obtuviste es realmente un array
+        if (Array.isArray(parsedValue)) {
+          return parsedValue;
+        }
+        throw new Error('El valor no es un array válido');
       } catch (e) {
-        // Si no se puede convertir, retorna un array vacío o lanza un error
-        return [];
+        // Si no se puede convertir, lanza una excepción de error de formato
+        throw new BadRequestException('Formato de categorías inválido');
       }
     }
     return value; // Si ya es un array, lo devuelve tal cual
@@ -220,13 +226,18 @@ export class UpdateProductDto {
   @IsArray()
   @IsString({ each: true })
   @Transform(({ value }) => {
-    // Intenta convertir el string a un array
     if (typeof value === 'string') {
+      // Intenta convertir el string a un array
       try {
-        return JSON.parse(value);
+        const parsedValue = JSON.parse(value);
+        // Verifica si lo que obtuviste es realmente un array
+        if (Array.isArray(parsedValue)) {
+          return parsedValue;
+        }
+        throw new Error('El valor no es un array válido');
       } catch (e) {
-        // Si no se puede convertir, retorna un array vacío o lanza un error
-        return [];
+        // Si no se puede convertir, lanza una excepción de error de formato
+        throw new BadRequestException('Formato de categorías inválido');
       }
     }
     return value; // Si ya es un array, lo devuelve tal cual

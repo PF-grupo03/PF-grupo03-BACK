@@ -145,6 +145,8 @@ export class ProductsRepository {
         throw new BadRequestException('ID de producto inexistente');
       }
 
+      let updatedCategories = existingProduct.categories;
+
       if (product.categories) {
         const categories = await this.categoriesRepository.find({
           where: {
@@ -159,10 +161,15 @@ export class ProductsRepository {
           );
         }
 
-        product.categories = categories;
+        updatedCategories = categories;
       }
 
-      await this.productsRepository.update(id, product);
+      const updatedProduct = {
+        ...product,
+        categories: updatedCategories,
+      };
+  
+      await this.productsRepository.update(id, updatedProduct);
 
       return await this.productsRepository.findOne({
         where: { id, isActive: true },

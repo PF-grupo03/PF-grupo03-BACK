@@ -19,8 +19,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
 
     async validate (accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
         try {
-            console.log('Profile:', profile);
-            
             
             const { emails, name, photos } = profile;
     
@@ -31,8 +29,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
     
             const email = emails[0].value;
             const profileImage = photos && photos.length > 0 ? photos[0].value : 'URL_DE_IMAGEN_DEFAULT';
-
-            console.log(email);
             
             
                 // Aquí puedes extraer más datos del perfil si es necesario
@@ -40,9 +36,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             console.log(user);
             
     
-            if(!user) {
+            if(!user || user == null) {
                 console.log('Error: Usuario no encontrado');
-                return done(null, { message: 'Usuario no encontrado' });
+                // return done(null, { message: 'Usuario no encontrado' });
+                return done(null, { userExists: false });
                 
             }
     
