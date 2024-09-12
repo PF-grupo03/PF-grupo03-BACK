@@ -84,7 +84,7 @@ export class AuthController {
         return res.redirect('https://pf-grupo03.vercel.app/');
       } else if (user.isAdmin) {
         // Redirect to admin dashboard
-        return res.redirect('https://pf-grupo03.vercel.app/admin-dashboard');
+        return res.redirect('https://pf-grupo03.vercel.app/dashboard/admin');
       } 
 
       // Default redirect to home for other users
