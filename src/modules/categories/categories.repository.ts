@@ -14,10 +14,14 @@ export class CategoriesRepository {
   async getCategories() {
     try {
       const categories = this.categoriesRepository.find();
-      const activeCategories = (await categories).filter(category => category.isActive);
-      return activeCategories
+      const activeCategories = (await categories).filter(
+        (category) => category.isActive,
+      );
+      return activeCategories;
     } catch (error) {
-      throw new InternalServerErrorException('Error fetching categories from the database.');
+      throw new InternalServerErrorException(
+        'Error fetching categories from the database.',
+      );
     }
   }
 
@@ -25,7 +29,9 @@ export class CategoriesRepository {
     try {
       return await this.categoriesRepository.findOne({ where: { id } });
     } catch (error) {
-      throw new InternalServerErrorException('Error fetching category from the database.');
+      throw new InternalServerErrorException(
+        'Error fetching category from the database.',
+      );
     }
   }
 
@@ -44,7 +50,9 @@ export class CategoriesRepository {
       );
       return 'Categorías Agregadas Correctamente';
     } catch (error) {
-      throw new InternalServerErrorException('Error adding categories to the database');
+      throw new InternalServerErrorException(
+        'Error adding categories to the database',
+      );
     }
   }
 
@@ -58,7 +66,9 @@ export class CategoriesRepository {
         .execute();
       return 'Categoría actualizada correctamente';
     } catch (error) {
-      throw new InternalServerErrorException('Error updating category in the database');
+      throw new InternalServerErrorException(
+        'Error updating category in the database',
+      );
     }
   }
 
@@ -72,7 +82,9 @@ export class CategoriesRepository {
         .execute();
       return 'Categoría desactivada correctamente';
     } catch (error) {
-      throw new InternalServerErrorException('Error desactivating category in the database');
+      throw new InternalServerErrorException(
+        'Error desactivating category in the database',
+      );
     }
-}
+  }
 }

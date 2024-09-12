@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, BadRequestException, Put, UseGuards, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  BadRequestException,
+  Put,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './categorie.dto';
 import { ValidationPipe } from '@nestjs/common';
@@ -14,8 +23,14 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get categories', description: 'Get all categories' })
-  @ApiResponse({ status: 200, description: 'Categories retrieved successfully' })
+  @ApiOperation({
+    summary: 'Get categories',
+    description: 'Get all categories',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Categories retrieved successfully',
+  })
   @ApiResponse({ status: 404, description: 'Categories not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async getCategories() {
@@ -23,7 +38,10 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get category', description: 'Get category using category ID' })
+  @ApiOperation({
+    summary: 'Get category',
+    description: 'Get category using category ID',
+  })
   @ApiResponse({ status: 200, description: 'Category retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Category not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
@@ -37,9 +55,11 @@ export class CategoriesController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: [CreateCategoryDto] })
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  async addCategories(@Body(new ValidationPipe({ whitelist: true })) data: CreateCategoryDto[]) {
+  @UseGuards(AuthGuard, RolesGuard)
+  async addCategories(
+    @Body(new ValidationPipe({ whitelist: true })) data: CreateCategoryDto[],
+  ) {
     if (!data.length) {
       throw new BadRequestException('No categories provided.');
     }
@@ -47,25 +67,37 @@ export class CategoriesController {
   }
 
   @Put('update')
-  @ApiOperation({ summary: 'Update category', description: 'update category using category ID' })
+  @ApiOperation({
+    summary: 'Update category',
+    description: 'update category using category ID',
+  })
   @ApiResponse({ status: 200, description: 'Category updated successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Category not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
-  async updateCategory(@Body('id') id: string, @Body(new ValidationPipe({ whitelist: true })) data: UpdateCategoryDto) {
+  @UseGuards(RolesGuard)
+  async updateCategory(
+    @Body('id') id: string,
+    @Body(new ValidationPipe({ whitelist: true })) data: UpdateCategoryDto,
+  ) {
     return this.categoriesService.updateCategory(id, data);
   }
 
   @Put('desactivate')
-  @ApiOperation({ summary: 'Desactivate category', description: 'deactivate category using category ID' })
-  @ApiResponse({ status: 200, description: 'category successfully deactivated' })
+  @ApiOperation({
+    summary: 'Desactivate category',
+    description: 'deactivate category using category ID',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'category successfully deactivated',
+  })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Category not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   async desactivateCategory(@Body('id') id: string) {
     return this.categoriesService.desactivateCategory(id);
   }

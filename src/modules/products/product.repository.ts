@@ -130,44 +130,41 @@ export class ProductsRepository {
   }
 
   async updateProduct(id: string, product: UpdateProductDto) {
-    const fieldsToUpdate = Object.keys(product).filter(
-      (key) => product[key] !== undefined && product[key] !== null,
-    );
-  
-    if (fieldsToUpdate.length === 0) {
+    if (!product || Object.keys(product).length === 0) {
       throw new BadRequestException('Introduce al menos un campo a actualizar');
     }
-  
-    try {
-      const existingProduct = await this.productsRepository.findOne({
-        where: { id, isActive: true },
-        relations: {
-          categories: true,
+
+    const existingProduct = await this.productsRepository.findOne({
+      where: { id, isActive: true },
+      relations: {
+        categories: true,
+      },
+    });
+
+    if (!existingProduct) {
+      throw new BadRequestException('ID de producto inexistente');
+    }
+
+    if (product.categories) {
+      const categories = await this.categoriesRepository.find({
+        where: {
+          name: In(product.categories),
+          isActive: true,
         },
       });
-  
-      if (!existingProduct) {
-        throw new BadRequestException('ID de producto inexistente');
-      }
-  
-      if (product.categories) {
-        const categories = await this.categoriesRepository.find({
-          where: {
-            name: In(product.categories.map((category) => category.name)),
-            isActive: true,
-          },
-        });
-  
-        if (categories.length !== product.categories.length) {
-          throw new BadRequestException(
-            'Una o más categorías no fueron encontradas',
-          );
-        }
 
-        existingProduct.categories = categories;
+      if (categories.length !== product.categories.length) {
+        throw new BadRequestException(
+          'Una o más categorías no fueron encontradas',
+        );
       }
 
+      existingProduct.categories = categories;
+    }
+
+    try {
       await this.productsRepository.save(existingProduct);
+
       const { categories, ...productData } = product;
 
       if (Object.keys(productData).length > 0) {
@@ -181,11 +178,10 @@ export class ProductsRepository {
         },
       });
     } catch (error) {
-      console.log(error)
+      console.error('Error capturado:', error.message);
       throw new InternalServerErrorException('Error actualizando el producto');
     }
   }
-  
 
   async deleteProduct(id: string) {
     try {
@@ -201,7 +197,6 @@ export class ProductsRepository {
       }
       const imageFields = ['image', 'image2', 'image3'];
 
-      // Eliminar imágenes de Cloudinary si existen
       for (const field of imageFields) {
         const imageUrl = productById[field];
         if (imageUrl && imageUrl.includes('res.cloudinary.com')) {

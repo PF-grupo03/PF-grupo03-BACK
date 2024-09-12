@@ -24,9 +24,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from '../users/roles.enum';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import {
-  FileFieldsInterceptor,
-} from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('products')
 @Controller('products')
@@ -61,8 +59,8 @@ export class ProductsController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: [CreateProductDto] })
-/*   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin) */
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'image', maxCount: 1 },
@@ -83,6 +81,8 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Update product',
     description: 'Update product using product ID',
@@ -92,7 +92,6 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBody({ type: [UpdateProductDto] })
-  /* @UseGuards(AuthGuard) */
   updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() product: UpdateProductDto,
@@ -109,8 +108,8 @@ export class ProductsController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Product not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-/*   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin) */
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.deleteProduct(id);
   }

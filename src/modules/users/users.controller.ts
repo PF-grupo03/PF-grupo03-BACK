@@ -44,8 +44,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Get()
-  /*   @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard) */
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   getUsers(@Query() params?: FiltersUsersDto) {
     return this.userService.getUsers(params);
   }
@@ -56,7 +56,7 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Get(':id')
-  /* @UseGuards(AuthGuard) */
+  @UseGuards(AuthGuard)
   getUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.getUserById(id);
   }
@@ -83,7 +83,7 @@ export class UsersController {
   @ApiBearerAuth()
   @Put(':id')
   @ApiBody({ type: UpdateUserDto })
-  /*  @UseGuards(AuthGuard) */
+  @UseGuards(AuthGuard)
   updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() userBody: UpdateUserDto,
@@ -92,6 +92,7 @@ export class UsersController {
   }
 
   @Put('image-profile/:id')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   updateImageProfile(
     @Param('id', ParseUUIDPipe) id: string,
@@ -122,6 +123,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @Put('change-password/:id')
+  @UseGuards(AuthGuard)
   async changePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() newPassword: UpdateUserPasswordDto,
@@ -135,8 +137,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('make-admin/:id')
-  /*   @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard) */
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async makeAdmin(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.makeAdmin(id);
   }
@@ -150,8 +152,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('remove-admin/:id')
-  /*   @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard) */
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async removeAdmin(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.removeAdmin(id);
   }
@@ -162,8 +164,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('ban-user/:id')
-  // @Roles(Role.Admin)
-  // @UseGuards(AuthGuard,RolesGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async banUser(
     @Body() bannedUserDto: bannedUserDto,
     @Param('id', ParseUUIDPipe) id: string,
@@ -177,8 +179,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth()
   @Put('unban-user/:id')
-  // @Roles(Role.Admin)
-  // @UseGuards(AuthGuard,RolesGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async unbanUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.unbanUser(id);
   }
@@ -191,8 +193,8 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  // @Roles(Role.Admin)
-  // @UseGuards(AuthGuard,RolesGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteUser(id);
   }
@@ -201,9 +203,9 @@ export class UsersController {
     summary: 'Delete profile image user',
     description: 'Delete profile image user',
   })
-  // @Roles(Role.User)
-  // @UseGuards(AuthGuard, RolesGuard)
-  @Delete('image-profile/:id')
+  @Roles(Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Delete('image-profileDelete/:id')
   deleteProfileImage(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteProfileImage(id);
   }
