@@ -213,9 +213,25 @@ export class UpdateProductDto {
   @IsEmpty()
   isActive?: boolean;
 
-  @ApiHideProperty()
-  @IsEmpty()
-  categories?: CategoryEntity[];
+  @ApiProperty({
+    description: 'Categorías asociadas al paquete de viaje',
+    example: ['adventure', 'history'],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @Transform(({ value }) => {
+    // Intenta convertir el string a un array
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        // Si no se puede convertir, retorna un array vacío o lanza un error
+        return [];
+      }
+    }
+    return value; // Si ya es un array, lo devuelve tal cual
+  })
+  categories: string[];
 
   @ApiPropertyOptional({
     description: 'Fechas disponibles para el paquete de viaje',
