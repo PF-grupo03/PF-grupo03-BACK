@@ -202,7 +202,9 @@ export class UsersRepository {
     try {
       console.log(email);
       
-      const userByEmail = await this.usersRepository.findOneBy({ email });
+      const userByEmail = await this.usersRepository.findOne({
+        where: { email, isActive: true }
+      });
       console.log(userByEmail);
       
 
