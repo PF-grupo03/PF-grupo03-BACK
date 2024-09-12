@@ -387,7 +387,7 @@ export class UsersRepository {
 
     newUser.password = "Pass1234"
 
-    return this.usersRepository.save(newUser)
+    return await this.usersRepository.save(newUser)
   }
   
 }
