@@ -178,6 +178,7 @@ export class ProductsRepository {
         },
       });
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException('Error actualizando el producto');
     }
   }
