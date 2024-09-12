@@ -65,7 +65,7 @@ export class AuthController {
     @ApiResponse({ status: 500, description: 'Internal server error' })
     @UseGuards(AuthGuard('google'))
     async googlelogin(@Req() req, @Res() res) {
-        res.redirect('/auth/google/callback');
+        // res.redirect('/auth/google/callback');
     }
 
     @Get('google/callback')
