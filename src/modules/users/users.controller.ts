@@ -193,8 +193,8 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteUser(id);
   }
@@ -203,8 +203,8 @@ export class UsersController {
     summary: 'Delete profile image user',
     description: 'Delete profile image user',
   })
-  // @Roles(Role.User)
-  // @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete('image-profileDelete/:id')
   deleteProfileImage(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteProfileImage(id);
