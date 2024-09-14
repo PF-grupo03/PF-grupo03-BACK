@@ -22,6 +22,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
         try {
             
             const { emails, name, photos } = profile;
+            console.log(profile);
+            
     
             if(!emails || !name) {
                 console.log('Error: No se pudo obtener la información de perfil');
@@ -33,6 +35,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             
                 // Aquí puedes extraer más datos del perfil si es necesario
             let user = await this.authService.findUserByEmailGoogle(email);
+            
             if (!user) {
             user = await this.authService.createUserGoogle({email, name});
             }
