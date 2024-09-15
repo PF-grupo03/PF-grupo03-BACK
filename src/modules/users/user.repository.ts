@@ -22,10 +22,13 @@ import { DEFAULT_PROFILE_IMAGE_USER } from 'src/config/env.config';
 
 @Injectable()
 export class UsersRepository {
+  private saltRounds = 10;
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
     private readonly mailRepository: MailRepository,
+    
   ) {}
 
   async getUsers(params?: FiltersUsersDto) {
@@ -399,16 +402,40 @@ export class UsersRepository {
   }
 
   async createUserGoogle(userGoogle: any) {
-    const newUser = new UserEntity();
-    newUser.email = userGoogle.email;
-    newUser.name = userGoogle.name;
-    newUser.username = "usernameGoogle";
-    newUser.dni = 10000897628;
-    newUser.phone = 3015523112;
-
-    newUser.password = "Pass1234"
-
-    return await this.usersRepository.save(newUser)
-  }
+    try {
+      const newUser = new UserEntity();
+      newUser.email = userGoogle.email;
+      newUser.name = `${userGoogle.firstName} ${userGoogle.lastName}`;
+      newUser.username = `${userGoogle.firstName}`;
+      newUser.dni = this.generateRandomDNI();
+      newUser.phone = this.generateRandomPhone();
+      newUser.password = this.generateRandomPassword();
   
+      const savedUser = await this.usersRepository.save(newUser);
+      return savedUser;
+    } catch (error) {
+      console.error("Error al crear el usuario:", error);
+      throw new InternalServerErrorException('Error al crear el usuario');
+    }
+  }
+
+  private generateRandomDNI(): number {
+    return Math.floor(10000000 + Math.random() * 90000000);
+  }
+
+  private generateRandomPhone(): number {
+    return Math.floor(1000000000 + Math.random() * 9000000000);
+  }
+
+  private generateRandomPassword(): string {
+    const length = 12;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+    }
+    return password;
+  }
+
 }
