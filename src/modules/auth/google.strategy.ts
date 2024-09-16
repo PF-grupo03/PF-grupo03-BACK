@@ -31,7 +31,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             }
     
             const email = emails[0].value;
-            const profileImage = photos && photos.length > 0 ? photos[0].value : 'URL_DE_IMAGEN_DEFAULT';
+            const profileImage = photos && photos.length > 0 ? photos[0].value : null;
             const firstName = name?.givenName; 
             const lastName = name?.familyName; 
             
@@ -39,7 +39,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             let user = await this.authService.findUserByEmailGoogle(email);
 
             if (!user) {
-            user = await this.authService.createUserGoogle({email, lastName, firstName});
+            user = await this.authService.createUserGoogle({email, lastName, firstName, profileImage});
             }
             
     
