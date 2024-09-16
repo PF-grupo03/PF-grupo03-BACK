@@ -420,6 +420,55 @@ export class UsersRepository {
   // }
 
 
+  // async createUserGoogle(userGoogle: any): Promise<UserEntity> {
+  //   try {
+  //     const { email, firstName, lastName, profileImage } = userGoogle;
+
+  //     // Subir la imagen a Cloudinary si está disponible
+  //     let imageProfileUrl = DEFAULT_PROFILE_IMAGE_USER;  // Usa la imagen por defecto en caso de error
+
+  //     if (profileImage) {
+  //       const uploadImageToCloudinary = (): Promise<UploadApiResponse> => {
+  //         return new Promise((resolve, reject) => {
+  //           const uploadStream = cloudinary.uploader.upload_stream(
+  //             { resource_type: 'auto', folder: 'travel_zone_cloudinary' },
+  //             (error, result) => {
+  //               if (error) {
+  //                 reject(error);
+  //               } else {
+  //                 resolve(result);
+  //               }
+  //             }
+  //           );
+  //           toStream(profileImage).pipe(uploadStream);
+  //         });
+  //       };
+
+  //       const uploadResult = await uploadImageToCloudinary();
+  //       imageProfileUrl = uploadResult.secure_url;
+  //     }
+
+  //     const plainPassword = this.generateRandomPassword();
+  //     const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+  //     // Crear y guardar el nuevo usuario
+  //     const newUser = new UserEntity();
+  //     newUser.email = email;
+  //     newUser.name = `${firstName} ${lastName}`;
+  //     newUser.username = `${firstName}`;
+  //     newUser.dni = this.generateRandomDNI();
+  //     newUser.phone = this.generateRandomPhone();
+  //     newUser.password = hashedPassword;
+  //     newUser.imageProfile = imageProfileUrl;
+
+  //     const savedUser = await this.usersRepository.save(newUser);
+  //     return savedUser;
+  //   } catch (error) {
+  //     console.error("Error al crear el usuario:", error);
+  //     throw new InternalServerErrorException('Error al crear el usuario');
+  //   }
+  // }
+
   async createUserGoogle(userGoogle: any): Promise<UserEntity> {
     try {
       const { email, firstName, lastName, profileImage } = userGoogle;
@@ -428,28 +477,44 @@ export class UsersRepository {
       let imageProfileUrl = DEFAULT_PROFILE_IMAGE_USER;  // Usa la imagen por defecto en caso de error
 
       if (profileImage) {
-        const uploadImageToCloudinary = (): Promise<UploadApiResponse> => {
-          return new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-              { resource_type: 'auto', folder: 'travel_zone_cloudinary' },
-              (error, result) => {
-                if (error) {
-                  reject(error);
-                } else {
-                  resolve(result);
-                }
-              }
-            );
-            toStream(profileImage).pipe(uploadStream);
-          });
-        };
+        try {
+          // Descargar la imagen del enlace proporcionado por Google
+          const response = await fetch(profileImage);
+          if (!response.ok) {
+            throw new BadRequestException('No se pudo descargar la imagen de perfil.');
+          }
 
-        const uploadResult = await uploadImageToCloudinary();
-        imageProfileUrl = uploadResult.secure_url;
+          // Leer la imagen como buffer
+          const imageBuffer = Buffer.from(await response.arrayBuffer());
+
+          // Subir la imagen a Cloudinary
+          const uploadImageToCloudinary = (): Promise<UploadApiResponse> => {
+            return new Promise((resolve, reject) => {
+              const uploadStream = cloudinary.uploader.upload_stream(
+                { resource_type: 'auto', folder: 'travel_zone_cloudinary' },
+                (error, result) => {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(result);
+                  }
+                }
+              );
+              toStream(imageBuffer).pipe(uploadStream);
+            });
+          };
+
+          const uploadResult = await uploadImageToCloudinary();
+          imageProfileUrl = uploadResult.secure_url;
+        } catch (uploadError) {
+          console.error('Error al procesar la imagen:', uploadError);
+          imageProfileUrl = DEFAULT_PROFILE_IMAGE_USER;
+        }
       }
 
+      // Generar una contraseña aleatoria y hacerle hash
       const plainPassword = this.generateRandomPassword();
-      const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      const hashedPassword = await bcrypt.hash(plainPassword, this.saltRounds);
 
       // Crear y guardar el nuevo usuario
       const newUser = new UserEntity();
@@ -464,7 +529,7 @@ export class UsersRepository {
       const savedUser = await this.usersRepository.save(newUser);
       return savedUser;
     } catch (error) {
-      console.error("Error al crear el usuario:", error);
+      console.error('Error al crear el usuario:', error);
       throw new InternalServerErrorException('Error al crear el usuario');
     }
   }
